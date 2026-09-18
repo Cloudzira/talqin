@@ -6,8 +6,9 @@
   <title>Mushaf Tajwid Interaktif - Surah Al-Ikhlas</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    * { box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background-color: #121212;
       color: #fff;
       text-align: center;
@@ -15,20 +16,21 @@
       padding: 20px;
     }
 
-    /* Card Container Mushaf */
+    /* Container Utama Frame Mushaf */
     .mushaf-card {
       position: relative;
-      display: inline-block;
+      display: block;
       width: 100%;
       max-width: 480px;
+      margin: 10px auto;
       background: #ffffff;
       border: 3px solid #b91c1c;
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-      margin: 10px auto;
     }
 
+    /* Header Mushaf */
     .mushaf-header {
       display: flex;
       justify-content: space-between;
@@ -47,11 +49,12 @@
       background: #fff;
     }
 
-    /* Wrapper Gambar & Layer Overlay */
-    .image-wrapper {
+    /* Wrapper Gambar & Canvas Overlay */
+    .mushaf-container {
       position: relative;
       width: 100%;
       line-height: 0;
+      background-color: #fff;
     }
 
     .mushaf-img {
@@ -60,47 +63,48 @@
       display: block;
     }
 
-    /* Layer Tempat Area Klik */
-    .overlay-layer {
+    /* SVG Overlay Presisi Scalable */
+    .svg-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 10;
       pointer-events: auto;
     }
 
-    /* Area Klik Ayat */
-    .clickable-verse {
-      position: absolute;
-      background-color: rgba(13, 148, 136, 0.2); /* Hijau transparan */
-      border: 1px dashed rgba(13, 148, 136, 0.6);
-      border-radius: 4px;
+    /* Styling Box Area Klik Ayat */
+    .verse-box {
+      fill: rgba(13, 148, 136, 0.25);
+      stroke: #0d9488;
+      stroke-width: 2;
+      stroke-dasharray: 6 4;
       cursor: pointer;
       transition: all 0.2s ease-in-out;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      rx: 6px;
+      ry: 6px;
     }
 
-    .clickable-verse:hover {
-      background-color: rgba(13, 148, 136, 0.45) !important;
-      border-color: #0d9488;
+    .verse-box:hover {
+      fill: rgba(13, 148, 136, 0.5) !important;
+      stroke-width: 3;
     }
 
-    .clickable-verse.playing {
-      background-color: rgba(234, 179, 8, 0.6) !important; /* Yellow highlight saat audio diputar */
-      border: 2px solid #ca8a04;
+    .verse-box.playing {
+      fill: rgba(234, 179, 8, 0.65) !important;
+      stroke: #ca8a04 !important;
+      stroke-dasharray: none;
     }
 
-    .verse-label {
-      font-size: 10px;
-      background: rgba(0,0,0,0.65);
-      color: #fff;
-      padding: 1px 5px;
-      border-radius: 3px;
+    /* Label Text Dalam SVG */
+    .verse-text {
+      fill: #ffffff;
+      font-size: 22px;
+      font-weight: bold;
+      font-family: sans-serif;
       pointer-events: none;
+      text-anchor: middle;
+      dominant-baseline: middle;
     }
   </style>
 </head>
@@ -114,65 +118,98 @@
         <span class="header-badge">Juz 30</span>
       </div>
 
-      <div class="image-wrapper">
+      <div class="mushaf-container">
+        <!-- Gambar Mushaf Halaman 604 -->
         <img id="mushaf-img" class="mushaf-img" 
              src="https://android.quran.com/data/width_1024/page604.png" 
              alt="Mushaf Halaman 604">
 
-        <div id="overlay-layer" class="overlay-layer"></div>
+        <!-- Overlay SVG Scalable (ViewBox disesuaikan aspek rasio 1000x1420) -->
+        <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1000 1420"></svg>
       </div>
     </div>
   </div>
 
   <script>
-    // =========================================================
-    // ISIKAN DATA SUPABASE KAMU DI SINI
-    // =========================================================
-    const SUPABASE_URL = 'https://wltnavooqxyovmhcdfwz.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsdG5hdm9vZ3h2b3ltaGNkZnd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MTE3ODEsImV4cCI6MjEwNTI4Nzc4MX0.7B7TdYafWjuRMOrInLo_u8f0d_WwRizqzdzABTITfpI'; // Masukkan anon key Supabase di sini
+    // =========================================================================
+    // CONFIG SUPABASE
+    // Ganti SUPABASE_URL dengan URL Project Supabase Anda yang AKTIF dan BENAR
+    // Contoh: 'https://xyzabcdefg.supabase.co'
+    // =========================================================================
+    const SUPABASE_URL = 'https://wltnavoogxvoymhcdfwz.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsdG5hdm9vZ3h2b3ltaGNkZnd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MTE3ODEsImV4cCI6MjEwNTI4Nzc4MX0.7B7TdYafWjuRMOrInLo_u8f0d_WwRizqzdzABTITfpI';
+
 
     let supabaseClient = null;
-    if (SUPABASE_KEY && !SUPABASE_KEY.includes('ISI_ANON_KEY')) {
-      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // Hanya menginisialisasi jika Key & URL valid
+    if (SUPABASE_URL && SUPABASE_KEY) {
+      try {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      } catch (e) {
+        console.warn("Supabase Init Warning:", e);
+      }
     }
 
     let currentAudio = null;
 
-    // Coordination Area Klik Surah Al-Ikhlas (Halaman 604)
+    // KOORDINAT PERSISI UNTUK SURAH AL-IKHLAS (Halaman 604)
+    // Berdasarkan matriks viewBox 1000 x 1420
     const ikhlasVerses = [
-      { surah: 112, ayah: 0, top: '9.8%', left: '11%', width: '78%', height: '5.2%', title: 'Bismillah' },
-      { surah: 112, ayah: 1, top: '15.2%', left: '11%', width: '78%', height: '5.2%', title: 'Ayat 1' },
-      { surah: 112, ayah: 2, top: '20.6%', left: '11%', width: '78%', height: '5.2%', title: 'Ayat 2' },
-      { surah: 112, ayah: 3, top: '26.0%', left: '11%', width: '78%', height: '5.2%', title: 'Ayat 3' },
-      { surah: 112, ayah: 4, top: '31.4%', left: '11%', width: '78%', height: '5.2%', title: 'Ayat 4' }
+      { surah: 112, ayah: 0, x: 100, y: 130, w: 800, h: 72, label: "Bismillah" },
+      { surah: 112, ayah: 1, x: 100, y: 212, w: 800, h: 78, label: "Ayat 1" },
+      { surah: 112, ayah: 2, x: 100, y: 298, w: 800, h: 78, label: "Ayat 2" },
+      { surah: 112, ayah: 3, x: 100, y: 384, w: 800, h: 78, label: "Ayat 3" },
+      { surah: 112, ayah: 4, x: 100, y: 470, w: 800, h: 78, label: "Ayat 4" }
     ];
 
-    // Render Tombol-Tombol Area Klik
+    // Render Area Klik di Atas Gambar
     function renderClickableAreas() {
-      const overlay = document.getElementById('overlay-layer');
-      overlay.innerHTML = '';
+      const svg = document.getElementById('svg-overlay');
+      svg.innerHTML = '';
 
       ikhlasVerses.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'clickable-verse';
-        div.style.top = item.top;
-        div.style.left = item.left;
-        div.style.width = item.width;
-        div.style.height = item.height;
-        div.setAttribute('data-verse', `${item.surah}:${item.ayah}`);
+        // Group SVG
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        
+        // Rect Box
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', item.x);
+        rect.setAttribute('y', item.y);
+        rect.setAttribute('width', item.w);
+        rect.setAttribute('height', item.h);
+        rect.setAttribute('class', 'verse-box');
+        rect.setAttribute('data-verse', `${item.surah}:${item.ayah}`);
 
-        div.innerHTML = `<span class="verse-label">${item.title}</span>`;
+        // Label Badge Background
+        const badge = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        badge.setAttribute('x', item.x + 10);
+        badge.setAttribute('y', item.y + (item.h / 2) - 16);
+        badge.setAttribute('width', 90);
+        badge.setAttribute('height', 32);
+        badge.setAttribute('rx', 6);
+        badge.setAttribute('fill', 'rgba(0, 0, 0, 0.7)');
 
-        div.addEventListener('click', () => {
+        // Label Text
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', item.x + 55);
+        text.setAttribute('y', item.y + (item.h / 2) + 2);
+        text.setAttribute('class', 'verse-text');
+        text.textContent = item.label;
+
+        // Event Listener
+        g.addEventListener('click', () => {
           highlightVerse(item.surah, item.ayah);
           playAudioAyat(item.surah, item.ayah);
         });
 
-        overlay.appendChild(div);
+        g.appendChild(rect);
+        g.appendChild(badge);
+        g.appendChild(text);
+        svg.appendChild(g);
       });
     }
 
-    // Pemutaran Audio Sesuai Nama Folder Supabase (`112/0.mp3`, `112/1.mp3`, dst)
+    // Handled Audio Player dengan Pemanggilan Aman (No Broken Request)
     async function playAudioAyat(surahNumber, ayahNumber) {
       if (currentAudio) {
         currentAudio.pause();
@@ -181,11 +218,10 @@
 
       let audioSrc = null;
 
+      // 1. Ambil dari Supabase HANYA JIKA client aktif
       if (supabaseClient) {
         try {
-          // Menggunakan `112/${ayahNumber}.mp3` sesuai folder Supabase Storage
           const filePath = `${surahNumber}/${ayahNumber}.mp3`;
-
           const { data, error } = await supabaseClient
             .storage
             .from('quran-audio')
@@ -193,40 +229,37 @@
 
           if (!error && data?.signedUrl) {
             audioSrc = data.signedUrl;
-          } else {
-            console.warn("Audio Supabase tidak ditemukan, menggunakan CDN cadangan.", error);
           }
         } catch (e) {
-          console.warn("Supabase Storage Error:", e);
+          // Silent fallback tanpa mengotori console
         }
       }
 
-      // Fallback CDN Publik jika Supabase belum dikonfigurasi / file tidak ditemukan
+      // 2. Fallback CDN Publik jika Supabase tidak terhubung / error
       if (!audioSrc) {
         if (ayahNumber === 0) {
-          audioSrc = 'https://cdn.islamic.network/quran/audio/128/ar.alafasy/1.mp3'; // Audio Bismillah
+          audioSrc = 'https://cdn.islamic.network/quran/audio/128/ar.alafasy/1.mp3';
         } else {
-          const globalAyahId = 6221 + (ayahNumber - 1);
+          const globalAyahId = 6221 + (ayahNumber - 1); // Index Global Surah 112
           audioSrc = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${globalAyahId}.mp3`;
         }
       }
 
+      // Play Audio
       currentAudio = new Audio(audioSrc);
-      currentAudio.play().catch(err => {
-        console.error("Gagal memutar audio:", err);
-      });
+      currentAudio.play().catch(err => console.log("Audio Play Interrupted:", err));
     }
 
-    // Memberikan Efek Sorot Warna Kuning Saat Audio Diputar
+    // Effect Highlighting
     function highlightVerse(surah, ayah) {
-      document.querySelectorAll('.clickable-verse').forEach(el => el.classList.remove('playing'));
-      const activeEl = document.querySelector(`.clickable-verse[data-verse="${surah}:${ayah}"]`);
+      document.querySelectorAll('.verse-box').forEach(el => el.classList.remove('playing'));
+      const activeEl = document.querySelector(`.verse-box[data-verse="${surah}:${ayah}"]`);
       if (activeEl) {
         activeEl.classList.add('playing');
       }
     }
 
-    // Inisialisasi awal
+    // Inisialisasi
     renderClickableAreas();
   </script>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mushaf Tajwid Interaktif - Surah Al-Ikhlas</title>
+  <title>Mushaf Interaktif - Dynamic JSON Coordinates</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; }
@@ -16,7 +16,6 @@
       padding: 20px;
     }
 
-    /* Container Card Mushaf */
     .mushaf-card {
       position: relative;
       display: block;
@@ -49,7 +48,6 @@
       background: #fff;
     }
 
-    /* Wrapper Gambar & Layer SVG */
     .mushaf-container {
       position: relative;
       width: 100%;
@@ -62,7 +60,6 @@
       display: block;
     }
 
-    /* SVG Overlay Terkunci Presisi */
     .svg-overlay {
       position: absolute;
       top: 0;
@@ -72,7 +69,6 @@
       pointer-events: auto;
     }
 
-    /* Style Area Klik */
     .verse-box {
       fill: rgba(13, 148, 136, 0.25);
       stroke: #0d9488;
@@ -111,17 +107,13 @@
   <div id="mushaf-section">
     <div class="mushaf-card">
       <div class="mushaf-header">
-        <span class="header-badge">112. Al-Ikhlāṣ</span>
-        <span class="header-badge">Hal. 604</span>
+        <span class="header-badge" id="surah-title">112. Al-Ikhlāṣ</span>
+        <span class="header-badge" id="page-title">Hal. 604</span>
         <span class="header-badge">Juz 30</span>
       </div>
 
       <div class="mushaf-container">
-        <img id="mushaf-img" class="mushaf-img" 
-             src="https://android.quran.com/data/width_1024/page604.png" 
-             alt="Mushaf Halaman 604">
-
-        <!-- SVG dengan ViewBox 1024x1460 mengikuti rasio asli gambar -->
+        <img id="mushaf-img" class="mushaf-img" src="" alt="Mushaf Image">
         <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1024 1460"></svg>
       </div>
     </div>
@@ -139,23 +131,33 @@
 
     let currentAudio = null;
 
-    // KOORDINAT BARU YANG SUDAH DISESUAIKAN DENGAN POSISI TEKS BACAAN
-    const ikhlasVerses = [
-      { surah: 112, ayah: 0, x: 110, y: 145, w: 804, h: 65, label: "Bismillah" },
-      { surah: 112, ayah: 1, x: 110, y: 220, w: 804, h: 65, label: "Ayat 1" },
-      { surah: 112, ayah: 2, x: 110, y: 295, w: 804, h: 65, label: "Ayat 2" },
-      { surah: 112, ayah: 3, x: 110, y: 370, w: 804, h: 65, label: "Ayat 3" },
-      { surah: 112, ayah: 4, x: 110, y: 445, w: 804, h: 65, label: "Ayat 4" }
-    ];
+    // FUNGSI UTAMA: Load Halaman & JSON Koordinat Secara Otomatis
+    async function loadMushafPage(pageNumber) {
+      try {
+        // 1. Load Gambar Mushaf
+        const imgEl = document.getElementById('mushaf-img');
+        imgEl.src = `https://android.quran.com/data/width_1024/page${pageNumber}.png`;
 
-    function renderClickableAreas() {
+        // 2. Fetch Dataset JSON Koordinat Halaman
+        const response = await fetch(`./data/page${pageNumber}.json`);
+        const pageData = await response.json();
+
+        // 3. Render Area Klik SVG
+        renderSVGOverlay(pageData.ayahs);
+      } catch (err) {
+        console.error("Gagal memuat dataset JSON halaman:", err);
+      }
+    }
+
+    // Render Komponen SVG dari Data JSON
+    function renderSVGOverlay(ayahList) {
       const svg = document.getElementById('svg-overlay');
       svg.innerHTML = '';
 
-      ikhlasVerses.forEach(item => {
+      ayahList.forEach(item => {
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         
-        // Kotak Area Klik
+        // Kotak Area
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.setAttribute('x', item.x);
         rect.setAttribute('y', item.y);
@@ -164,7 +166,7 @@
         rect.setAttribute('class', 'verse-box');
         rect.setAttribute('data-verse', `${item.surah}:${item.ayah}`);
 
-        // Badge Tag Label (Sisi Kiri Kotak)
+        // Badge Tag Label
         const badge = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         badge.setAttribute('x', item.x + 10);
         badge.setAttribute('y', item.y + (item.h / 2) - 13);
@@ -215,14 +217,9 @@
         }
       }
 
-      // Fallback CDN jika Supabase tidak terhubung
       if (!audioSrc || audioSrc.includes('undefined')) {
-        if (ayahNumber === 0) {
-          audioSrc = 'https://cdn.islamic.network/quran/audio/128/ar.alafasy/1.mp3';
-        } else {
-          const globalAyahId = 6221 + (ayahNumber - 1);
-          audioSrc = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${globalAyahId}.mp3`;
-        }
+        const fallbackId = ayahNumber === 0 ? 1 : 6221 + (ayahNumber - 1);
+        audioSrc = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${fallbackId}.mp3`;
       }
 
       currentAudio = new Audio(audioSrc);
@@ -237,7 +234,8 @@
       }
     }
 
-    renderClickableAreas();
+    // Panggil Halaman 604 saat dimuat
+    loadMushafPage(604);
   </script>
 
 </body>

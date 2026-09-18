@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mushaf Tajwid Interaktif - Surah Al-Ikhlas</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1a1a1a;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Form Login */
+    .auth-container {
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 360px;
+      margin: 40px auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .auth-container input {
+      width: 80%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #333;
+      color: #fff;
+    }
+    .auth-container button {
+      padding: 10px 20px;
+      background-color: #0d9488;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .auth-container button:hover { background-color: #0f766e; }
+
+    /* Frame Utama Mushaf */
+    .mushaf-card {
+      position: relative;
+      display: inline-block;
+      max-width: 500px;
+      width: 100%;
+      background: #ffffff;
+      border: 2px solid #b91c1c;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    /* Header Latin */
+    .mushaf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 15px;
+      border-bottom: 2px solid #b91c1c;
+      font-weight: bold;
+      font-size: 14px;
+      color: #000;
+      background-color: #fdfbf7;
+    }
+    .header-badge {
+      border: 1px solid #ccc;
+      padding: 2px 10px;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    /* Gambar Mushaf Tajwid */
+    .mushaf-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* SVG Overlay */
+    .svg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Polygon Area Klik */
+    .verse-polygon {
+      fill: rgba(255, 255, 255, 0);
+      stroke: none;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: fill 0.2s ease;
+    }
+    .verse-polygon:hover {
+      fill: rgba(13, 148, 136, 0.3);
+    }
+    .verse-polygon.playing {
+      fill: rgba(255, 235, 59, 0.4) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Form Login -->
+  <div id="auth-section" class="auth-container">
+    <h3>Login Aplikasi Al-Qur'an</h3>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <br>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- Tampilan Mushaf -->
+  <div id="mushaf-section" style="display: none;">
+    <div class="mushaf-card">
+      <div class="mushaf-header">
+        <span class="header-badge">112. Al-Ikhlāṣ</span>
+        <span class="header-badge">604</span>
+        <span class="header-badge">Juz 30</span>
+      </div>
+
+      <div style="position: relative;">
+        <img id="mushaf-img" class="mushaf-img" 
+             src="https://raw.githubusercontent.com/QuranHub/quran-pages-images/main/easyquran.com/hafs-tajweed/604.png" 
+             alt="Mushaf Halaman 604">
+
+        <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1000 1420"></svg>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // ISI DUA VARIABEL DI BAWAH INI DENGAN DATA DARI SUPABASE
+    // =========================================================
+    const SUPABASE_URL = 'https://wltnavoogxvoymhcdfwz.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsdG5hdm9vZ3h2b3ltaGNkZnd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MTE3ODEsImV4cCI6MjEwNTI4Nzc4MX0.7B7TdYafWjuRMOrInLo_u8f0d_WwRizqzdzABTITfpI';
+
+    // Inisialisasi Supabase Client
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const currentPage = 604;
+    let currentAudio = null;
+
+    // Fungsi Login
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        alert('Login Gagal: ' + error.message);
+      } else {
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('mushaf-section').style.display = 'block';
+        loadPolygonData(currentPage);
+      }
+    }
+
+    // Ambil Data Polygon dari Quran.com API
+    async function loadPolygonData(pageNum) {
+      const svgContainer = document.getElementById('svg-overlay');
+      svgContainer.innerHTML = '';
+
+      try {
+        const response = await fetch(`https://api.quran.com/api/v4/verses/by_page/${pageNum}?words=true&word_fields=v2_page,location`);
+        const data = await response.json();
+
+        data.verses.forEach(verse => {
+          const [surah, ayah] = verse.verse_key.split(':');
+
+          let points = [];
+          verse.words.forEach(word => {
+            if (word.code_v2_page) {
+              points.push(word.code_v2_page);
+            }
+          });
+
+          const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+          polygon.setAttribute('class', 'verse-polygon');
+          
+          if (points.length > 0) {
+            polygon.setAttribute('points', points.join(' '));
+          }
+
+          polygon.addEventListener('click', () => {
+            highlightVerse(polygon);
+            playAudioAyat(surah, ayah);
+          });
+
+          svgContainer.appendChild(polygon);
+        });
+      } catch (err) {
+        console.error('Gagal mengambil data polygon:', err);
+      }
+    }
+
+    // Putar Audio dari Supabase Private Storage
+    async function playAudioAyat(surahNumber, ayahNumber) {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      const folderSurah = String(surahNumber).padStart(3, '0');
+      const filePath = `${folderSurah}/${ayahNumber}.mp3`;
+
+      const { data, error } = await supabaseClient
+        .storage
+        .from('quran-audio')
+        .createSignedUrl(filePath, 60);
+
+      if (error) {
+        alert('Gagal memuat audio: ' + error.message);
+        return;
+      }
+
+      currentAudio = new Audio(data.signedUrl);
+      currentAudio.play();
+    }
+
+    // Efek Sorotan Kuning Saat Diputar
+    function highlightVerse(element) {
+      document.querySelectorAll('.verse-polygon').forEach(el => el.classList.remove('playing'));
+      element.classList.add('playing');
+    }
+  </script>
+
+</body>
+</html>

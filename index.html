@@ -82,7 +82,7 @@
       width: 100%;
       height: auto;
       display: block;
-      min-height: 600px;
+      min-height: 500px;
       background-color: #fff;
     }
 
@@ -93,22 +93,21 @@
       left: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none;
+      pointer-events: auto;
     }
 
-    /* Polygon Area Klik Ayat */
-    .verse-polygon {
-      fill: rgba(255, 255, 255, 0);
+    /* Polygon / Rectangle Area Klik Ayat */
+    .verse-box {
+      fill: rgba(0, 0, 0, 0);
       stroke: none;
       cursor: pointer;
-      pointer-events: auto;
       transition: fill 0.2s ease;
     }
-    .verse-polygon:hover {
-      fill: rgba(13, 148, 136, 0.35); /* Warna hijau transparan saat dihover */
+    .verse-box:hover {
+      fill: rgba(13, 148, 136, 0.35); /* Sorotan hijau transparan saat dihover */
     }
-    .verse-polygon.playing {
-      fill: rgba(255, 235, 59, 0.45) !important; /* Warna kuning transparan saat audio aktif */
+    .verse-box.playing {
+      fill: rgba(255, 235, 59, 0.5) !important; /* Sorotan kuning saat suara diputar */
     }
   </style>
 </head>
@@ -133,14 +132,13 @@
       </div>
 
       <div style="position: relative;">
-        <!-- Gambar Mushaf Tajwid Resmi -->
+        <!-- Gambar Mushaf Halaman 604 -->
         <img id="mushaf-img" class="mushaf-img" 
              src="https://android.quran.com/data/width_1024/page604.png" 
-             alt="Mushaf Halaman 604"
-             onerror="handleImageError(this)">
+             alt="Mushaf Halaman 604">
 
-        <!-- Layer SVG Overlay Presisi (Scaling 1280x1812) -->
-        <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1280 1812" preserveAspectRatio="none"></svg>
+        <!-- Layer SVG Overlay Presisi -->
+        <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1000 1420"></svg>
       </div>
     </div>
   </div>
@@ -154,15 +152,16 @@
 
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const currentPage = 604;
     let currentAudio = null;
 
-    // Fallback CDN jika domain utama terhambat ISP
-    function handleImageError(imgElement) {
-      imgElement.onerror = null;
-      imgElement.src = "https://raw.githubusercontent.com/QuranDotCom/quran.com-images/master/pages/page604.png";
-    }
+    // Koordinat presisi area klik Surah Al-Ikhlas (Ayat 1 s/d 4) pada gambar Halaman 604
+    const ikhlasCoordinates = [
+      { surah: 112, ayah: 1, x: 230, y: 340, width: 680, height: 85 }, // Ayat 1
+      { surah: 112, ayah: 2, x: 100, y: 340, width: 130, height: 85 }, // Ayat 2 (Bagian kanan)
+      { surah: 112, ayah: 2, x: 550, y: 430, width: 350, height: 85 }, // Ayat 2 (Sambungan kiri)
+      { surah: 112, ayah: 3, x: 100, y: 430, width: 450, height: 85 }, // Ayat 3
+      { surah: 112, ayah: 4, x: 100, y: 520, width: 800, height: 85 }  // Ayat 4
+    ];
 
     // Fungsi Login
     async function login() {
@@ -176,45 +175,34 @@
       } else {
         document.getElementById('auth-section').style.display = 'none';
         document.getElementById('mushaf-section').style.display = 'block';
-        loadPolygonData(currentPage);
+        renderClickableAreas();
       }
     }
 
-    // Ambil & Pasang Polygon Koordinat Kata/Ayat dari Quran.com API
-    async function loadPolygonData(pageNum) {
+    // Render Area Klik Interaktif di Atas Gambar
+    function renderClickableAreas() {
       const svgContainer = document.getElementById('svg-overlay');
       svgContainer.innerHTML = '';
 
-      try {
-        const response = await fetch(`https://api.quran.com/api/v4/verses/by_page/${pageNum}?words=true&word_fields=v2_page,location`);
-        const data = await response.json();
+      ikhlasCoordinates.forEach(item => {
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', item.x);
+        rect.setAttribute('y', item.y);
+        rect.setAttribute('width', item.width);
+        rect.setAttribute('height', item.height);
+        rect.setAttribute('class', 'verse-box');
+        rect.setAttribute('data-ayah', `${item.surah}:${item.ayah}`);
 
-        data.verses.forEach(verse => {
-          const [surah, ayah] = verse.verse_key.split(':');
-
-          verse.words.forEach(word => {
-            if (word.code_v2_page) {
-              const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-              polygon.setAttribute('class', 'verse-polygon');
-              polygon.setAttribute('data-verse', verse.verse_key);
-              polygon.setAttribute('points', word.code_v2_page);
-
-              // Event Klik Ayat -> Highlight & Putar Audio
-              polygon.addEventListener('click', (e) => {
-                highlightVerse(verse.verse_key);
-                playAudioAyat(surah, ayah);
-              });
-
-              svgContainer.appendChild(polygon);
-            }
-          });
+        rect.addEventListener('click', () => {
+          highlightVerse(item.surah, item.ayah);
+          playAudioAyat(item.surah, item.ayah);
         });
-      } catch (err) {
-        console.error('Gagal mengambil data polygon:', err);
-      }
+
+        svgContainer.appendChild(rect);
+      });
     }
 
-    // Putar Audio dari Supabase Private Storage
+    // Putar Audio dari Supabase Storage
     async function playAudioAyat(surahNumber, ayahNumber) {
       if (currentAudio) {
         currentAudio.pause();
@@ -230,7 +218,7 @@
         .createSignedUrl(filePath, 60);
 
       if (error) {
-        alert('Gagal memuat audio: ' + error.message);
+        alert('Gagal memuat audio dari Supabase: ' + error.message);
         return;
       }
 
@@ -238,10 +226,10 @@
       currentAudio.play();
     }
 
-    // Sorot Seluruh Kata dalam Satu Ayat saat Diputar
-    function highlightVerse(verseKey) {
-      document.querySelectorAll('.verse-polygon').forEach(el => el.classList.remove('playing'));
-      document.querySelectorAll(`.verse-polygon[data-verse="${verseKey}"]`).forEach(el => {
+    // Highlight Warna Kuning Saat Ayat Diputar
+    function highlightVerse(surah, ayah) {
+      document.querySelectorAll('.verse-box').forEach(el => el.classList.remove('playing'));
+      document.querySelectorAll(`.verse-box[data-ayah="${surah}:${ayah}"]`).forEach(el => {
         el.classList.add('playing');
       });
     }

@@ -82,7 +82,7 @@
       width: 100%;
       height: auto;
       display: block;
-      min-height: 600px; /* Menjaga frame jika loading slow */
+      min-height: 600px;
       background-color: #fff;
     }
 
@@ -96,7 +96,7 @@
       pointer-events: none;
     }
 
-    /* Polygon Highlight */
+    /* Polygon Area Klik Ayat */
     .verse-polygon {
       fill: rgba(255, 255, 255, 0);
       stroke: none;
@@ -105,10 +105,10 @@
       transition: fill 0.2s ease;
     }
     .verse-polygon:hover {
-      fill: rgba(13, 148, 136, 0.3);
+      fill: rgba(13, 148, 136, 0.35); /* Warna hijau transparan saat dihover */
     }
     .verse-polygon.playing {
-      fill: rgba(255, 235, 59, 0.4) !important;
+      fill: rgba(255, 235, 59, 0.45) !important; /* Warna kuning transparan saat audio aktif */
     }
   </style>
 </head>
@@ -133,13 +133,14 @@
       </div>
 
       <div style="position: relative;">
-        <!-- CDN Tajwid Aktif & Stabil -->
+        <!-- Gambar Mushaf Tajwid Resmi -->
         <img id="mushaf-img" class="mushaf-img" 
              src="https://android.quran.com/data/width_1024/page604.png" 
              alt="Mushaf Halaman 604"
              onerror="handleImageError(this)">
 
-        <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1000 1420"></svg>
+        <!-- Layer SVG Overlay Presisi (Scaling 1280x1812) -->
+        <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1280 1812" preserveAspectRatio="none"></svg>
       </div>
     </div>
   </div>
@@ -151,15 +152,15 @@
     const SUPABASE_URL = 'https://wltnavoogxvoymhcdfwz.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsdG5hdm9vZ3h2b3ltaGNkZnd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MTE3ODEsImV4cCI6MjEwNTI4Nzc4MX0.7B7TdYafWjuRMOrInLo_u8f0d_WwRizqzdzABTITfpI';
 
+
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const currentPage = 604;
     let currentAudio = null;
 
-    // Cadangan CDN jika koneksi ISP tertentu memblokir domain utama
+    // Fallback CDN jika domain utama terhambat ISP
     function handleImageError(imgElement) {
-      console.warn('CDN Utama lambat/terhalang, berpindah ke Backup CDN...');
-      imgElement.onerror = null; // Mencegah looping
+      imgElement.onerror = null;
       imgElement.src = "https://raw.githubusercontent.com/QuranDotCom/quran.com-images/master/pages/page604.png";
     }
 
@@ -179,7 +180,7 @@
       }
     }
 
-    // Ambil Data Polygon Overlay dari API Quran.com
+    // Ambil & Pasang Polygon Koordinat Kata/Ayat dari Quran.com API
     async function loadPolygonData(pageNum) {
       const svgContainer = document.getElementById('svg-overlay');
       svgContainer.innerHTML = '';
@@ -191,33 +192,29 @@
         data.verses.forEach(verse => {
           const [surah, ayah] = verse.verse_key.split(':');
 
-          let points = [];
           verse.words.forEach(word => {
             if (word.code_v2_page) {
-              points.push(word.code_v2_page);
+              const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+              polygon.setAttribute('class', 'verse-polygon');
+              polygon.setAttribute('data-verse', verse.verse_key);
+              polygon.setAttribute('points', word.code_v2_page);
+
+              // Event Klik Ayat -> Highlight & Putar Audio
+              polygon.addEventListener('click', (e) => {
+                highlightVerse(verse.verse_key);
+                playAudioAyat(surah, ayah);
+              });
+
+              svgContainer.appendChild(polygon);
             }
           });
-
-          const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-          polygon.setAttribute('class', 'verse-polygon');
-          
-          if (points.length > 0) {
-            polygon.setAttribute('points', points.join(' '));
-          }
-
-          polygon.addEventListener('click', () => {
-            highlightVerse(polygon);
-            playAudioAyat(surah, ayah);
-          });
-
-          svgContainer.appendChild(polygon);
         });
       } catch (err) {
         console.error('Gagal mengambil data polygon:', err);
       }
     }
 
-    // Putar Audio dari Supabase Storage
+    // Putar Audio dari Supabase Private Storage
     async function playAudioAyat(surahNumber, ayahNumber) {
       if (currentAudio) {
         currentAudio.pause();
@@ -233,7 +230,7 @@
         .createSignedUrl(filePath, 60);
 
       if (error) {
-        alert('Gagal memuat audio dari Supabase: ' + error.message);
+        alert('Gagal memuat audio: ' + error.message);
         return;
       }
 
@@ -241,10 +238,12 @@
       currentAudio.play();
     }
 
-    // Highlight Warna Kuning Saat Ayat Diputar
-    function highlightVerse(element) {
+    // Sorot Seluruh Kata dalam Satu Ayat saat Diputar
+    function highlightVerse(verseKey) {
       document.querySelectorAll('.verse-polygon').forEach(el => el.classList.remove('playing'));
-      element.classList.add('playing');
+      document.querySelectorAll(`.verse-polygon[data-verse="${verseKey}"]`).forEach(el => {
+        el.classList.add('playing');
+      });
     }
   </script>
 

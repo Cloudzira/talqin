@@ -139,7 +139,7 @@
         imgEl.src = `https://android.quran.com/data/width_1024/page${pageNumber}.png`;
 
         // 2. Fetch Dataset JSON Koordinat Halaman
-        const response = await fetch(`./data/page${pageNumber}.json`);
+       const response = await fetch(`./data/page${pageNumber}.json`);
         const pageData = await response.json();
 
         // 3. Render Area Klik SVG

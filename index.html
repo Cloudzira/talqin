@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mushaf Interaktif - Dynamic JSON Coordinates</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mushaf Interactive - TalqinKu</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #121212;
-      color: #fff;
-      text-align: center;
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 20px;
+      padding: 0;
     }
 
-    .mushaf-card {
-      position: relative;
-      display: block;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 10px;
+    }
+
+    .header {
       width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-      background: #ffffff;
-      border: 3px solid #b91c1c;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-    }
-
-    .mushaf-header {
+      max-width: 600px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 15px;
-      border-bottom: 2px solid #b91c1c;
-      font-weight: bold;
-      font-size: 14px;
-      color: #000;
-      background-color: #fdfbf7;
+      background-color: #1e1e1e;
+      padding: 12px 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .header-badge {
-      border: 1px solid #ccc;
-      padding: 2px 10px;
-      border-radius: 12px;
-      background: #fff;
+    .header div {
+      font-weight: 600;
+      font-size: 14px;
+      background-color: #2a2a2a;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #3d3d3d;
     }
 
     .mushaf-container {
       position: relative;
       width: 100%;
-      line-height: 0;
+      max-width: 600px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      background-color: #fff;
     }
 
     .mushaf-img {
@@ -66,177 +66,186 @@
       left: 0;
       width: 100%;
       height: 100%;
+      pointer-events: none;
+    }
+
+    .ayah-rect {
       pointer-events: auto;
-    }
-
-    .verse-box {
-      fill: rgba(13, 148, 136, 0.25);
-      stroke: #0d9488;
+      fill: rgba(0, 150, 255, 0.05);
+      stroke: rgba(0, 150, 255, 0.4);
       stroke-width: 2;
-      stroke-dasharray: 6 4;
+      rx: 4;
       cursor: pointer;
-      transition: all 0.2s ease-in-out;
-      rx: 5px;
-      ry: 5px;
+      transition: all 0.2s ease;
     }
 
-    .verse-box:hover {
-      fill: rgba(13, 148, 136, 0.5) !important;
+    .ayah-rect:hover {
+      fill: rgba(0, 200, 100, 0.25);
+      stroke: #00ff88;
       stroke-width: 3;
     }
 
-    .verse-box.playing {
-      fill: rgba(234, 179, 8, 0.65) !important;
-      stroke: #ca8a04 !important;
-      stroke-dasharray: none;
+    .ayah-rect.active {
+      fill: rgba(255, 180, 0, 0.35);
+      stroke: #ffb400;
+      stroke-width: 3;
     }
 
-    .verse-text {
-      fill: #ffffff;
-      font-size: 16px;
-      font-weight: bold;
-      font-family: sans-serif;
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      background: #2e7d32;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
       pointer-events: none;
-      text-anchor: middle;
-      dominant-baseline: middle;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 <body>
 
-  <div id="mushaf-section">
-    <div class="mushaf-card">
-      <div class="mushaf-header">
-        <span class="header-badge" id="surah-title">112. Al-Ikhlāṣ</span>
-        <span class="header-badge" id="page-title">Hal. 604</span>
-        <span class="header-badge">Juz 30</span>
-      </div>
-
-      <div class="mushaf-container">
-        <img id="mushaf-img" class="mushaf-img" src="" alt="Mushaf Image">
-        <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1024 1460"></svg>
-      </div>
-    </div>
+  <div class="header">
+    <div id="surah-title">112. Al-Ikhlāṣ</div>
+    <div id="page-title">Hal. 604</div>
+    <div id="juz-title">Juz 30</div>
   </div>
 
+  <div class="mushaf-container">
+    <img id="mushaf-img" class="mushaf-img" alt="Halaman Mushaf" />
+    <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1024 1460" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+
+  <div id="toast" class="toast">Ayat terpilih</div>
+
   <script>
-     const SUPABASE_URL = 'https://wltnavoogxvoymhcdfwz.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsdG5hdm9vZ3h2b3ltaGNkZnd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MTE3ODEsImV4cCI6MjEwNTI4Nzc4MX0.7B7TdYafWjuRMOrInLo_u8f0d_WwRizqzdzABTITfpI';
+    const currentPage = 604;
 
-
-    let supabaseClient = null;
-    if (SUPABASE_KEY && !SUPABASE_KEY.includes('ISI_ANON_KEY')) {
-      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    }
-
-    let currentAudio = null;
-
-    // FUNGSI UTAMA: Load Halaman & JSON Koordinat Secara Otomatis
     async function loadMushafPage(pageNumber) {
-      try {
-        // 1. Load Gambar Mushaf
-        const imgEl = document.getElementById('mushaf-img');
-        imgEl.src = `https://android.quran.com/data/width_1024/page${pageNumber}.png`;
+      const imgEl = document.getElementById('mushaf-img');
+      const svgEl = document.getElementById('svg-overlay');
 
-        // 2. Fetch Dataset JSON Koordinat Halaman
-       const response = await fetch(`./data/page${pageNumber}.json`);
+      // 1. Load Gambar Halaman Quran
+      imgEl.src = `https://android.quran.com/data/width_1024/page${pageNumber}.png`;
+
+      try {
+        // 2. Fetch dataset JSON
+        const response = await fetch(`./data/page${pageNumber}.json`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const pageData = await response.json();
 
-        // 3. Render Area Klik SVG
-        renderSVGOverlay(pageData.ayahs);
+        // Tentukan viewBox jika ada di JSON
+        if (pageData.viewBox) {
+          svgEl.setAttribute('viewBox', pageData.viewBox);
+        }
+
+        let ayahsArray = [];
+
+        // 3. Parsing data jika formatnya "coords" (kata/ayat per object key)
+        if (pageData.coords) {
+          const ayahMap = {};
+
+          Object.keys(pageData.coords).forEach(key => {
+            const [surah, ayah] = key.split(':').map(Number);
+            const item = pageData.coords[key];
+            const coord = item.h || item.p || item.o;
+
+            if (coord && coord.x >= 0) {
+              const ayahKey = `${surah}:${ayah}`;
+
+              if (!ayahMap[ayahKey]) {
+                ayahMap[ayahKey] = {
+                  surah: surah,
+                  ayah: ayah,
+                  minX: coord.x,
+                  minY: coord.y,
+                  maxX: coord.x + coord.w,
+                  maxY: coord.y + coord.h,
+                  label: ayah === 0 ? "Bismillah" : `Surah ${surah} Ayat ${ayah}`
+                };
+              } else {
+                // Gabungkan bounding box dari setiap kata menjadi 1 ayat penuh
+                ayahMap[ayahKey].minX = Math.min(ayahMap[ayahKey].minX, coord.x);
+                ayahMap[ayahKey].minY = Math.min(ayahMap[ayahKey].minY, coord.y);
+                ayahMap[ayahKey].maxX = Math.max(ayahMap[ayahKey].maxX, coord.x + coord.w);
+                ayahMap[ayahKey].maxY = Math.max(ayahMap[ayahKey].maxY, coord.y + coord.h);
+              }
+            }
+          });
+
+          ayahsArray = Object.values(ayahMap).map(item => ({
+            surah: item.surah,
+            ayah: item.ayah,
+            x: item.minX,
+            y: item.minY,
+            w: item.maxX - item.minX,
+            h: item.maxY - item.minY,
+            label: item.label
+          }));
+        } 
+        // 4. Parsing data jika formatnya berupa array "ayahs"
+        else if (pageData.ayahs && Array.isArray(pageData.ayahs)) {
+          ayahsArray = pageData.ayahs;
+        }
+
+        renderSVGOverlay(ayahsArray);
+
       } catch (err) {
         console.error("Gagal memuat dataset JSON halaman:", err);
       }
     }
 
-    // Render Komponen SVG dari Data JSON
-    function renderSVGOverlay(ayahList) {
-      const svg = document.getElementById('svg-overlay');
-      svg.innerHTML = '';
+    function renderSVGOverlay(ayahs) {
+      const svgEl = document.getElementById('svg-overlay');
+      svgEl.innerHTML = ''; // Clear SVG sebelumnya
 
-      ayahList.forEach(item => {
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        
-        // Kotak Area
+      if (!ayahs || ayahs.length === 0) return;
+
+      ayahs.forEach(item => {
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.setAttribute('x', item.x);
         rect.setAttribute('y', item.y);
         rect.setAttribute('width', item.w);
         rect.setAttribute('height', item.h);
-        rect.setAttribute('class', 'verse-box');
-        rect.setAttribute('data-verse', `${item.surah}:${item.ayah}`);
+        rect.setAttribute('class', 'ayah-rect');
+        rect.setAttribute('data-label', item.label || `Surah ${item.surah} Ayat ${item.ayah}`);
 
-        // Badge Tag Label
-        const badge = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        badge.setAttribute('x', item.x + 10);
-        badge.setAttribute('y', item.y + (item.h / 2) - 13);
-        badge.setAttribute('width', 80);
-        badge.setAttribute('height', 26);
-        badge.setAttribute('rx', 4);
-        badge.setAttribute('fill', 'rgba(0, 0, 0, 0.75)');
-
-        // Teks Label
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', item.x + 50);
-        text.setAttribute('y', item.y + (item.h / 2) + 1);
-        text.setAttribute('class', 'verse-text');
-        text.textContent = item.label;
-
-        g.addEventListener('click', () => {
-          highlightVerse(item.surah, item.ayah);
-          playAudioAyat(item.surah, item.ayah);
+        // Event listener saat ayat diklik
+        rect.addEventListener('click', (e) => {
+          document.querySelectorAll('.ayah-rect').forEach(r => r.classList.remove('active'));
+          rect.classList.add('active');
+          showToast(`Terpilih: ${rect.getAttribute('data-label')}`);
         });
 
-        g.appendChild(rect);
-        g.appendChild(badge);
-        g.appendChild(text);
-        svg.appendChild(g);
+        svgEl.appendChild(rect);
       });
     }
 
-    async function playAudioAyat(surahNumber, ayahNumber) {
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-      }
-
-      let audioSrc = null;
-
-      if (supabaseClient) {
-        try {
-          const { data } = supabaseClient
-            .storage
-            .from('quran-audio')
-            .getPublicUrl(`${surahNumber}/${ayahNumber}.mp3`);
-
-          if (data?.publicUrl) {
-            audioSrc = data.publicUrl;
-          }
-        } catch (e) {
-          console.warn("Supabase Storage Error:", e);
-        }
-      }
-
-      if (!audioSrc || audioSrc.includes('undefined')) {
-        const fallbackId = ayahNumber === 0 ? 1 : 6221 + (ayahNumber - 1);
-        audioSrc = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${fallbackId}.mp3`;
-      }
-
-      currentAudio = new Audio(audioSrc);
-      currentAudio.play().catch(err => console.error("Gagal memutar audio:", err));
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
     }
 
-    function highlightVerse(surah, ayah) {
-      document.querySelectorAll('.verse-box').forEach(el => el.classList.remove('playing'));
-      const activeEl = document.querySelector(`.verse-box[data-verse="${surah}:${ayah}"]`);
-      if (activeEl) {
-        activeEl.classList.add('playing');
-      }
-    }
-
-    // Panggil Halaman 604 saat dimuat
-    loadMushafPage(604);
+    // Jalankan saat halaman dibuka
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMushafPage(currentPage);
+    });
   </script>
-
 </body>
 </html>

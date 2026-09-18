@@ -82,9 +82,11 @@
       width: 100%;
       height: auto;
       display: block;
+      min-height: 600px; /* Menjaga frame jika loading slow */
+      background-color: #fff;
     }
 
-    /* SVG Overlay */
+    /* SVG Overlay Area Klik */
     .svg-overlay {
       position: absolute;
       top: 0;
@@ -94,7 +96,7 @@
       pointer-events: none;
     }
 
-    /* Polygon Area Klik */
+    /* Polygon Highlight */
     .verse-polygon {
       fill: rgba(255, 255, 255, 0);
       stroke: none;
@@ -112,7 +114,7 @@
 </head>
 <body>
 
-  <!-- Form Login -->
+  <!-- 1. Form Login -->
   <div id="auth-section" class="auth-container">
     <h3>Login Aplikasi Al-Qur'an</h3>
     <input type="email" id="email" placeholder="Email">
@@ -121,7 +123,7 @@
     <button onclick="login()">Login</button>
   </div>
 
-  <!-- Tampilan Mushaf -->
+  <!-- 2. Tampilan Mushaf -->
   <div id="mushaf-section" style="display: none;">
     <div class="mushaf-card">
       <div class="mushaf-header">
@@ -131,9 +133,11 @@
       </div>
 
       <div style="position: relative;">
-<img id="mushaf-img" class="mushaf-img" 
-     src="https://archive.org/download/604-quran-koran-book-png-written-pages-in-arabic-page-number/604%20quran%20koran%20book%20png%20written%20pages%20in%20arabic%20page%20number%20.png" 
-     alt="Mushaf Halaman 604">
+        <!-- CDN Tajwid Aktif & Stabil -->
+        <img id="mushaf-img" class="mushaf-img" 
+             src="https://android.quran.com/data/width_1024/page604.png" 
+             alt="Mushaf Halaman 604"
+             onerror="handleImageError(this)">
 
         <svg id="svg-overlay" class="svg-overlay" viewBox="0 0 1000 1420"></svg>
       </div>
@@ -142,16 +146,22 @@
 
   <script>
     // =========================================================
-    // ISI DUA VARIABEL DI BAWAH INI DENGAN DATA DARI SUPABASE
+    // ISI DUA VARIABEL DI BAWAH INI DENGAN DATA SUPABASE KAMU
     // =========================================================
     const SUPABASE_URL = 'https://wltnavoogxvoymhcdfwz.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsdG5hdm9vZ3h2b3ltaGNkZnd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MTE3ODEsImV4cCI6MjEwNTI4Nzc4MX0.7B7TdYafWjuRMOrInLo_u8f0d_WwRizqzdzABTITfpI';
 
-    // Inisialisasi Supabase Client
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const currentPage = 604;
     let currentAudio = null;
+
+    // Cadangan CDN jika koneksi ISP tertentu memblokir domain utama
+    function handleImageError(imgElement) {
+      console.warn('CDN Utama lambat/terhalang, berpindah ke Backup CDN...');
+      imgElement.onerror = null; // Mencegah looping
+      imgElement.src = "https://raw.githubusercontent.com/QuranDotCom/quran.com-images/master/pages/page604.png";
+    }
 
     // Fungsi Login
     async function login() {
@@ -169,7 +179,7 @@
       }
     }
 
-    // Ambil Data Polygon dari Quran.com API
+    // Ambil Data Polygon Overlay dari API Quran.com
     async function loadPolygonData(pageNum) {
       const svgContainer = document.getElementById('svg-overlay');
       svgContainer.innerHTML = '';
@@ -207,7 +217,7 @@
       }
     }
 
-    // Putar Audio dari Supabase Private Storage
+    // Putar Audio dari Supabase Storage
     async function playAudioAyat(surahNumber, ayahNumber) {
       if (currentAudio) {
         currentAudio.pause();
@@ -223,7 +233,7 @@
         .createSignedUrl(filePath, 60);
 
       if (error) {
-        alert('Gagal memuat audio: ' + error.message);
+        alert('Gagal memuat audio dari Supabase: ' + error.message);
         return;
       }
 
@@ -231,7 +241,7 @@
       currentAudio.play();
     }
 
-    // Efek Sorotan Kuning Saat Diputar
+    // Highlight Warna Kuning Saat Ayat Diputar
     function highlightVerse(element) {
       document.querySelectorAll('.verse-polygon').forEach(el => el.classList.remove('playing'));
       element.classList.add('playing');

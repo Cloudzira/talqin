@@ -7,13 +7,16 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Scheherazade+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* PEMUATAN FONT KEMENAG (LPMQ ISEP MISBAH) DENGAN PRIORITAS TINGGI */
     @font-face {
       font-family: 'LPMQ Isep Misbah';
       src: url('https://cdn.jsdelivr.net/gh/QuranStandarIndonesia/LPMQ-IsepMisbah@main/LPMQ%20Isep%20Misbah.woff2') format('woff2');
-      font-display: swap;
+      font-weight: normal;
+      font-style: normal;
+      font-display: block;
     }
 
     /* TEMA DARK (Default - Cyan/Teal Neon) */
@@ -32,7 +35,9 @@
       --text-muted: #9ca3af;
       --accent-gold: #fbbf24;
       
-      --font-arabic: 'LPMQ Isep Misbah', 'Scheherazade New', 'Amiri', serif;
+      /* Memaksa variabel font arab menggunakan LPMQ Isep Misbah */
+      --font-arabic: 'LPMQ Isep Misbah', sans-serif;
+      
       --glass-blur: blur(16px);
       --glow-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
       --dropdown-bg: #0f172a;
@@ -346,9 +351,9 @@
     }
 
     .surah-title-ar {
-      font-family: 'Amiri', serif;
+      font-family: 'LPMQ Isep Misbah', sans-serif !important;
       font-size: 42px;
-      font-weight: 700;
+      font-weight: normal;
       color: var(--neon-secondary);
       margin-bottom: 2px;
       line-height: 1.6;
@@ -423,10 +428,11 @@
       box-shadow: var(--btn-glass-shadow);
     }
 
+    /* MENGGUNAKAN FONT KEMENAG SECARA MUTLAK DENGAN !IMPORTANT */
     .ayah-arabic {
-      font-family: var(--font-arabic);
+      font-family: 'LPMQ Isep Misbah', sans-serif !important;
       font-size: 38px;
-      font-weight: 400;
+      font-weight: normal;
       direction: rtl;
       text-align: right;
       line-height: 2.3;
@@ -439,10 +445,11 @@
       text-align: center;
       color: var(--accent-gold);
       font-size: 40px;
+      font-family: 'LPMQ Isep Misbah', sans-serif !important;
     }
 
     .ayah-number-icon {
-      font-family: 'LPMQ Isep Misbah', var(--font-arabic);
+      font-family: 'LPMQ Isep Misbah', sans-serif !important;
       font-weight: normal;
       display: inline-block;
       margin-right: 8px;
@@ -784,7 +791,7 @@
       { num: 114, name: "An-Nas", ar: "النَّاسِ", ayahs: 6 }
     ];
 
-    let currentSurahNum = 112; 
+    let currentSurahNum = 106; 
     let currentTotalAyahs = 4;
     let currentAyah = null; 
     let isPlaying = false;
@@ -938,17 +945,16 @@
       }
     }
 
-    // FUNGSI PENYESUAIAN HAROKAT:
-    // 1. Lafal Allah (الله/للّه) dengan harokat alif tegak (khanjariyyah) di atas huruf lam.
-    // 2. Huruf fiy (في) dengan harokat sukun pada huruf ya' (فِيْ).
-    function applyCustomQuranRules(text) {
+    // PENYESUAIAN STANDAR KEMENAG (Lafaz Allah & Harokat Berdiri)
+    function applyIndonesianQuranStandards(text) {
       return text
-        // Penyesuaian Lafal Allah (menambahkan alif khanjariyyah/tegak di atas lam)
-        .replace(/اللَّه/g, 'اللَّٰه')
-        .replace(/للَّه/g, 'لِلَّٰه')
-        .replace(/ٱللَّه/g, 'ٱللَّٰه')
-        // Penyesuaian Huruf fiy (في -> فِيْ)
-        .replace(/فِي(?!\u0652)/g, 'فِيْ');
+        .replace(/اللَّهِ/g, 'اللَّٰهِ')
+        .replace(/اللَّهُ/g, 'اللَّٰهُ')
+        .replace(/اللََّ/g, 'اللََّٰ')
+        .replace(/ٱللَّهِ/g, 'ٱللَّٰهِ')
+        .replace(/ٱللَّهُ/g, 'ٱللَّٰهُ')
+        .replace(/ي(?!\u0652)/g, 'ي')
+        .replace(/ي([^\u0650-\u0652]|$)/g, 'يْ$1');
     }
 
     async function loadSurah() {
@@ -978,7 +984,6 @@
         if (currentSurahNum !== 9) {
           const itemKey0 = `${currentSurahNum}:0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
-          let bismillahText = applyCustomQuranRules("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ");
 
           html += `
             <div class="ayah-card bismillah-card" id="ayah-card-0">
@@ -994,7 +999,7 @@
                 </div>
               </div>
               <div class="ayah-arabic bismillah-text">
-                ${bismillahText}
+                بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
               </div>
               <div class="ayah-translation ${transHiddenClass}" id="translation-0">
                 Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.
@@ -1011,8 +1016,7 @@
             formattedText = formattedText.replace(/^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/, '');
           }
           
-          // Terapkan penyesuaian harokat lafal Allah dan kata "fiy"
-          formattedText = applyCustomQuranRules(formattedText);
+          formattedText = applyIndonesianQuranStandards(formattedText);
 
           const endOfAyahSymbol = `\u06DD${toArabicDigits(ayahNum)}`;
           const itemKey = `${currentSurahNum}:${ayahNum}`;

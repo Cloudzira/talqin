@@ -83,17 +83,17 @@
       top: 0;
       z-index: 10;
       border-bottom: 1px solid var(--card-border);
-      padding: 14px 24px 10px 24px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
     }
 
     body.theme-light .navbar { background: rgba(255, 255, 255, 0.7); }
 
-    .brand-section { display: flex; flex-direction: column; gap: 4px; }
+    .brand-section { display: flex; flex-direction: column; gap: 2px; }
     .brand {
-      font-size: 28px;
+      font-size: 20px;
       text-transform: uppercase;
       font-weight: 700;
       background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
@@ -101,13 +101,13 @@
       -webkit-text-fill-color: transparent;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
-    .header-subtext { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .header-subtext { font-size: 11px; color: var(--text-muted); font-weight: 500; }
 
     .surah-selector-wrapper {
       position: sticky;
-      top: 75px;
+      top: 65px;
       z-index: 20;
       max-width: 800px;
       margin: 12px auto 0 auto;
@@ -124,19 +124,19 @@
       gap: 10px;
       background: var(--card-glass);
       backdrop-filter: var(--glass-blur);
-      padding: 10px 18px;
-      border-radius: 14px;
+      padding: 8px 14px;
+      border-radius: 12px;
       border: 1px solid var(--card-border);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
     }
 
-    .surah-selector-container label { color: var(--neon-primary); text-transform: uppercase; font-size: 12px; }
-    .surah-selector-container select { background: transparent; color: var(--text-main); border: none; outline: none; font-size: 16px; font-weight: 700; cursor: pointer; }
+    .surah-selector-container label { color: var(--neon-primary); text-transform: uppercase; font-size: 11px; }
+    .surah-selector-container select { background: transparent; color: var(--text-main); border: none; outline: none; font-size: 14px; font-weight: 600; cursor: pointer; }
     .surah-selector-container select option { background: var(--dropdown-bg); color: var(--text-main); }
 
-    .nav-controls { display: flex; align-items: center; gap: 10px; }
+    .nav-controls { display: flex; align-items: center; gap: 8px; }
 
     .glass-btn {
       background: var(--btn-glass-bg);
@@ -144,9 +144,9 @@
       border: 1px solid var(--btn-glass-border);
       box-shadow: var(--btn-glass-shadow);
       color: var(--text-main);
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -158,56 +158,58 @@
     .glass-btn:hover { border-color: var(--neon-primary); transform: translateY(-2px); }
     .glass-btn.active, .glass-btn.saved { background: var(--btn-glass-active-bg); border-color: var(--neon-secondary); }
     .glass-btn.saved svg { fill: var(--accent-gold); stroke: var(--accent-gold); }
-    .glass-btn svg { width: 20px; height: 20px; stroke: var(--neon-primary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .glass-btn svg { width: 18px; height: 18px; stroke: var(--neon-primary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .glass-btn svg.icon-fill-stop { fill: var(--neon-primary); }
     .glass-btn.round { border-radius: 50%; }
 
     .container { max-width: 800px; margin: 16px auto; padding: 0 20px; flex: 1; width: 100%; }
 
-    .surah-header-standalone { text-align: center; margin-bottom: 24px; padding: 10px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .surah-header-standalone { text-align: center; margin-bottom: 20px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     
+    /* Perbaikan: Ukuran font Arab header disesuaikan agar tidak terlalu mendominasi */
     .surah-title-ar {
       font-family: 'Scheherazade New', serif !important;
-      font-size: 42px !important;
+      font-size: 32px !important;
       font-weight: 400 !important;
       color: var(--neon-secondary);
       direction: rtl;
-      line-height: 1.5;
+      line-height: 1.4;
     }
 
-    .surah-subtitle { color: var(--text-muted); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+    .surah-subtitle { color: var(--text-muted); font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
 
     .ayah-card {
       background: var(--card-glass);
       backdrop-filter: var(--glass-blur);
       border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 20px;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
       transition: all 0.3s ease;
     }
     .ayah-card.bismillah-card { border-color: rgba(251, 191, 36, 0.3); }
     .ayah-card.active { border-color: var(--neon-secondary); box-shadow: var(--glow-shadow); }
 
-    .ayah-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
-    .ayah-actions { display: flex; align-items: center; gap: 10px; }
-    .ayah-key { padding: 0 12px; height: 36px; border-radius: 12px; background: var(--btn-glass-bg); border: 1px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .ayah-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
+    .ayah-actions { display: flex; align-items: center; gap: 8px; }
+    .ayah-key { padding: 0 10px; height: 32px; border-radius: 10px; background: var(--btn-glass-bg); border: 1px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
+    /* Perbaikan: Ukuran font teks Arab ayat diturunkan ke 28px agar pas dan elegan */
     .ayah-arabic {
       font-family: 'Scheherazade New', serif !important;
       font-weight: 400 !important;
-      font-size: 36px !important;
+      font-size: 28px !important;
       direction: rtl;
       text-align: right;
-      line-height: 2.6 !important;
+      line-height: 2.4 !important;
       color: var(--text-arabic);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
-    .bismillah-text { text-align: center; color: var(--accent-gold); font-size: 38px !important; font-weight: 400 !important; }
-    .ayah-number-icon { font-family: 'Scheherazade New', serif !important; font-weight: 400 !important; display: inline-block; margin-right: 8px; color: var(--neon-secondary); font-size: 30px; }
-    .ayah-translation { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+    .bismillah-text { text-align: center; color: var(--accent-gold); font-size: 30px !important; font-weight: 400 !important; }
+    .ayah-number-icon { font-family: 'Scheherazade New', serif !important; font-weight: 400 !important; display: inline-block; margin-right: 6px; color: var(--neon-secondary); font-size: 24px; }
+    .ayah-translation { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
     .ayah-translation.hidden { display: none; }
 
     /* Modal Bookmark Styles */
@@ -229,28 +231,28 @@
     .modal-card {
       background: var(--dropdown-bg);
       border: 1px solid var(--card-border);
-      border-radius: 20px;
+      border-radius: 16px;
       width: 100%;
-      max-width: 500px;
+      max-width: 480px;
       max-height: 80vh;
       display: flex;
       flex-direction: column;
       box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     }
     .modal-header {
-      padding: 16px 20px;
+      padding: 14px 18px;
       border-bottom: 1px solid var(--card-border);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .modal-title { font-size: 16px; font-weight: 700; color: var(--neon-primary); }
-    .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .modal-title { font-size: 14px; font-weight: 700; color: var(--neon-primary); }
+    .modal-body { padding: 14px 18px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
     .bookmark-item {
       background: var(--card-glass);
       border: 1px solid var(--card-border);
-      padding: 12px 16px;
-      border-radius: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -258,18 +260,17 @@
       transition: all 0.2s ease;
     }
     .bookmark-item:hover { border-color: var(--neon-secondary); transform: translateX(4px); }
-    .bookmark-info { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; padding-right: 12px; }
-    .bookmark-title { font-weight: 600; font-size: 14px; color: var(--text-main); }
-    .bookmark-sub { font-size: 12px; color: var(--text-muted); }
+    .bookmark-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; padding-right: 10px; }
+    .bookmark-title { font-weight: 600; font-size: 13px; color: var(--text-main); }
+    .bookmark-sub { font-size: 11px; color: var(--text-muted); }
     
-    /* Tombol Tanda Silang Hapus Bookmark */
     .bookmark-delete {
       background: var(--btn-glass-bg);
       border: 1px solid var(--btn-glass-border);
       color: var(--text-muted);
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -284,8 +285,8 @@
       transform: scale(1.05);
     }
     .bookmark-delete svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       stroke: currentColor;
       stroke-width: 2.5;
       stroke-linecap: round;
@@ -303,30 +304,30 @@
       background: var(--card-glass);
       backdrop-filter: var(--glass-blur);
       border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 16px 24px;
+      border-radius: 16px;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), var(--glow-shadow);
       z-index: 100;
-      gap: 16px;
+      gap: 14px;
     }
 
-    .player-left-content { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 0; }
-    .player-info { display: flex; flex-direction: column; }
-    .player-title { font-size: 14px; font-weight: 600; color: var(--neon-primary); }
-    .player-subtitle { font-size: 12px; color: var(--text-muted); }
-    .player-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
+    .player-left-content { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
+    .player-info { display: flex; flex-direction: column; gap: 1px; }
+    .player-title { font-size: 13px; font-weight: 600; color: var(--neon-primary); }
+    .player-subtitle { font-size: 11px; color: var(--text-muted); }
+    .player-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; }
 
     .repeat-mode-select {
       background: var(--btn-glass-bg);
       backdrop-filter: blur(12px);
       color: var(--text-main);
       border: 1px solid var(--btn-glass-border);
-      padding: 8px 10px;
-      border-radius: 12px;
-      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 12px;
       outline: none;
       cursor: pointer;
     }
@@ -335,19 +336,19 @@
     .range-picker {
       display: none;
       align-items: center;
-      gap: 8px;
-      font-size: 12px;
+      gap: 6px;
+      font-size: 11px;
       color: var(--text-muted);
       background: var(--btn-glass-bg);
-      padding: 6px 12px;
-      border-radius: 12px;
+      padding: 5px 10px;
+      border-radius: 10px;
       border: 1px solid var(--btn-glass-border);
     }
-    .range-picker select { background: transparent; color: var(--neon-secondary); border: none; outline: none; font-size: 13px; font-weight: 700; cursor: pointer; }
+    .range-picker select { background: transparent; color: var(--neon-secondary); border: none; outline: none; font-size: 12px; font-weight: 700; cursor: pointer; }
     .range-picker select option { background: var(--dropdown-bg); color: var(--text-main); }
 
-    .main-play-btn { width: 48px; height: 48px; flex-shrink: 0; align-self: center; }
-    .main-play-btn svg { width: 24px; height: 24px; }
+    .main-play-btn { width: 44px; height: 44px; flex-shrink: 0; align-self: center; }
+    .main-play-btn svg { width: 22px; height: 22px; }
     #audio-element { display: none; }
   </style>
 </head>
@@ -381,7 +382,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <div class="modal-title">DAFTAR BOOKMARK</div>
-        <button class="glass-btn round" onclick="toggleBookmarkModal()" style="width: 32px; height: 32px;"><svg style="width: 16px; height: 16px;"><use href="#icon-close"></use></svg></button>
+        <button class="glass-btn round" onclick="toggleBookmarkModal()" style="width: 28px; height: 28px;"><svg style="width: 14px; height: 14px;"><use href="#icon-close"></use></svg></button>
       </div>
       <div class="modal-body" id="bookmarkListContainer">
         <!-- List bookmarks akan dimuat secara dinamis disini -->
@@ -845,7 +846,7 @@
       const mode = repeatModeSelect.value;
       
       if (mode === 'single') {
-        playAyah(currentAyah);
+        playAudio(currentAyah);
       } 
       else if (mode === 'surah') {
         const hasBismillah = currentSurahNum !== 9;

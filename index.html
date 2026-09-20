@@ -519,7 +519,7 @@
       backdrop-filter: blur(12px);
       color: var(--text-main);
       border: 1px solid var(--btn-glass-border);
-      padding: 8px 14px;
+      padding: 8px 10px;
       border-radius: 12px;
       font-size: 13px;
       font-weight: 500;
@@ -528,6 +528,7 @@
       box-shadow: var(--btn-glass-shadow);
       transition: all 0.3s ease;
       flex-shrink: 0;
+      max-width: fit-content;
     }
 
     .repeat-mode-select:hover {
@@ -700,10 +701,9 @@
       </div>
       <div class="player-controls">
         <select id="repeatMode" class="repeat-mode-select" onchange="handleRepeatModeChange()">
-          <option value="none">Tanpa Pengulangan</option>
-          <option value="single">Ulangi ayat ini</option>
-          <option value="surah">Ulang satu surat</option>
-          <option value="range">Ulang rentang</option>
+          <option value="single">Ulang ayat</option>
+          <option value="surah">Ulang surat</option>
+          <option value="range">Pilih ayat</option>
         </select>
 
         <!-- Panel Rentang Ayat Bersebelahan / Flex-Wrap -->
@@ -1149,12 +1149,6 @@
           playAyah(currentAyah + 1);
         } else {
           playAyah(startAyah);
-        }
-      } else {
-        if (currentAyah < currentTotalAyahs) {
-          playAyah(currentAyah + 1);
-        } else {
-          playerStatus.innerText = "Selesai";
         }
       }
     };

@@ -210,6 +210,89 @@
     .ayah-translation { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
     .ayah-translation.hidden { display: none; }
 
+    /* Modal Bookmark Styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-card {
+      background: var(--dropdown-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title { font-size: 16px; font-weight: 700; color: var(--neon-primary); }
+    .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .bookmark-item {
+      background: var(--card-glass);
+      border: 1px solid var(--card-border);
+      padding: 12px 16px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .bookmark-item:hover { border-color: var(--neon-secondary); transform: translateX(4px); }
+    .bookmark-info { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; padding-right: 12px; }
+    .bookmark-title { font-weight: 600; font-size: 14px; color: var(--text-main); }
+    .bookmark-sub { font-size: 12px; color: var(--text-muted); }
+    
+    /* Tombol Tanda Silang Hapus Bookmark */
+    .bookmark-delete {
+      background: var(--btn-glass-bg);
+      border: 1px solid var(--btn-glass-border);
+      color: var(--text-muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .bookmark-delete:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: #ef4444;
+      color: #ef4444;
+      transform: scale(1.05);
+    }
+    .bookmark-delete svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
     .bottom-player {
       position: fixed;
       bottom: 16px;
@@ -278,22 +361,37 @@
     <symbol id="icon-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"></path></symbol>
     <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></symbol>
     <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></symbol>
   </svg>
 
   <nav class="navbar">
     <div class="brand-section">
-      <div class="brand"><span class="brand-icon">📖</span> TALQINKU</div>
+      <div class="brand"><span class="brand-icon">☆</span> TALQINKU</div>
       <div class="header-subtext">Kurniapedia | 2026</div>
     </div>
     <div class="nav-controls">
+      <button class="glass-btn round" id="bookmarkListBtn" onclick="toggleBookmarkModal()" title="Daftar Bookmark"><svg><use href="#icon-bookmark"></use></svg></button>
       <button class="glass-btn round" id="globalTransToggleBtn" onclick="toggleGlobalTranslation()" title="Terjemahan"><svg><use href="#icon-globe"></use></svg></button>
       <button class="glass-btn round" id="themeToggleBtn" onclick="toggleTheme()" title="Tema"><svg id="themeIcon"><use href="#icon-moon"></use></svg></button>
     </div>
   </nav>
 
+  <!-- Modal Bookmark -->
+  <div class="modal-overlay" id="bookmarkModal" onclick="handleModalOutsideClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">DAFTAR BOOKMARK</div>
+        <button class="glass-btn round" onclick="toggleBookmarkModal()" style="width: 32px; height: 32px;"><svg style="width: 16px; height: 16px;"><use href="#icon-close"></use></svg></button>
+      </div>
+      <div class="modal-body" id="bookmarkListContainer">
+        <!-- List bookmarks akan dimuat secara dinamis disini -->
+      </div>
+    </div>
+  </div>
+
   <div class="surah-selector-wrapper">
     <div class="surah-selector-container">
-      <label for="surahSelect">SURAT</label>
+      <label for="surahSelect">Pilih Surat:</label>
       <select id="surahSelect" onchange="changeSurah()"></select>
     </div>
   </div>
@@ -319,7 +417,7 @@
           <option value="range">Pilih ayat</option>
         </select>
         <div class="range-picker" id="rangePicker">
-          <span>Ayat</span>
+          <span>Ayat:</span>
           <select id="startAyahSelect"></select>
           <span>s/d</span>
           <select id="endAyahSelect"></select>
@@ -417,6 +515,8 @@
     const endAyahSelect = document.getElementById('endAyahSelect');
     const themeIcon = document.getElementById('themeIcon');
     const globalTransToggleBtn = document.getElementById('globalTransToggleBtn');
+    const bookmarkModal = document.getElementById('bookmarkModal');
+    const bookmarkListContainer = document.getElementById('bookmarkListContainer');
 
     function initTheme() {
       const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -456,6 +556,81 @@
         globalTransToggleBtn.classList.remove('active');
         globalTransToggleBtn.title = 'Tampilkan Semua Terjemahan';
       }
+    }
+
+    function toggleBookmarkModal() {
+      bookmarkModal.classList.toggle('open');
+      if (bookmarkModal.classList.contains('open')) {
+        renderBookmarkList();
+      }
+    }
+
+    function handleModalOutsideClick(event) {
+      if (event.target === bookmarkModal) {
+        toggleBookmarkModal();
+      }
+    }
+
+    function renderBookmarkList() {
+      if (savedAyahs.length === 0) {
+        bookmarkListContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 20px;">Belum ada bookmark</p>`;
+        return;
+      }
+
+      let html = '';
+      savedAyahs.forEach(itemKey => {
+        const [sNum, aNum] = itemKey.split(':').map(Number);
+        const surah = ALL_SURAHS.find(s => s.num === sNum);
+        const surahName = surah ? surah.name : `Surah ${sNum}`;
+        const ayahText = aNum === 0 ? 'Bismillah' : `Ayat ${aNum}`;
+
+        html += `
+          <div class="bookmark-item" onclick="jumpToBookmark(${sNum}, ${aNum})">
+            <div class="bookmark-info">
+              <div class="bookmark-title">${surahName} (${sNum}:${aNum})</div>
+              <div class="bookmark-sub">Surah ${surahName} • ${ayahText}</div>
+            </div>
+            <button class="bookmark-delete" onclick="event.stopPropagation(); removeBookmarkItem('${itemKey}')" title="Hapus Bookmark">
+              <svg><use href="#icon-close"></use></svg>
+            </button>
+          </div>
+        `;
+      });
+      bookmarkListContainer.innerHTML = html;
+    }
+
+    function removeBookmarkItem(itemKey) {
+      const index = savedAyahs.indexOf(itemKey);
+      if (index > -1) {
+        savedAyahs.splice(index, 1);
+        localStorage.setItem('saved_ayahs', JSON.stringify(savedAyahs));
+        renderBookmarkList();
+        const [sNum, aNum] = itemKey.split(':').map(Number);
+        if (currentSurahNum === sNum) {
+          updateBookmarkUI(aNum);
+        }
+      }
+    }
+
+    async function jumpToBookmark(surahNum, ayahNum) {
+      toggleBookmarkModal();
+      if (currentSurahNum !== surahNum) {
+        currentSurahNum = surahNum;
+        surahSelect.value = surahNum;
+        const surahData = ALL_SURAHS.find(s => s.num === currentSurahNum);
+        if (surahData) currentTotalAyahs = surahData.ayahs;
+        stopAudio();
+        await loadSurah();
+      }
+      
+      setTimeout(() => {
+        const card = document.getElementById(`ayah-card-${ayahNum}`);
+        if (card) {
+          document.querySelectorAll('.ayah-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
     }
 
     function populateSurahDropdown() {
@@ -618,7 +793,6 @@
       
       if (currentCard) {
         currentCard.classList.add('active');
-        // FITUR BARU: Scroll otomatis ke tengah layar dengan animasi halus
         currentCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 

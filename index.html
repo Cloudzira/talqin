@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Scheherazade+New:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Scheherazade+New:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     @font-face {
@@ -32,7 +32,7 @@
       --text-muted: #9ca3af;
       --accent-gold: #fbbf24;
       
-      --font-arabic: 'Scheherazade New', 'Amiri', serif;
+      --font-arabic: 'LPMQ Isep Misbah', 'Scheherazade New', 'Amiri', serif;
       --glass-blur: blur(16px);
       --glow-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
       --dropdown-bg: #0f172a;
@@ -164,10 +164,10 @@
       letter-spacing: 0.3px;
     }
 
-    /* Floating / Sticky Panel Pilihan Surat (Tidak Ikut Scroll) */
+    /* Floating / Sticky Panel Pilihan Surat */
     .surah-selector-wrapper {
       position: sticky;
-      top: 75px; /* Menempel di bawah navbar saat scroll */
+      top: 75px;
       z-index: 20;
       max-width: 800px;
       margin: 12px auto 0 auto;
@@ -175,11 +175,11 @@
       width: 100%;
       display: flex;
       justify-content: flex-start;
-      pointer-events: none; /* Klik tembus ruang kosong */
+      pointer-events: none;
     }
 
     .surah-selector-container {
-      pointer-events: auto; /* Tombol & dropdown dapat diklik */
+      pointer-events: auto;
       display: inline-flex;
       align-items: center;
       gap: 10px;
@@ -346,11 +346,12 @@
     }
 
     .surah-title-ar {
-      font-family: var(--font-arabic);
+      font-family: 'Amiri', serif;
       font-size: 42px;
-      font-weight: 400;
+      font-weight: 700;
       color: var(--neon-secondary);
       margin-bottom: 2px;
+      line-height: 1.6;
     }
 
     body:not(.theme-light) .surah-title-ar {
@@ -505,12 +506,11 @@
       color: var(--text-muted);
     }
 
-    /* Layout Responsif Panel Pengulangan & Rentang Ayat */
     .player-controls {
       display: flex;
       align-items: center;
       gap: 10px;
-      flex-wrap: wrap; /* Pindah ke bawah jika berbenturan dengan Master Play */
+      flex-wrap: wrap;
       width: 100%;
     }
 
@@ -540,7 +540,6 @@
       color: var(--text-main);
     }
 
-    /* Panel Rentang Ayat Bersebelahan Secara Default */
     .range-picker {
       display: none;
       align-items: center;
@@ -569,7 +568,6 @@
       color: var(--text-main);
     }
 
-    /* Master Play Button di Posisi Paling Kanan */
     .main-play-btn {
       width: 48px;
       height: 48px;
@@ -594,7 +592,7 @@
         padding: 12px 16px;
       }
       .surah-title-ar {
-        font-size: 34px;
+        font-size: 38px;
       }
       .ayah-arabic {
         font-size: 30px;
@@ -672,7 +670,7 @@
     </div>
   </nav>
 
-  <!-- Floating / Fixed Panel Pilihan Surat (Tidak ikut scroll) -->
+  <!-- Floating / Fixed Panel Pilihan Surat -->
   <div class="surah-selector-wrapper">
     <div class="surah-selector-container">
       <label for="surahSelect">Pilih Surat:</label>
@@ -706,7 +704,6 @@
           <option value="range">Pilih ayat</option>
         </select>
 
-        <!-- Panel Rentang Ayat Bersebelahan / Flex-Wrap -->
         <div class="range-picker" id="rangePicker">
           <span>Ayat:</span>
           <select id="startAyahSelect"></select>
@@ -716,7 +713,6 @@
       </div>
     </div>
 
-    <!-- Master Play / Stop Button di Paling Kanan -->
     <button class="glass-btn round main-play-btn" id="masterPlayBtn" onclick="toggleMasterPlay()">
       <svg id="masterPlaySvg"><use id="masterPlayIcon" href="#icon-play"></use></svg>
     </button>
@@ -729,63 +725,63 @@
     const BUCKET_NAME = "quran-audio";
 
     const JUZ_28_30_SURAHS = [
-      { num: 58, name: "Al-Mujadilah", ar: "المجادلة", ayahs: 22 },
-      { num: 59, name: "Al-Hasyr", ar: "الحشر", ayahs: 24 },
-      { num: 60, name: "Al-Mumtahanah", ar: "الممتحنة", ayahs: 13 },
-      { num: 61, name: "As-Saff", ar: "الصف", ayahs: 14 },
-      { num: 62, name: "Al-Jumu'ah", ar: "الجمعة", ayahs: 11 },
-      { num: 63, name: "Al-Munafiqun", ar: "المنافقون", ayahs: 11 },
-      { num: 64, name: "At-Tagabun", ar: "التغابن", ayahs: 18 },
-      { num: 65, name: "At-Talaq", ar: "الطلاق", ayahs: 12 },
-      { num: 66, name: "At-Tahrim", ar: "التحريم", ayahs: 12 },
-      { num: 67, name: "Al-Mulk", ar: "الملك", ayahs: 30 },
-      { num: 68, name: "Al-Qalam", ar: "القلم", ayahs: 52 },
-      { num: 69, name: "Al-Haqqah", ar: "الحاقة", ayahs: 52 },
-      { num: 70, name: "Al-Ma'arij", ar: "المعارج", ayahs: 44 },
-      { num: 71, name: "Nuh", ar: "نوح", ayahs: 28 },
-      { num: 72, name: "Al-Jinn", ar: "الجن", ayahs: 28 },
-      { num: 73, name: "Al-Muzzammil", ar: "المزمل", ayahs: 20 },
-      { num: 74, name: "Al-Muddassir", ar: "المدثر", ayahs: 56 },
-      { num: 75, name: "Al-Qiyamah", ar: "القيامة", ayahs: 40 },
-      { num: 76, name: "Al-Insan", ar: "الإنسان", ayahs: 31 },
-      { num: 77, name: "Al-Mursalat", ar: "المرسلات", ayahs: 50 },
-      { num: 78, name: "An-Naba'", ar: "النبإ", ayahs: 40 },
-      { num: 79, name: "An-Nazi'at", ar: "النازعات", ayahs: 46 },
-      { num: 80, name: "'Abasa", ar: "عبس", ayahs: 42 },
-      { num: 81, name: "At-Takwir", ar: "التكوير", ayahs: 29 },
-      { num: 82, name: "Al-Infitar", ar: "الإنفطار", ayahs: 19 },
-      { num: 83, name: "Al-Mutaffifin", ar: "المطففين", ayahs: 36 },
-      { num: 84, name: "Al-Insyiqaq", ar: "الإنشقاق", ayahs: 25 },
-      { num: 85, name: "Al-Buruj", ar: "البروج", ayahs: 22 },
-      { num: 86, name: "At-Tariq", ar: "الطارق", ayahs: 17 },
-      { num: 87, name: "Al-A'la", ar: "الأعلى", ayahs: 19 },
-      { num: 88, name: "Al-Gasyiyah", ar: "الغاشية", ayahs: 26 },
-      { num: 89, name: "Al-Fajr", ar: "الفجر", ayahs: 30 },
-      { num: 90, name: "Al-Balad", ar: "البلد", ayahs: 20 },
-      { num: 91, name: "Asy-Syams", ar: "الشمس", ayahs: 15 },
-      { num: 92, name: "Al-Lail", ar: "الليل", ayahs: 21 },
-      { num: 93, name: "Ad-Duha", ar: "الضحى", ayahs: 11 },
-      { num: 94, name: "Asy-Syarh", ar: "الشرح", ayahs: 8 },
-      { num: 95, name: "At-Tin", ar: "التين", ayahs: 8 },
-      { num: 96, name: "Al-'Alaq", ar: "العلق", ayahs: 19 },
-      { num: 97, name: "Al-Qadr", ar: "القدر", ayahs: 5 },
-      { num: 98, name: "Al-Bayyinah", ar: "البينة", ayahs: 8 },
-      { num: 99, name: "Az-Zalzalah", ar: "الزلزلة", ayahs: 8 },
-      { num: 100, name: "Al-'Adiyat", ar: "العاديات", ayahs: 11 },
-      { num: 101, name: "Al-Qari'ah", ar: "القارعة", ayahs: 11 },
-      { num: 102, name: "At-Takasur", ar: "التكاثر", ayahs: 8 },
-      { num: 103, name: "Al-'Asr", ar: "العصر", ayahs: 3 },
-      { num: 104, name: "Al-Humazah", ar: "الهمزة", ayahs: 9 },
-      { num: 105, name: "Al-Fil", ar: "الفيل", ayahs: 5 },
-      { num: 106, name: "Quraisy", ar: "قريش", ayahs: 4 },
-      { num: 107, name: "Al-Ma'un", ar: "الماعون", ayahs: 7 },
-      { num: 108, name: "Al-Kausar", ar: "الكوثر", ayahs: 3 },
-      { num: 109, name: "Al-Kafirun", ar: "الكافرون", ayahs: 6 },
-      { num: 110, name: "An-Nasr", ar: "النصر", ayahs: 3 },
-      { num: 111, name: "Al-Lahab", ar: "المسد", ayahs: 5 },
-      { num: 112, name: "Al-Ikhlas", ar: "الإخلاص", ayahs: 4 },
-      { num: 113, name: "Al-Falaq", ar: "الفلق", ayahs: 5 },
-      { num: 114, name: "An-Nas", ar: "الناس", ayahs: 6 }
+      { num: 58, name: "Al-Mujadilah", ar: "المُجَادَلَةِ", ayahs: 22 },
+      { num: 59, name: "Al-Hasyr", ar: "الحَشْرِ", ayahs: 24 },
+      { num: 60, name: "Al-Mumtahanah", ar: "المُمْتَحَنَةِ", ayahs: 13 },
+      { num: 61, name: "As-Saff", ar: "الصَّفِّ", ayahs: 14 },
+      { num: 62, name: "Al-Jumu'ah", ar: "الجُمُعَةِ", ayahs: 11 },
+      { num: 63, name: "Al-Munafiqun", ar: "المُنَافِقُونَ", ayahs: 11 },
+      { num: 64, name: "At-Tagabun", ar: "التَّغَابُنِ", ayahs: 18 },
+      { num: 65, name: "At-Talaq", ar: "التَّلَاقِ", ayahs: 12 },
+      { num: 66, name: "At-Tahrim", ar: "التَّحْرِيمِ", ayahs: 12 },
+      { num: 67, name: "Al-Mulk", ar: "المُلْكِ", ayahs: 30 },
+      { num: 68, name: "Al-Qalam", ar: "القَلَمِ", ayahs: 52 },
+      { num: 69, name: "Al-Haqqah", ar: "الحَاقَّةِ", ayahs: 52 },
+      { num: 70, name: "Al-Ma'arij", ar: "المَعَارِجِ", ayahs: 44 },
+      { num: 71, name: "Nuh", ar: "نُوحٍ", ayahs: 28 },
+      { num: 72, name: "Al-Jinn", ar: "الجِنِّ", ayahs: 28 },
+      { num: 73, name: "Al-Muzzammil", ar: "المُزَّمِّلِ", ayahs: 20 },
+      { num: 74, name: "Al-Muddassir", ar: "المُدَّثِّرِ", ayahs: 56 },
+      { num: 75, name: "Al-Qiyamah", ar: "القِيَامَةِ", ayahs: 40 },
+      { num: 76, name: "Al-Insan", ar: "الإِنْسَانِ", ayahs: 31 },
+      { num: 77, name: "Al-Mursalat", ar: "المُرْسَلَاتِ", ayahs: 50 },
+      { num: 78, name: "An-Naba'", ar: "النَّبَإِ", ayahs: 40 },
+      { num: 79, name: "An-Nazi'at", ar: "النَّازِعَاتِ", ayahs: 46 },
+      { num: 80, name: "'Abasa", ar: "عَبَسَ", ayahs: 42 },
+      { num: 81, name: "At-Takwir", ar: "التَّكْوِيرِ", ayahs: 29 },
+      { num: 82, name: "Al-Infitar", ar: "الإِنْفِطَارِ", ayahs: 19 },
+      { num: 83, name: "Al-Mutaffifin", ar: "المُطَفِّفِينَ", ayahs: 36 },
+      { num: 84, name: "Al-Insyiqaq", ar: "الإِنْشِقَاقِ", ayahs: 25 },
+      { num: 85, name: "Al-Buruj", ar: "البُرُوجِ", ayahs: 22 },
+      { num: 86, name: "At-Tariq", ar: "الطَّارِقِ", ayahs: 17 },
+      { num: 87, name: "Al-A'la", ar: "الأَعْلَىٰ", ayahs: 19 },
+      { num: 88, name: "Al-Gasyiyah", ar: "الغَاشِيَةِ", ayahs: 26 },
+      { num: 89, name: "Al-Fajr", ar: "الفَجْرِ", ayahs: 30 },
+      { num: 90, name: "Al-Balad", ar: "البَلَدِ", ayahs: 20 },
+      { num: 91, name: "Asy-Syams", ar: "الشَّمْسِ", ayahs: 15 },
+      { num: 92, name: "Al-Lail", ar: "اللَّيْلِ", ayahs: 21 },
+      { num: 93, name: "Ad-Duha", ar: "الضُّحَىٰ", ayahs: 11 },
+      { num: 94, name: "Asy-Syarh", ar: "الشَّرْحِ", ayahs: 8 },
+      { num: 95, name: "At-Tin", ar: "التِّينِ", ayahs: 8 },
+      { num: 96, name: "Al-'Alaq", ar: "العَلَقِ", ayahs: 19 },
+      { num: 97, name: "Al-Qadr", ar: "القَدْرِ", ayahs: 5 },
+      { num: 98, name: "Al-Bayyinah", ar: "البَيِّنَةِ", ayahs: 8 },
+      { num: 99, name: "Az-Zalzalah", ar: "الزَّلْزَلَةِ", ayahs: 8 },
+      { num: 100, name: "Al-'Adiyat", ar: "العَادِيَاتِ", ayahs: 11 },
+      { num: 101, name: "Al-Qari'ah", ar: "القَارِعَةِ", ayahs: 11 },
+      { num: 102, name: "At-Takasur", ar: "التَّكَاثُرِ", ayahs: 8 },
+      { num: 103, name: "Al-'Asr", ar: "العَصْرِ", ayahs: 3 },
+      { num: 104, name: "Al-Humazah", ar: "الهُمَزَةِ", ayahs: 9 },
+      { num: 105, name: "Al-Fil", ar: "الفِيلِ", ayahs: 5 },
+      { num: 106, name: "Quraisy", ar: "قُرَيْشٍ", ayahs: 4 },
+      { num: 107, name: "Al-Ma'un", ar: "المَاعُونِ", ayahs: 7 },
+      { num: 108, name: "Al-Kausar", ar: "الكَوْثَرِ", ayahs: 3 },
+      { num: 109, name: "Al-Kafirun", ar: "الكَافِرُونَ", ayahs: 6 },
+      { num: 110, name: "An-Nasr", ar: "النَّصْرِ", ayahs: 3 },
+      { num: 111, name: "Al-Lahab", ar: "المَسَدِ", ayahs: 5 },
+      { num: 112, name: "Al-Ikhlas", ar: "الإِخْلَاصِ", ayahs: 4 },
+      { num: 113, name: "Al-Falaq", ar: "الفَلَقِ", ayahs: 5 },
+      { num: 114, name: "An-Nas", ar: "النَّاسِ", ayahs: 6 }
     ];
 
     let currentSurahNum = 112; 
@@ -942,6 +938,19 @@
       }
     }
 
+    // FUNGSI PENYESUAIAN HAROKAT:
+    // 1. Lafal Allah (الله/للّه) dengan harokat alif tegak (khanjariyyah) di atas huruf lam.
+    // 2. Huruf fiy (في) dengan harokat sukun pada huruf ya' (فِيْ).
+    function applyCustomQuranRules(text) {
+      return text
+        // Penyesuaian Lafal Allah (menambahkan alif khanjariyyah/tegak di atas lam)
+        .replace(/اللَّه/g, 'اللَّٰه')
+        .replace(/للَّه/g, 'لِلَّٰه')
+        .replace(/ٱللَّه/g, 'ٱللَّٰه')
+        // Penyesuaian Huruf fiy (في -> فِيْ)
+        .replace(/فِي(?!\u0652)/g, 'فِيْ');
+    }
+
     async function loadSurah() {
       const surahInfo = JUZ_28_30_SURAHS.find(s => s.num === currentSurahNum);
       document.getElementById('surahTitleAr').innerText = `سُورَةُ ${surahInfo.ar}`;
@@ -969,6 +978,7 @@
         if (currentSurahNum !== 9) {
           const itemKey0 = `${currentSurahNum}:0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
+          let bismillahText = applyCustomQuranRules("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ");
 
           html += `
             <div class="ayah-card bismillah-card" id="ayah-card-0">
@@ -984,7 +994,7 @@
                 </div>
               </div>
               <div class="ayah-arabic bismillah-text">
-                بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+                ${bismillahText}
               </div>
               <div class="ayah-translation ${transHiddenClass}" id="translation-0">
                 Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.
@@ -1000,13 +1010,10 @@
           if (currentSurahNum !== 1 && currentSurahNum !== 9 && idx === 0) {
             formattedText = formattedText.replace(/^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/, '');
           }
-
-          formattedText = formattedText
-            .replace(/اللَّهِ/g, 'اللَّٰهِ')
-            .replace(/اللَّهُ/g, 'اللَّٰهُ')
-            .replace(/ٱللَّهِ/g, 'ٱللَّٰهِ')
-            .replace(/ٱللَّهُ/g, 'ٱللَّٰهُ');
           
+          // Terapkan penyesuaian harokat lafal Allah dan kata "fiy"
+          formattedText = applyCustomQuranRules(formattedText);
+
           const endOfAyahSymbol = `\u06DD${toArabicDigits(ayahNum)}`;
           const itemKey = `${currentSurahNum}:${ayahNum}`;
           const isSaved = savedAyahs.includes(itemKey);
@@ -1037,7 +1044,7 @@
         container.innerHTML = html;
 
       } catch (err) {
-        container.innerHTML = `<p style="text-align:center; color:#ef4444;">Gagal memuat ayat.</p>`;
+        container.innerHTML = `<p style="text-align:center; color:#ef4444;">Gagal memuat ayat. Periksa koneksi internet Anda.</p>`;
       }
     }
 

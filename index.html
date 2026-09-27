@@ -698,21 +698,28 @@
 
     function applyIndonesianQuranStandards(text) {
       return text
-        // Ubah variasi lafal Allah dan kata dengan fathah berdiri
+        // Bersihkan variasi lafal Allah agar konsisten menggunakan fathah berdiri (U+0670) tanpa dobel harokat/tanda hubung sisa
         .replace(/لِلَّهِ/g, 'لِلَّٰهِ')
         .replace(/اللَّهِ/g, 'اللَّٰهِ')
         .replace(/اللَّهُ/g, 'اللَّٰهُ')
-        .replace(/اللََّ/g, 'اللََّٰ')
+        .replace(/للَّهِ/g, 'لِلَّٰهِ')
+        .replace(/للَّه/g, 'لِلَّٰهِ')
+        .replace(/لِلّه/g, 'لِلَّٰهِ')
+        .replace(/اللّه/g, 'اللَّٰهُ')
         .replace(/ٱللَّهِ/g, 'ٱللَّٰهِ')
         .replace(/ٱللَّهُ/g, 'ٱللَّٰهُ')
-        .replace(/لله/g, 'لِلَّٰهِ')
-        .replace(/اللّه/g, 'اللَّٰهُ')
         .replace(/ٱلله/g, 'ٱللَّٰهُ')
-        .replace(/لَّه/g, 'لَّٰه')
+        .replace(/لله/g, 'لِلَّٰهِ')
+        // Tangani pembersihan harokat ganda/fathah miring sebelum fathah berdiri secara total
+        .replace(/([لl])\u0651?\u064E?[\u064D\u0650\u064E]?\u0651?[\u2010\u2013\u2014\-]?\u0652?(\u0670)/g, '$1لَّٰ')
+        .replace(/([لl])\u0651\u064E\u0670/g, '$1لَّٰ')
         .replace(/لَِّ/g, 'لَِّٰ')
-        // Hapus harokat fathah miring (fathah biasa U+064E) jika setelahnya terdapat huruf ber-fathah berdiri (U+0670) atau pada kata tertentu
-        .replace(/َ([^\u0670]*?)\u0670/g, '$1\u0670')
-        // Penyesuaian spesifik untuk kata Shiroth/shirothol (mengubah fathah miring pada shod/ro' menjadi fathah berdiri)
+        // Pembersihan umum fathah ganda atau bentrok harokat sebelum fathah berdiri
+        .replace(/\u064E([^\u0670]*?)\u0670/g, '$1\u0670')
+        .replace(/لِلَّ\u0650\u0670/g, 'لِلَّٰ')
+        .replace(/لِلَّ\u064E\u0670/g, 'لِلَّٰ')
+        .replace(/لِلَّ\-\u0650/g, 'لِلَّ')
+        // Perbaikan kata shiroth/shiratho
         .replace(/ٱلصِّرَٰطَ/g, 'ٱلصِّرَٰطَ')
         .replace(/صِرَٰطَ/g, 'صِرَٰطَ')
         .replace(/الصِّرَاطَ/g, 'ٱلصِّرَٰطَ')

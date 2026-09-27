@@ -700,12 +700,19 @@
 
     function applyIndonesianQuranStandards(text) {
       return text
-        .replace(/لله/g, 'لِلَّٰهِ')
+        // Ubah berbagai variasi lafal Allah (fathah miring/biasa) menjadi fathah berdiri ( U+0670 )
+        .replace(/لِلَّهِ/g, 'لِلَّٰهِ')
         .replace(/اللَّهِ/g, 'اللَّٰهِ')
         .replace(/اللَّهُ/g, 'اللَّٰهُ')
         .replace(/اللََّ/g, 'اللََّٰ')
         .replace(/ٱللَّهِ/g, 'ٱللَّٰهِ')
-        .replace(/ٱللَّهُ/g, 'ٱللَّٰهُ');
+        .replace(/ٱللَّهُ/g, 'ٱللَّٰهُ')
+        .replace(/لله/g, 'لِلَّٰهِ')
+        .replace(/اللّه/g, 'اللَّٰهُ')
+        .replace(/ٱلله/g, 'ٱللَّٰهُ')
+        // Tangkap variasi bentuk huruf lam dengan alif kecil/fathah berdiri di tengah
+        .replace(/لَّه/g, 'لَّٰه')
+        .replace(/لَِّ/g, 'لَِّٰ');
     }
 
     async function loadSurah() {

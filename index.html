@@ -168,9 +168,8 @@
     .surah-header-standalone { text-align: center; margin-bottom: 20px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     
     .surah-title-ar {
-      font-family: 'Scheherazade New', serif !important;
-      font-size: 32px !important;
-      font-weight: 400 !important;
+      font-family: 'Scheherazade New', serif;
+      font-size: 32px;
       color: var(--neon-secondary);
       direction: rtl;
       line-height: 1.4;
@@ -196,18 +195,17 @@
     .ayah-key { padding: 0 10px; height: 32px; border-radius: 10px; background: var(--btn-glass-bg); border: 1px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
     .ayah-arabic {
-      font-family: 'Scheherazade New', serif !important;
-      font-weight: 400 !important;
-      font-size: 28px !important;
+      font-family: 'Scheherazade New', serif;
+      font-size: 28px;
       direction: rtl;
       text-align: right;
-      line-height: 2.4 !important;
+      line-height: 2.4;
       color: var(--text-arabic);
       margin-bottom: 14px;
     }
 
-    .bismillah-text { text-align: center; color: var(--accent-gold); font-size: 30px !important; font-weight: 400 !important; }
-    .ayah-number-icon { font-family: 'Scheherazade New', serif !important; font-weight: 400 !important; display: inline-block; margin-right: 6px; color: var(--neon-secondary); font-size: 24px; }
+    .bismillah-text { text-align: center; color: var(--accent-gold); font-size: 30px; }
+    .ayah-number-icon { font-family: 'Scheherazade New', serif; display: inline-block; margin-right: 6px; color: var(--neon-secondary); font-size: 24px; }
     .ayah-translation { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
     .ayah-translation.hidden { display: none; }
 
@@ -700,7 +698,6 @@
 
     function applyIndonesianQuranStandards(text) {
       return text
-        // Ubah berbagai variasi lafal Allah (fathah miring/biasa) menjadi fathah berdiri ( U+0670 )
         .replace(/لِلَّهِ/g, 'لِلَّٰهِ')
         .replace(/اللَّهِ/g, 'اللَّٰهِ')
         .replace(/اللَّهُ/g, 'اللَّٰهُ')
@@ -710,7 +707,6 @@
         .replace(/لله/g, 'لِلَّٰهِ')
         .replace(/اللّه/g, 'اللَّٰهُ')
         .replace(/ٱلله/g, 'ٱللَّٰهُ')
-        // Tangkap variasi bentuk huruf lam dengan alif kecil/fathah berdiri di tengah
         .replace(/لَّه/g, 'لَّٰه')
         .replace(/لَِّ/g, 'لَِّٰ');
     }

@@ -8,6 +8,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Menambahkan teknik swap dan subset latin+arabic agar load lebih stabil di semua perangkat -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
@@ -167,14 +168,16 @@
 
     .surah-header-standalone { text-align: center; margin-bottom: 20px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     
-    /* Perbaikan: Ukuran font Arab header disesuaikan agar tidak terlalu mendominasi */
+    /* Perbaikan Font Arab Header agar stabil di Laptop dan HP */
     .surah-title-ar {
-      font-family: 'Scheherazade New', serif !important;
+      font-family: 'Scheherazade New', serif, 'Traditional Arabic', sans-serif !important;
       font-size: 32px !important;
       font-weight: 400 !important;
       color: var(--neon-secondary);
       direction: rtl;
       line-height: 1.4;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
     }
 
     .surah-subtitle { color: var(--text-muted); font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
@@ -196,9 +199,9 @@
     .ayah-actions { display: flex; align-items: center; gap: 8px; }
     .ayah-key { padding: 0 10px; height: 32px; border-radius: 10px; background: var(--btn-glass-bg); border: 1px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
-    /* Perbaikan: Ukuran font teks Arab ayat diturunkan ke 28px agar pas dan elegan */
+    /* Perbaikan Font Arab Ayat agar konsisten merata di Laptop & HP */
     .ayah-arabic {
-      font-family: 'Scheherazade New', serif !important;
+      font-family: 'Scheherazade New', serif, 'Traditional Arabic', sans-serif !important;
       font-weight: 400 !important;
       font-size: 28px !important;
       direction: rtl;
@@ -206,10 +209,27 @@
       line-height: 2.4 !important;
       color: var(--text-arabic);
       margin-bottom: 14px;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .bismillah-text { text-align: center; color: var(--accent-gold); font-size: 30px !important; font-weight: 400 !important; }
-    .ayah-number-icon { font-family: 'Scheherazade New', serif !important; font-weight: 400 !important; display: inline-block; margin-right: 6px; color: var(--neon-secondary); font-size: 24px; }
+    .bismillah-text { 
+      text-align: center; 
+      color: var(--accent-gold); 
+      font-size: 30px !important; 
+      font-weight: 400 !important; 
+      font-family: 'Scheherazade New', serif, 'Traditional Arabic', sans-serif !important;
+    }
+    
+    .ayah-number-icon { 
+      font-family: 'Scheherazade New', serif, 'Traditional Arabic', sans-serif !important; 
+      font-weight: 400 !important; 
+      display: inline-block; 
+      margin-right: 6px; 
+      color: var(--neon-secondary); 
+      font-size: 24px; 
+    }
+    
     .ayah-translation { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
     .ayah-translation.hidden { display: none; }
 

@@ -700,6 +700,7 @@
 
     function applyIndonesianQuranStandards(text) {
       return text
+        .replace(/لله/g, 'لِلَّٰهِ')
         .replace(/اللَّهِ/g, 'اللَّٰهِ')
         .replace(/اللَّهُ/g, 'اللَّٰهُ')
         .replace(/اللََّ/g, 'اللََّٰ')
@@ -735,6 +736,8 @@
           const isBismillahSaved = savedAyahs.includes(itemKey0);
           
           if (currentSurahNum === 1) {
+            let taawudzText = "أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ";
+            taawudzText = applyIndonesianQuranStandards(taawudzText);
             html += `
               <div class="ayah-card bismillah-card" id="ayah-card-0">
                 <div class="ayah-top-bar">
@@ -744,10 +747,12 @@
                     <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
                   </div>
                 </div>
-                <div class="ayah-arabic bismillah-text">أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ</div>
+                <div class="ayah-arabic bismillah-text">${taawudzText}</div>
                 <div class="ayah-translation ${transHiddenClass}" id="translation-0">Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div>
               </div>`;
           } else {
+            let bismillahText = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+            bismillahText = applyIndonesianQuranStandards(bismillahText);
             html += `
               <div class="ayah-card bismillah-card" id="ayah-card-0">
                 <div class="ayah-top-bar">
@@ -757,7 +762,7 @@
                     <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
                   </div>
                 </div>
-                <div class="ayah-arabic bismillah-text">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+                <div class="ayah-arabic bismillah-text">${bismillahText}</div>
                 <div class="ayah-translation ${transHiddenClass}" id="translation-0">Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.</div>
               </div>`;
           }

@@ -167,7 +167,6 @@
 
     .surah-header-standalone { text-align: center; margin-bottom: 20px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     
-    /* Perbaikan: Ukuran font Arab header disesuaikan agar tidak terlalu mendominasi */
     .surah-title-ar {
       font-family: 'Scheherazade New', serif !important;
       font-size: 32px !important;
@@ -196,7 +195,6 @@
     .ayah-actions { display: flex; align-items: center; gap: 8px; }
     .ayah-key { padding: 0 10px; height: 32px; border-radius: 10px; background: var(--btn-glass-bg); border: 1px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
-    /* Perbaikan: Ukuran font teks Arab ayat diturunkan ke 28px agar pas dan elegan */
     .ayah-arabic {
       font-family: 'Scheherazade New', serif !important;
       font-weight: 400 !important;
@@ -213,7 +211,6 @@
     .ayah-translation { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
     .ayah-translation.hidden { display: none; }
 
-    /* Modal Bookmark Styles */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -584,7 +581,10 @@
         const [sNum, aNum] = itemKey.split(':').map(Number);
         const surah = ALL_SURAHS.find(s => s.num === sNum);
         const surahName = surah ? surah.name : `Surah ${sNum}`;
-        const ayahText = aNum === 0 ? 'Bismillah' : `Ayat ${aNum}`;
+        let ayahText = aNum === 0 ? 'Bismillah' : `Ayat ${aNum}`;
+        if (sNum === 1 && aNum === 0) {
+          ayahText = "Ta'awudz";
+        }
 
         html += `
           <div class="bookmark-item" onclick="jumpToBookmark(${sNum}, ${aNum})">
@@ -733,18 +733,34 @@
         if (currentSurahNum !== 9) {
           const itemKey0 = `${currentSurahNum}:0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
-          html += `
-            <div class="ayah-card bismillah-card" id="ayah-card-0">
-              <div class="ayah-top-bar">
-                <div class="ayah-key">${currentSurahNum}:0</div>
-                <div class="ayah-actions">
-                  <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
-                  <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
+          
+          if (currentSurahNum === 1) {
+            html += `
+              <div class="ayah-card bismillah-card" id="ayah-card-0">
+                <div class="ayah-top-bar">
+                  <div class="ayah-key">${currentSurahNum}:0</div>
+                  <div class="ayah-actions">
+                    <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
+                    <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
+                  </div>
                 </div>
-              </div>
-              <div class="ayah-arabic bismillah-text">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
-              <div class="ayah-translation ${transHiddenClass}" id="translation-0">Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.</div>
-            </div>`;
+                <div class="ayah-arabic bismillah-text">أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ</div>
+                <div class="ayah-translation ${transHiddenClass}" id="translation-0">Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div>
+              </div>`;
+          } else {
+            html += `
+              <div class="ayah-card bismillah-card" id="ayah-card-0">
+                <div class="ayah-top-bar">
+                  <div class="ayah-key">${currentSurahNum}:0</div>
+                  <div class="ayah-actions">
+                    <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
+                    <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
+                  </div>
+                </div>
+                <div class="ayah-arabic bismillah-text">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+                <div class="ayah-translation ${transHiddenClass}" id="translation-0">Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.</div>
+              </div>`;
+          }
         }
 
         ayahsArab.forEach((ayah, idx) => {
@@ -801,7 +817,11 @@
       setBtnPlayIcon(ayahNum, true);
 
       const surahInfo = ALL_SURAHS.find(s => s.num === currentSurahNum);
-      playerTitle.innerText = `${surahInfo.name} : ${ayahNum === 0 ? "Bismillah" : `Ayat ${ayahNum}`}`;
+      let titleLabel = ayahNum === 0 ? "Bismillah" : `Ayat ${ayahNum}`;
+      if (currentSurahNum === 1 && ayahNum === 0) {
+        titleLabel = "Ta'awudz";
+      }
+      playerTitle.innerText = `${surahInfo.name} : ${titleLabel}`;
       playerStatus.innerText = "Memutar audio...";
       
       masterPlayIcon.setAttribute('href', '#icon-stop');

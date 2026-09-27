@@ -8,7 +8,6 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Menambahkan teknik swap dan subset latin+arabic agar load lebih stabil di semua perangkat -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
@@ -168,15 +167,14 @@
 
     .surah-header-standalone { text-align: center; margin-bottom: 20px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     
+    /* Perbaikan: Ukuran font Arab header disesuaikan agar tidak terlalu mendominasi */
     .surah-title-ar {
-      font-family: 'Scheherazade New', serif, 'Traditional Arabic', sans-serif !important;
+      font-family: 'Scheherazade New', serif !important;
       font-size: 32px !important;
       font-weight: 400 !important;
       color: var(--neon-secondary);
       direction: rtl;
       line-height: 1.4;
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
     }
 
     .surah-subtitle { color: var(--text-muted); font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
@@ -198,8 +196,9 @@
     .ayah-actions { display: flex; align-items: center; gap: 8px; }
     .ayah-key { padding: 0 10px; height: 32px; border-radius: 10px; background: var(--btn-glass-bg); border: 1px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
+    /* Perbaikan: Ukuran font teks Arab ayat diturunkan ke 28px agar pas dan elegan */
     .ayah-arabic {
-      font-family: 'Scheherazade New', serif, 'Traditional Arabic', sans-serif !important;
+      font-family: 'Scheherazade New', serif !important;
       font-weight: 400 !important;
       font-size: 28px !important;
       direction: rtl;
@@ -207,30 +206,14 @@
       line-height: 2.4 !important;
       color: var(--text-arabic);
       margin-bottom: 14px;
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
     }
 
-    .bismillah-text { 
-      text-align: center; 
-      color: var(--accent-gold); 
-      font-size: 30px !important; 
-      font-weight: 400 !important; 
-      font-family: 'Scheherazade New', serif, 'Traditional Arabic', sans-serif !important;
-    }
-    
-    .ayah-number-icon { 
-      font-family: 'Scheherazade New', serif, 'Traditional Arabic', sans-serif !important; 
-      font-weight: 400 !important; 
-      display: inline-block; 
-      margin-right: 6px; 
-      color: var(--neon-secondary); 
-      font-size: 24px; 
-    }
-    
+    .bismillah-text { text-align: center; color: var(--accent-gold); font-size: 30px !important; font-weight: 400 !important; }
+    .ayah-number-icon { font-family: 'Scheherazade New', serif !important; font-weight: 400 !important; display: inline-block; margin-right: 6px; color: var(--neon-secondary); font-size: 24px; }
     .ayah-translation { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
     .ayah-translation.hidden { display: none; }
 
+    /* Modal Bookmark Styles */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -601,10 +584,7 @@
         const [sNum, aNum] = itemKey.split(':').map(Number);
         const surah = ALL_SURAHS.find(s => s.num === sNum);
         const surahName = surah ? surah.name : `Surah ${sNum}`;
-        let ayahText = `Ayat ${aNum}`;
-        if (aNum === 0) {
-          ayahText = sNum === 1 ? "Ta'awudz" : "Bismillah";
-        }
+        const ayahText = aNum === 0 ? 'Bismillah' : `Ayat ${aNum}`;
 
         html += `
           <div class="bookmark-item" onclick="jumpToBookmark(${sNum}, ${aNum})">
@@ -697,8 +677,6 @@
     }
 
     function getAudioUrl(surahNumber, ayahNumber) {
-      // Catatan: Jika Anda ingin memutar audio ta'awudz untuk Al-Fatihah (ayat 0), 
-      // pastikan file audionya tersedia di folder penyimpanan Supabase Anda (misal: /1/0.mp3).
       return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${surahNumber}/${ayahNumber}.mp3`;
     }
 
@@ -755,36 +733,18 @@
         if (currentSurahNum !== 9) {
           const itemKey0 = `${currentSurahNum}:0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
-          
-          if (currentSurahNum === 1) {
-            // Blok pertama khusus Al-Fatihah diubah menjadi Ta'awudz
-            html += `
-              <div class="ayah-card bismillah-card" id="ayah-card-0">
-                <div class="ayah-top-bar">
-                  <div class="ayah-key">${currentSurahNum}:0</div>
-                  <div class="ayah-actions">
-                    <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
-                    <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
-                  </div>
+          html += `
+            <div class="ayah-card bismillah-card" id="ayah-card-0">
+              <div class="ayah-top-bar">
+                <div class="ayah-key">${currentSurahNum}:0</div>
+                <div class="ayah-actions">
+                  <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
+                  <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
                 </div>
-                <div class="ayah-arabic bismillah-text">أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّحِيمِ</div>
-                <div class="ayah-translation ${transHiddenClass}" id="translation-0">Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div>
-              </div>`;
-          } else {
-            // Blok pertama untuk surat lain tetap Bismillah
-            html += `
-              <div class="ayah-card bismillah-card" id="ayah-card-0">
-                <div class="ayah-top-bar">
-                  <div class="ayah-key">${currentSurahNum}:0</div>
-                  <div class="ayah-actions">
-                    <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
-                    <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
-                  </div>
-                </div>
-                <div class="ayah-arabic bismillah-text">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
-                <div class="ayah-translation ${transHiddenClass}" id="translation-0">Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.</div>
-              </div>`;
-          }
+              </div>
+              <div class="ayah-arabic bismillah-text">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+              <div class="ayah-translation ${transHiddenClass}" id="translation-0">Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.</div>
+            </div>`;
         }
 
         ayahsArab.forEach((ayah, idx) => {
@@ -841,11 +801,7 @@
       setBtnPlayIcon(ayahNum, true);
 
       const surahInfo = ALL_SURAHS.find(s => s.num === currentSurahNum);
-      let labelAyah = `Ayat ${ayahNum}`;
-      if (ayahNum === 0) {
-        labelAyah = currentSurahNum === 1 ? "Ta'awudz" : "Bismillah";
-      }
-      playerTitle.innerText = `${surahInfo.name} : ${labelAyah}`;
+      playerTitle.innerText = `${surahInfo.name} : ${ayahNum === 0 ? "Bismillah" : `Ayat ${ayahNum}`}`;
       playerStatus.innerText = "Memutar audio...";
       
       masterPlayIcon.setAttribute('href', '#icon-stop');
@@ -898,15 +854,15 @@
         const minAyah = hasBismillah ? 0 : 1;
 
         if (currentAyah < currentTotalAyahs) {
-          playAudio(currentAyah + 1);
+          playAyah(currentAyah + 1);
         } else {
-          playAudio(minAyah);
+          playAyah(minAyah);
         }
       } 
       else if (mode === 'range') {
         const start = parseInt(startAyahSelect.value);
         const end = parseInt(endAyahSelect.value);
-        playAudio(currentAyah < end ? currentAyah + 1 : start);
+        playAyah(currentAyah < end ? currentAyah + 1 : start);
       }
     };
 

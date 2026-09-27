@@ -698,6 +698,7 @@
 
     function applyIndonesianQuranStandards(text) {
       return text
+        // Ubah variasi lafal Allah dan kata dengan fathah berdiri
         .replace(/لِلَّهِ/g, 'لِلَّٰهِ')
         .replace(/اللَّهِ/g, 'اللَّٰهِ')
         .replace(/اللَّهُ/g, 'اللَّٰهُ')
@@ -708,7 +709,15 @@
         .replace(/اللّه/g, 'اللَّٰهُ')
         .replace(/ٱلله/g, 'ٱللَّٰهُ')
         .replace(/لَّه/g, 'لَّٰه')
-        .replace(/لَِّ/g, 'لَِّٰ');
+        .replace(/لَِّ/g, 'لَِّٰ')
+        // Hapus harokat fathah miring (fathah biasa U+064E) jika setelahnya terdapat huruf ber-fathah berdiri (U+0670) atau pada kata tertentu
+        .replace(/َ([^\u0670]*?)\u0670/g, '$1\u0670')
+        // Penyesuaian spesifik untuk kata Shiroth/shirothol (mengubah fathah miring pada shod/ro' menjadi fathah berdiri)
+        .replace(/ٱلصِّرَٰطَ/g, 'ٱلصِّرَٰطَ')
+        .replace(/صِرَٰطَ/g, 'صِرَٰطَ')
+        .replace(/الصِّرَاطَ/g, 'ٱلصِّرَٰطَ')
+        .replace(/ٱلصَّرَٰطَ/g, 'ٱلصَّرَٰطَ')
+        .replace(/صَرَٰطَ/g, 'صَرَٰطَ');
     }
 
     async function loadSurah() {

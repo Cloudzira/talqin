@@ -897,21 +897,20 @@
         titleLabel = "Ta'awudz";
       }
       playerTitle.innerText = `${surahInfo.name} : ${titleLabel}`;
-      playerStatus.innerText = "Memutar audio...";
       
       masterPlayIcon.setAttribute('href', '#icon-stop');
       masterPlaySvg.classList.add('icon-fill-stop');
 
-      // Cek apakah Qori Supabase (Murottal Anak) atau API Eksternal
       const qari = QARIS.find(q => q.id === currentQariId);
 
-      // Jika Murottal Anak dipilih, putar otomatis Ta'awudz (0) terlebih dahulu, lalu lanjut ke Ayat 1
+      // Jika Murottal Anak dipilih dan user menekan Ayat 1 Al-Fatihah, aktifkan fase Ta'awudz
       if (currentSurahNum === 1 && ayahNum === 1 && qari && qari.type === 'supabase') {
         isPlayingTaawudzPhase = true;
         playerStatus.innerText = "Memutar Ta'awudz...";
         audioElement.src = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/0.mp3`;
       } else {
         isPlayingTaawudzPhase = false;
+        playerStatus.innerText = "Memutar audio...";
         audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
       }
 
@@ -943,23 +942,28 @@
 
     function toggleMasterPlay() {
       if (isPlaying) { stopAudio(); return; }
-      // Tombol play utama dimulai dari Ta'awudz (0) untuk Al-Fatihah, atau Ayat 1 untuk surat lain
       const startIdx = (currentSurahNum === 1) ? 0 : (currentSurahNum === 9 ? 1 : 0);
       playAyah(repeatModeSelect.value === 'range' ? parseInt(startAyahSelect.value) : startIdx);
     }
 
     audioElement.onended = () => {
+      // Jika sedang berada dalam fase Ta'awudz Murottal Anak
       if (isPlayingTaawudzPhase) {
         isPlayingTaawudzPhase = false;
         playerStatus.innerText = "Memutar audio ayat...";
-        audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
-        audioElement.play().catch(() => {
-          isPlaying = false;
-          masterPlayIcon.setAttribute('href', '#icon-play');
-          masterPlaySvg.classList.remove('icon-fill-stop');
-          if (currentAyah !== null) setBtnPlayIcon(currentAyah, false);
-          playerStatus.innerText = "Gagal memutar audio ayat";
-        });
+        
+        // Beri jeda singkat sekitar 400ms agar Ta'awudz tidak langsung menempel/masuk ke Bismillah/Ayat 1
+        setTimeout(() => {
+          if (!isPlaying) return; // Jika dihentikan saat jeda
+          audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
+          audioElement.play().catch(() => {
+            isPlaying = false;
+            masterPlayIcon.setAttribute('href', '#icon-play');
+            masterPlaySvg.classList.remove('icon-fill-stop');
+            if (currentAyah !== null) setBtnPlayIcon(currentAyah, false);
+            playerStatus.innerText = "Gagal memutar audio ayat";
+          });
+        }, 400);
         return;
       }
 

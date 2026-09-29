@@ -354,7 +354,7 @@
     const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
     const BUCKET_NAME = "quran-audio";
 
-    // Link Ta'awudz Sesuai Permintaan Anda:
+    // Link Ta'awudz:
     const TAAWUDZ_ANAK_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzanak.mp3`;
     const TAAWUDZ_UNIVERSAL_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzuniversal.mp3`;
 
@@ -618,26 +618,28 @@
       }
     }
 
+    // FUNGSI GET AUDIO URL YANG SUDAH DIPERBAIKI
     function getAudioUrl(surahNumber, ayahNumber) {
       const qari = QARIS.find(q => q.id === currentQariId);
 
-      // KHUSUS TAAWUDZ (Ayat 0 di Surah 1)
+      // Tangani kondisi Ta'awudz (Surah 1, Ayat 0)
       if (surahNumber === 1 && ayahNumber === 0) {
         if (qari && qari.type === 'supabase') {
-          return TAAWUDZ_ANAK_URL; // taawudzanak.mp3
+          return TAAWUDZ_ANAK_URL; 
         } else {
-          return TAAWUDZ_UNIVERSAL_URL; // taawudzuniversal.mp3
+          return TAAWUDZ_UNIVERSAL_URL; 
         }
       }
       
-      // AUDIO REGULER AYAT & BISMILLAH
+      // Tangani kondisi Bismillah (Ayat 0 selain Surah 1 & 9)
+      if (ayahNumber === 0) {
+        return TAAWUDZ_UNIVERSAL_URL;
+      }
+
+      // Audio Reguler Ayat
       if (qari && qari.type === 'supabase') {
         return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${surahNumber}/${ayahNumber}.mp3`;
       } else if (qari && qari.type === 'api') {
-        // Jika qori API dan mencoba memutar Bismillah (ayat 0), arahkan ke universal atau skip (bisa pakai link universal juga)
-        if (ayahNumber === 0) {
-          return TAAWUDZ_UNIVERSAL_URL; 
-        }
         const formattedSurah = String(surahNumber).padStart(3, '0');
         const formattedAyah = String(ayahNumber).padStart(3, '0');
         return `${qari.baseUrl}${formattedSurah}${formattedAyah}.mp3`;

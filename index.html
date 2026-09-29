@@ -122,7 +122,7 @@
       pointer-events: auto;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       background: var(--card-glass);
       backdrop-filter: var(--glass-blur);
       padding: 8px 14px;
@@ -131,6 +131,19 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
       font-size: 13px;
       font-weight: 600;
+      flex-wrap: wrap;
+    }
+
+    .selector-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .selector-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--card-border);
     }
 
     .surah-selector-container label { color: var(--neon-primary); text-transform: uppercase; font-size: 11px; }
@@ -388,8 +401,15 @@
 
   <div class="surah-selector-wrapper">
     <div class="surah-selector-container">
-      <label for="surahSelect">SURAT</label>
-      <select id="surahSelect" onchange="changeSurah()"></select>
+      <div class="selector-group">
+        <label for="surahSelect">SURAT</label>
+        <select id="surahSelect" onchange="changeSurah()"></select>
+      </div>
+      <div class="selector-divider"></div>
+      <div class="selector-group">
+        <label for="qariSelect">QORI</label>
+        <select id="qariSelect" onchange="changeQari()"></select>
+      </div>
     </div>
   </div>
 
@@ -431,6 +451,16 @@
   <script>
     const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
     const BUCKET_NAME = "quran-audio";
+
+    // Daftar Qori (Supabase dan API External Quran Central / EveryAyah)
+    const QARIS = [
+      { id: 'supabase', name: 'Suara Saya (Talqin)', type: 'supabase' },
+      { id: 'mishary', name: 'Syaikh Misyari Rasyid', type: 'api', baseUrl: 'https://everyayah.com/data/Alafasy_128kbps/' },
+      { id: 'husary', name: 'Syaikh Mahmud Khalil Al-Husary', type: 'api', baseUrl: 'https://everyayah.com/data/Husary_128kbps/' },
+      { id: 'minshawi', name: 'Syaikh Muhammad Siddiq Al-Minshawi', type: 'api', baseUrl: 'https://everyayah.com/data/Minshawy_Murattal_128kbps/' }
+    ];
+
+    let currentQariId = 'supabase';
 
     const ALL_SURAHS = [
       { num: 1, name: "Al-Fatihah", ar: "سُورَةُ ٱلْفَاتِحَةِ", ayahs: 7 },
@@ -506,6 +536,7 @@
     const masterPlaySvg = document.getElementById('masterPlaySvg');
     const masterPlayIcon = document.getElementById('masterPlayIcon');
     const surahSelect = document.getElementById('surahSelect');
+    const qariSelect = document.getElementById('qariSelect');
     const repeatModeSelect = document.getElementById('repeatMode');
     const rangePicker = document.getElementById('rangePicker');
     const startAyahSelect = document.getElementById('startAyahSelect');
@@ -633,7 +664,8 @@
       }, 100);
     }
 
-    function populateSurahDropdown() {
+    function populateDropdowns() {
+      // Dropdown Surat
       surahSelect.innerHTML = '';
       ALL_SURAHS.forEach(s => {
         const option = document.createElement('option');
@@ -641,6 +673,16 @@
         option.textContent = `${s.num}. ${s.name}`;
         if (s.num === currentSurahNum) option.selected = true;
         surahSelect.appendChild(option);
+      });
+
+      // Dropdown Qori
+      qariSelect.innerHTML = '';
+      QARIS.forEach(q => {
+        const option = document.createElement('option');
+        option.value = q.id;
+        option.textContent = q.name;
+        if (q.id === currentQariId) option.selected = true;
+        qariSelect.appendChild(option);
       });
     }
 
@@ -674,8 +716,30 @@
       loadSurah();
     }
 
+    function changeQari() {
+      currentQariId = qariSelect.value;
+      if (isPlaying && currentAyah !== null) {
+        // Jika sedang memutar audio, ganti sumber audio secara real-time
+        audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
+        audioElement.play().catch(() => {
+          playerStatus.innerText = "Gagal memutar audio qori ini";
+        });
+      }
+    }
+
     function getAudioUrl(surahNumber, ayahNumber) {
-      return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${surahNumber}/${ayahNumber}.mp3`;
+      const qari = QARIS.find(q => q.id === currentQariId);
+      
+      if (qari && qari.type === 'supabase') {
+        return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${surahNumber}/${ayahNumber}.mp3`;
+      } else if (qari && qari.type === 'api') {
+        // Format standar API EveryAyah (3 digit nomor surat + 3 digit nomor ayat, contoh: 001001.mp3)
+        const formattedSurah = String(surahNumber).padStart(3, '0');
+        const formattedAyah = String(ayahNumber).padStart(3, '0');
+        return `${qari.baseUrl}${formattedSurah}${formattedAyah}.mp3`;
+      }
+      
+      return '';
     }
 
     function toggleSaveAyah(ayahNum) {
@@ -698,7 +762,6 @@
 
     function applyIndonesianQuranStandards(text) {
       return text
-        // Normalisasi baku lafal Allah dan Lillahi dengan fathah berdiri (U+0670)
         .replace(/لِلَّهِ/g, 'لِلَّٰهِ')
         .replace(/اللَّهِ/g, 'اللَّٰهِ')
         .replace(/اللَّهُ/g, 'اللَّٰهُ')
@@ -707,10 +770,8 @@
         .replace(/لله/g, 'لِلَّٰهِ')
         .replace(/بالله/g, 'بِٱللَّٰهِ')
         .replace(/بِٱللَّهِ/g, 'بِٱللَّٰهِ')
-        // Membersihkan sisa artefak harokat dobel atau tanda hubung pada lafaz Allah/Lillahi/Billahi
         .replace(/بِٱللَّ+[ِե]/g, 'بِٱللَِّٰ')
         .replace(/اللَّ+[َُِ]/g, 'اللَّٰ')
-        // Perbaikan kata shiroth/shiratho
         .replace(/ٱلصِّرَٰطَ/g, 'ٱلصِّرَٰطَ')
         .replace(/صِرَٰطَ/g, 'صِرَٰطَ')
         .replace(/الصِّرَاطَ/g, 'ٱلصِّرَٰطَ');
@@ -880,7 +941,7 @@
       const mode = repeatModeSelect.value;
       
       if (mode === 'single') {
-        playAyah(currentAyah);
+        playAudioLoopSafe(currentAyah);
       } 
       else if (mode === 'surah') {
         const hasBismillah = currentSurahNum !== 9;
@@ -899,14 +960,16 @@
       }
     };
 
-    function toArabicDigits(num) { return String(num).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
+    function playAudioLoopSafe(ayahNum) {
+      playAyah(ayahNum);
+    }
 
-    document.getElementById('surahSelect').addEventListener('change', changeSurah);
+    function toArabicDigits(num) { return String(num).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
 
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       initTranslationState();
-      populateSurahDropdown();
+      populateDropdowns();
       loadSurah();
     });
   </script>

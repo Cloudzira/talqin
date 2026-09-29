@@ -451,6 +451,8 @@
   <script>
     const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
     const BUCKET_NAME = "quran-audio";
+    // Link Taawudz universal dari Supabase Anda
+    const TAAWUDZ_UNIVERSAL_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzuniversal.mp3`;
 
     // Daftar Qori (Supabase dan API External Quran Central / EveryAyah)
     const QARIS = [
@@ -527,6 +529,7 @@
     let currentTotalAyahs = 7;
     let currentAyah = null; 
     let isPlaying = false;
+    let isPlayingTaawudzPhase = false; // Status penanda sedang memutar taawudz gabungan
     let showTranslations = localStorage.getItem('show_translations') !== 'false';
     let savedAyahs = JSON.parse(localStorage.getItem('saved_ayahs') || '[]');
 
@@ -720,7 +723,11 @@
       currentQariId = qariSelect.value;
       if (isPlaying && currentAyah !== null) {
         // Jika sedang memutar audio, ganti sumber audio secara real-time
-        audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
+        if (currentSurahNum === 1 && currentAyah === 0 && currentQariId !== 'supabase') {
+          audioElement.src = TAAWUDZ_UNIVERSAL_URL;
+        } else {
+          audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
+        }
         audioElement.play().catch(() => {
           playerStatus.innerText = "Gagal memutar audio qori ini";
         });
@@ -733,7 +740,6 @@
       if (qari && qari.type === 'supabase') {
         return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${surahNumber}/${ayahNumber}.mp3`;
       } else if (qari && qari.type === 'api') {
-        // Format standar API EveryAyah (3 digit nomor surat + 3 digit nomor ayat, contoh: 001001.mp3)
         const formattedSurah = String(surahNumber).padStart(3, '0');
         const formattedAyah = String(ayahNumber).padStart(3, '0');
         return `${qari.baseUrl}${formattedSurah}${formattedAyah}.mp3`;
@@ -901,7 +907,19 @@
       masterPlayIcon.setAttribute('href', '#icon-stop');
       masterPlaySvg.classList.add('icon-fill-stop');
 
-      audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
+      // LOGIKA KONDISIONAL TAAWUDZ:
+      // Jika Surat Al-Fatihah (1) dan user memutar Ayat 1 (atau Bismillah/0) menggunakan Qori API,
+      // putar file Taawudz universal dari Supabase terlebih dahulu.
+      const qari = QARIS.find(q => q.id === currentQariId);
+      if (currentSurahNum === 1 && ayahNum === 1 && qari && qari.type === 'api') {
+        isPlayingTaawudzPhase = true;
+        playerStatus.innerText = "Memutar Ta'awudz...";
+        audioElement.src = TAAWUDZ_UNIVERSAL_URL;
+      } else {
+        isPlayingTaawudzPhase = false;
+        audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
+      }
+
       audioElement.play().then(() => { isPlaying = true; }).catch(() => {
         isPlaying = false;
         masterPlayIcon.setAttribute('href', '#icon-play');
@@ -915,6 +933,7 @@
       audioElement.pause();
       audioElement.currentTime = 0;
       isPlaying = false;
+      isPlayingTaawudzPhase = false;
       masterPlayIcon.setAttribute('href', '#icon-play');
       masterPlaySvg.classList.remove('icon-fill-stop');
       if (currentAyah !== null) {
@@ -933,6 +952,22 @@
     }
 
     audioElement.onended = () => {
+      // HANDLE TRANSISI JIKA SEDANG DALAM FASE TAAWUDZ API AL-FATIHAH
+      if (isPlayingTaawudzPhase) {
+        isPlayingTaawudzPhase = false;
+        playerStatus.innerText = "Memutar audio ayat...";
+        // Setelah taawudz habis, langsung putar audio asli Ayat 1 dari API Qori yang dipilih
+        audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
+        audioElement.play().catch(() => {
+          isPlaying = false;
+          masterPlayIcon.setAttribute('href', '#icon-play');
+          masterPlaySvg.classList.remove('icon-fill-stop');
+          if (currentAyah !== null) setBtnPlayIcon(currentAyah, false);
+          playerStatus.innerText = "Gagal memutar audio ayat";
+        });
+        return;
+      }
+
       isPlaying = false;
       masterPlayIcon.setAttribute('href', '#icon-play');
       masterPlaySvg.classList.remove('icon-fill-stop');

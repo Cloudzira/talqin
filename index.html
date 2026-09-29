@@ -529,7 +529,7 @@
     let currentTotalAyahs = 7;
     let currentAyah = null; 
     let isPlaying = false;
-    let isPlayingTaawudzPhase = false; // Status penanda sedang memutar taawudz gabungan
+    let isPlayingTaawudzPhase = false;
     let showTranslations = localStorage.getItem('show_translations') !== 'false';
     let savedAyahs = JSON.parse(localStorage.getItem('saved_ayahs') || '[]');
 
@@ -668,7 +668,6 @@
     }
 
     function populateDropdowns() {
-      // Dropdown Surat
       surahSelect.innerHTML = '';
       ALL_SURAHS.forEach(s => {
         const option = document.createElement('option');
@@ -678,7 +677,6 @@
         surahSelect.appendChild(option);
       });
 
-      // Dropdown Qori
       qariSelect.innerHTML = '';
       QARIS.forEach(q => {
         const option = document.createElement('option');
@@ -722,8 +720,7 @@
     function changeQari() {
       currentQariId = qariSelect.value;
       if (isPlaying && currentAyah !== null) {
-        // Jika sedang memutar audio, ganti sumber audio secara real-time
-        if (currentSurahNum === 1 && currentAyah === 0 && currentQariId !== 'supabase') {
+        if (currentSurahNum === 1 && currentAyah === 1 && currentQariId !== 'supabase') {
           audioElement.src = TAAWUDZ_UNIVERSAL_URL;
         } else {
           audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
@@ -806,41 +803,45 @@
         let html = '';
         const transHiddenClass = showTranslations ? '' : 'hidden';
 
-        if (currentSurahNum !== 9) {
+        // KHUSUS SURAT AL-FATIHAH: Tampilkan blok Ta'awudz terlebih dahulu sebagai kartu tersendiri
+        if (currentSurahNum === 1) {
+          const itemKeyTaawudz = `${currentSurahNum}:0`;
+          const isTaawudzSaved = savedAyahs.includes(itemKeyTaawudz);
+          let taawudzText = "أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيْطَٰنِ ٱلرَّجِيمِ";
+          taawudzText = applyIndonesianQuranStandards(taawudzText);
+
+          html += `
+            <div class="ayah-card bismillah-card" id="ayah-card-0">
+              <div class="ayah-top-bar">
+                <div class="ayah-key">${currentSurahNum}:0 (Ta'awudz)</div>
+                <div class="ayah-actions">
+                  <button class="glass-btn ${isTaawudzSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
+                  <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
+                </div>
+              </div>
+              <div class="ayah-arabic bismillah-text">${taawudzText}</div>
+              <div class="ayah-translation ${transHiddenClass}" id="translation-0">Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div>
+            </div>`;
+        } 
+        // UNTUK SURAT LAINNYA (Selain At-Taubah/9 dan Al-Fatihah/1), tampilkan Bismillah di indeks 0
+        else if (currentSurahNum !== 9) {
           const itemKey0 = `${currentSurahNum}:0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
-          
-          if (currentSurahNum === 1) {
-            let taawudzText = "أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيْطَٰنِ ٱلرَّجِيمِ";
-            taawudzText = applyIndonesianQuranStandards(taawudzText);
-            html += `
-              <div class="ayah-card bismillah-card" id="ayah-card-0">
-                <div class="ayah-top-bar">
-                  <div class="ayah-key">${currentSurahNum}:0</div>
-                  <div class="ayah-actions">
-                    <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
-                    <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
-                  </div>
+          let bismillahText = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+          bismillahText = applyIndonesianQuranStandards(bismillahText);
+
+          html += `
+            <div class="ayah-card bismillah-card" id="ayah-card-0">
+              <div class="ayah-top-bar">
+                <div class="ayah-key">${currentSurahNum}:0</div>
+                <div class="ayah-actions">
+                  <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
+                  <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
                 </div>
-                <div class="ayah-arabic bismillah-text">${taawudzText}</div>
-                <div class="ayah-translation ${transHiddenClass}" id="translation-0">Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div>
-              </div>`;
-          } else {
-            let bismillahText = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
-            bismillahText = applyIndonesianQuranStandards(bismillahText);
-            html += `
-              <div class="ayah-card bismillah-card" id="ayah-card-0">
-                <div class="ayah-top-bar">
-                  <div class="ayah-key">${currentSurahNum}:0</div>
-                  <div class="ayah-actions">
-                    <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
-                    <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
-                  </div>
-                </div>
-                <div class="ayah-arabic bismillah-text">${bismillahText}</div>
-                <div class="ayah-translation ${transHiddenClass}" id="translation-0">Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.</div>
-              </div>`;
-          }
+              </div>
+              <div class="ayah-arabic bismillah-text">${bismillahText}</div>
+              <div class="ayah-translation ${transHiddenClass}" id="translation-0">Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.</div>
+            </div>`;
         }
 
         ayahsArab.forEach((ayah, idx) => {
@@ -907,9 +908,8 @@
       masterPlayIcon.setAttribute('href', '#icon-stop');
       masterPlaySvg.classList.add('icon-fill-stop');
 
-      // LOGIKA KONDISIONAL TAAWUDZ:
-      // Jika Surat Al-Fatihah (1) dan user memutar Ayat 1 (atau Bismillah/0) menggunakan Qori API,
-      // putar file Taawudz universal dari Supabase terlebih dahulu.
+      // Jika Al-Fatihah, saat user menekan Play pada Ayat 1 (ayahNum === 1) dan qori API dipilih,
+      // putar Ta'awudz universal terlebih dahulu.
       const qari = QARIS.find(q => q.id === currentQariId);
       if (currentSurahNum === 1 && ayahNum === 1 && qari && qari.type === 'api') {
         isPlayingTaawudzPhase = true;
@@ -917,7 +917,12 @@
         audioElement.src = TAAWUDZ_UNIVERSAL_URL;
       } else {
         isPlayingTaawudzPhase = false;
-        audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
+        // Jika user secara manual menekan kartu Ta'awudz (ayahNum === 0 di Al-Fatihah)
+        if (currentSurahNum === 1 && ayahNum === 0) {
+          audioElement.src = TAAWUDZ_UNIVERSAL_URL;
+        } else {
+          audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
+        }
       }
 
       audioElement.play().then(() => { isPlaying = true; }).catch(() => {
@@ -948,15 +953,15 @@
 
     function toggleMasterPlay() {
       if (isPlaying) { stopAudio(); return; }
-      playAyah(repeatModeSelect.value === 'range' ? parseInt(startAyahSelect.value) : (currentSurahNum === 9 ? 1 : 0));
+      // Tombol play utama dimulai dari Ta'awudz (0) untuk Al-Fatihah, atau Ayat 1 untuk surat lain
+      const startIdx = (currentSurahNum === 1) ? 0 : (currentSurahNum === 9 ? 1 : 0);
+      playAyah(repeatModeSelect.value === 'range' ? parseInt(startAyahSelect.value) : startIdx);
     }
 
     audioElement.onended = () => {
-      // HANDLE TRANSISI JIKA SEDANG DALAM FASE TAAWUDZ API AL-FATIHAH
       if (isPlayingTaawudzPhase) {
         isPlayingTaawudzPhase = false;
         playerStatus.innerText = "Memutar audio ayat...";
-        // Setelah taawudz habis, langsung putar audio asli Ayat 1 dari API Qori yang dipilih
         audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
         audioElement.play().catch(() => {
           isPlaying = false;
@@ -979,8 +984,7 @@
         playAudioLoopSafe(currentAyah);
       } 
       else if (mode === 'surah') {
-        const hasBismillah = currentSurahNum !== 9;
-        const minAyah = hasBismillah ? 0 : 1;
+        const minAyah = (currentSurahNum === 1) ? 0 : (currentSurahNum === 9 ? 1 : 0);
 
         if (currentAyah < currentTotalAyahs) {
           playAyah(currentAyah + 1);

@@ -393,7 +393,9 @@
         <div class="modal-title">DAFTAR BOOKMARK</div>
         <button class="glass-btn round" onclick="toggleBookmarkModal()" style="width: 28px; height: 28px;"><svg style="width: 14px; height: 14px;"><use href="#icon-close"></use></svg></button>
       </div>
-      <div class="modal-body" id="bookmarkListContainer"></div>
+      <div class="modal-body" id="bookmarkListContainer">
+        <!-- List bookmarks -->
+      </div>
     </div>
   </div>
 
@@ -450,7 +452,11 @@
     const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
     const BUCKET_NAME = "quran-audio";
 
-    // Daftar Qori (Supabase dan API External Quran Central / EveryAyah)
+    // URL file ta'awudz khusus
+    const TAAWUDZ_ANAK_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/taawudzanak.mp3`;
+    const TAAWUDZ_UNIVERSAL_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/taawudzuniversal.mp3`;
+
+    // Daftar Qori
     const QARIS = [
       { id: 'supabase', name: 'Murottal Anak', type: 'supabase' },
       { id: 'mishary', name: 'Syaikh Misyari Rasyid', type: 'api', baseUrl: 'https://everyayah.com/data/Alafasy_128kbps/' },
@@ -467,7 +473,7 @@
       { num: 60, name: "Al-Mumtahanah", ar: "سُورَةُ ٱلْمُمْتَحَنَةِ", ayahs: 13 },
       { num: 61, name: "As-Saff", ar: "سُورَةُ ٱلصَّفِّ", ayahs: 14 },
       { num: 62, name: "Al-Jumu'ah", ar: "سُورَةُ ٱلجُمُعَةِ", ayahs: 11 },
-      { num: 63, name: "Al-Munafiqun", ar: "سُورَةُ ٱلْمُنَافِقُونَ", ayahs: 11 },
+      { num: 63, name: "Al-Munafiqun", ar: "سُورَةُ ٱلنَّافِقُونَ", ayahs: 11 },
       { num: 64, name: "At-Tagabun", ar: "سُورَةُ ٱلتَّغَابُنِ", ayahs: 18 },
       { num: 65, name: "At-Talaq", ar: "سُورَةُ ٱلطَّلَاقِ", ayahs: 12 },
       { num: 66, name: "At-Tahrim", ar: "سُورَةُ ٱلتَّحْرِيمِ", ayahs: 12 },
@@ -525,7 +531,7 @@
     let currentTotalAyahs = 7;
     let currentAyah = null; 
     let isPlaying = false;
-    let isPlayingTaawudzPhase = false; // Status apakah sedang memutar Ta'awudz
+    let isPlayingTaawudzPhase = false;
     let showTranslations = localStorage.getItem('show_translations') !== 'false';
     let savedAyahs = JSON.parse(localStorage.getItem('saved_ayahs') || '[]');
 
@@ -587,11 +593,15 @@
 
     function toggleBookmarkModal() {
       bookmarkModal.classList.toggle('open');
-      if (bookmarkModal.classList.contains('open')) renderBookmarkList();
+      if (bookmarkModal.classList.contains('open')) {
+        renderBookmarkList();
+      }
     }
 
     function handleModalOutsideClick(event) {
-      if (event.target === bookmarkModal) toggleBookmarkModal();
+      if (event.target === bookmarkModal) {
+        toggleBookmarkModal();
+      }
     }
 
     function renderBookmarkList() {
@@ -606,7 +616,9 @@
         const surah = ALL_SURAHS.find(s => s.num === sNum);
         const surahName = surah ? surah.name : `Surah ${sNum}`;
         let ayahText = aNum === 0 ? 'Bismillah' : `Ayat ${aNum}`;
-        if (sNum === 1 && aNum === 0) ayahText = "Ta'awudz";
+        if (sNum === 1 && aNum === 0) {
+          ayahText = "Ta'awudz";
+        }
 
         html += `
           <div class="bookmark-item" onclick="jumpToBookmark(${sNum}, ${aNum})">
@@ -630,7 +642,9 @@
         localStorage.setItem('saved_ayahs', JSON.stringify(savedAyahs));
         renderBookmarkList();
         const [sNum, aNum] = itemKey.split(':').map(Number);
-        if (currentSurahNum === sNum) updateBookmarkUI(aNum);
+        if (currentSurahNum === sNum) {
+          updateBookmarkUI(aNum);
+        }
       }
     }
 
@@ -787,10 +801,12 @@
         let html = '';
         const transHiddenClass = showTranslations ? '' : 'hidden';
 
+        // KHUSUS SURAT AL-FATIHAH: Tampilkan blok Ta'awudz di kartu nomor 0
         if (currentSurahNum === 1) {
           const itemKeyTaawudz = `${currentSurahNum}:0`;
           const isTaawudzSaved = savedAyahs.includes(itemKeyTaawudz);
-          let taawudzText = applyIndonesianQuranStandards("أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيْطَٰنِ ٱلرَّجِيمِ");
+          let taawudzText = "أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيْطَٰنِ ٱلرَّجِيمِ";
+          taawudzText = applyIndonesianQuranStandards(taawudzText);
 
           html += `
             <div class="ayah-card bismillah-card" id="ayah-card-0">
@@ -805,10 +821,12 @@
               <div class="ayah-translation ${transHiddenClass}" id="translation-0">Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div>
             </div>`;
         } 
+        // UNTUK SURAT LAINNYA (Selain At-Taubah/9 dan Al-Fatihah/1), tampilkan Bismillah di indeks 0
         else if (currentSurahNum !== 9) {
           const itemKey0 = `${currentSurahNum}:0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
-          let bismillahText = applyIndonesianQuranStandards("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ");
+          let bismillahText = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+          bismillahText = applyIndonesianQuranStandards(bismillahText);
 
           html += `
             <div class="ayah-card bismillah-card" id="ayah-card-0">
@@ -879,8 +897,9 @@
 
       const surahInfo = ALL_SURAHS.find(s => s.num === currentSurahNum);
       let titleLabel = ayahNum === 0 ? "Bismillah" : `Ayat ${ayahNum}`;
-      if (currentSurahNum === 1 && ayahNum === 0) titleLabel = "Ta'awudz";
-
+      if (currentSurahNum === 1 && ayahNum === 0) {
+        titleLabel = "Ta'awudz";
+      }
       playerTitle.innerText = `${surahInfo.name} : ${titleLabel}`;
       
       masterPlayIcon.setAttribute('href', '#icon-stop');
@@ -888,23 +907,16 @@
 
       const qari = QARIS.find(q => q.id === currentQariId);
 
-      // Cek apakah user memutar Ta'awudz (Ayat 0 Al-Fatihah)
+      // PENANGANAN TAAWUDZ OTOMATIS:
+      // Jika surat Al-Fatihah dan memutar Ayat 1 (atau jika diklik kartu Ta'awudz 0)
       if (currentSurahNum === 1 && ayahNum === 0) {
         isPlayingTaawudzPhase = false;
         playerStatus.innerText = "Memutar Ta'awudz...";
-        
-        if (qari && qari.type === 'supabase') {
-          audioElement.src = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/0.mp3`;
-        } else {
-          // Fallback universal ta'awudz untuk qori API eksternal (menggunakan file Al-Fatihah Ayat 1 Syaikh Misyari sebagai representasi universal atau fallback audio umum)
-          audioElement.src = `https://everyayah.com/data/Alafasy_128kbps/001001.mp3`;
-        }
-      } 
-      // Jika Murottal Anak dipilih dan user menekan Ayat 1 Al-Fatihah, mainkan Ta'awudz terlebih dahulu
-      else if (currentSurahNum === 1 && ayahNum === 1 && qari && qari.type === 'supabase') {
+        audioElement.src = (qari && qari.type === 'supabase') ? TAAWUDZ_ANAK_URL : TAAWUDZ_UNIVERSAL_URL;
+      } else if (currentSurahNum === 1 && ayahNum === 1) {
         isPlayingTaawudzPhase = true;
         playerStatus.innerText = "Memutar Ta'awudz...";
-        audioElement.src = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/0.mp3`;
+        audioElement.src = (qari && qari.type === 'supabase') ? TAAWUDZ_ANAK_URL : TAAWUDZ_UNIVERSAL_URL;
       } else {
         isPlayingTaawudzPhase = false;
         playerStatus.innerText = "Memutar audio...";
@@ -913,7 +925,6 @@
 
       audioElement.play().then(() => { isPlaying = true; }).catch(() => {
         isPlaying = false;
-        isPlayingTaawudzPhase = false;
         masterPlayIcon.setAttribute('href', '#icon-play');
         masterPlaySvg.classList.remove('icon-fill-stop');
         setBtnPlayIcon(ayahNum, false);
@@ -945,12 +956,12 @@
     }
 
     audioElement.onended = () => {
-      // Jika sedang berada dalam fase Ta'awudz otomatis menuju Ayat 1 Al-Fatihah
+      // Jika baru saja menyelesaikan fase pemutaran Ta'awudz untuk Al-Fatihah Ayat 1
       if (isPlayingTaawudzPhase) {
         isPlayingTaawudzPhase = false;
         playerStatus.innerText = "Memutar audio ayat...";
         
-        // Jeda waktu 600ms yang pas dan natural sebelum masuk ke ayat berikutnya
+        // Jeda waktu aman (600ms) sebelum lanjut ke Bismillah / Ayat 1
         setTimeout(() => {
           if (!isPlaying) return; 
           audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
@@ -965,15 +976,6 @@
         return;
       }
 
-      // Jika memutar Ta'awudz secara mandiri (Ayat 0 Al-Fatihah), hentikan atau lanjut ke Ayat 1 jika mode surat/range aktif
-      if (currentSurahNum === 1 && currentAyah === 0) {
-        const mode = repeatModeSelect.value;
-        if (mode === 'surah' || mode === 'range') {
-          playAyah(1);
-          return;
-        }
-      }
-
       isPlaying = false;
       masterPlayIcon.setAttribute('href', '#icon-play');
       masterPlaySvg.classList.remove('icon-fill-stop');
@@ -982,10 +984,11 @@
       const mode = repeatModeSelect.value;
       
       if (mode === 'single') {
-        playAyah(currentAyah);
+        playAudioLoopSafe(currentAyah);
       } 
       else if (mode === 'surah') {
         const minAyah = (currentSurahNum === 1) ? 0 : (currentSurahNum === 9 ? 1 : 0);
+
         if (currentAyah < currentTotalAyahs) {
           playAyah(currentAyah + 1);
         } else {
@@ -998,6 +1001,10 @@
         playAyah(currentAyah < end ? currentAyah + 1 : start);
       }
     };
+
+    function playAudioLoopSafe(ayahNum) {
+      playAyah(ayahNum);
+    }
 
     function toArabicDigits(num) { return String(num).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
 

@@ -134,18 +134,8 @@
       flex-wrap: wrap;
     }
 
-    .selector-group {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .selector-divider {
-      width: 1px;
-      height: 20px;
-      background: var(--card-border);
-    }
-
+    .selector-group { display: inline-flex; align-items: center; gap: 6px; }
+    .selector-divider { width: 1px; height: 20px; background: var(--card-border); }
     .surah-selector-container label { color: var(--neon-primary); text-transform: uppercase; font-size: 11px; }
     .surah-selector-container select { background: transparent; color: var(--text-main); border: none; outline: none; font-size: 14px; font-weight: 600; cursor: pointer; }
     .surah-selector-container select option { background: var(--dropdown-bg); color: var(--text-main); }
@@ -179,15 +169,7 @@
     .container { max-width: 800px; margin: 16px auto; padding: 0 20px; flex: 1; width: 100%; }
 
     .surah-header-standalone { text-align: center; margin-bottom: 20px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    
-    .surah-title-ar {
-      font-family: 'Scheherazade New', serif;
-      font-size: 32px;
-      color: var(--neon-secondary);
-      direction: rtl;
-      line-height: 1.4;
-    }
-
+    .surah-title-ar { font-family: 'Scheherazade New', serif; font-size: 32px; color: var(--neon-secondary); direction: rtl; line-height: 1.4; }
     .surah-subtitle { color: var(--text-muted); font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
 
     .ayah-card {
@@ -223,50 +205,21 @@
     .ayah-translation.hidden { display: none; }
 
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 7, 18, 0.7);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
+      position: fixed; inset: 0; background: rgba(3, 7, 18, 0.7); backdrop-filter: blur(8px);
+      z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
     }
     .modal-overlay.open { opacity: 1; pointer-events: auto; }
     .modal-card {
-      background: var(--dropdown-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 480px;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      background: var(--dropdown-bg); border: 1px solid var(--card-border); border-radius: 16px;
+      width: 100%; max-width: 480px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     }
-    .modal-header {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--card-border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .modal-header { padding: 14px 18px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; }
     .modal-title { font-size: 14px; font-weight: 700; color: var(--neon-primary); }
     .modal-body { padding: 14px 18px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
     .bookmark-item {
-      background: var(--card-glass);
-      border: 1px solid var(--card-border);
-      padding: 10px 14px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      background: var(--card-glass); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 10px;
+      display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease;
     }
     .bookmark-item:hover { border-color: var(--neon-secondary); transform: translateX(4px); }
     .bookmark-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; padding-right: 10px; }
@@ -274,53 +227,18 @@
     .bookmark-sub { font-size: 11px; color: var(--text-muted); }
     
     .bookmark-delete {
-      background: var(--btn-glass-bg);
-      border: 1px solid var(--btn-glass-border);
-      color: var(--text-muted);
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
+      background: var(--btn-glass-bg); border: 1px solid var(--btn-glass-border); color: var(--text-muted);
+      width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
     }
-    .bookmark-delete:hover {
-      background: rgba(239, 68, 68, 0.15);
-      border-color: #ef4444;
-      color: #ef4444;
-      transform: scale(1.05);
-    }
-    .bookmark-delete svg {
-      width: 14px;
-      height: 14px;
-      stroke: currentColor;
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      fill: none;
-    }
+    .bookmark-delete:hover { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #ef4444; transform: scale(1.05); }
+    .bookmark-delete svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
 
     .bottom-player {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 32px);
-      max-width: 800px;
-      background: var(--card-glass);
-      backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), var(--glow-shadow);
-      z-index: 100;
-      gap: 14px;
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 800px;
+      background: var(--card-glass); backdrop-filter: var(--glass-blur); border: 1px solid var(--card-border); border-radius: 16px;
+      padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), var(--glow-shadow);
+      z-index: 100; gap: 14px;
     }
 
     .player-left-content { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
@@ -330,28 +248,14 @@
     .player-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; }
 
     .repeat-mode-select {
-      background: var(--btn-glass-bg);
-      backdrop-filter: blur(12px);
-      color: var(--text-main);
-      border: 1px solid var(--btn-glass-border);
-      padding: 6px 10px;
-      border-radius: 10px;
-      font-size: 12px;
-      outline: none;
-      cursor: pointer;
+      background: var(--btn-glass-bg); backdrop-filter: blur(12px); color: var(--text-main); border: 1px solid var(--btn-glass-border);
+      padding: 6px 10px; border-radius: 10px; font-size: 12px; outline: none; cursor: pointer;
     }
     .repeat-mode-select option { background: var(--dropdown-bg); color: var(--text-main); }
 
     .range-picker {
-      display: none;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      color: var(--text-muted);
-      background: var(--btn-glass-bg);
-      padding: 5px 10px;
-      border-radius: 10px;
-      border: 1px solid var(--btn-glass-border);
+      display: none; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted);
+      background: var(--btn-glass-bg); padding: 5px 10px; border-radius: 10px; border: 1px solid var(--btn-glass-border);
     }
     .range-picker select { background: transparent; color: var(--neon-secondary); border: none; outline: none; font-size: 12px; font-weight: 700; cursor: pointer; }
     .range-picker select option { background: var(--dropdown-bg); color: var(--text-main); }
@@ -393,9 +297,7 @@
         <div class="modal-title">DAFTAR BOOKMARK</div>
         <button class="glass-btn round" onclick="toggleBookmarkModal()" style="width: 28px; height: 28px;"><svg style="width: 14px; height: 14px;"><use href="#icon-close"></use></svg></button>
       </div>
-      <div class="modal-body" id="bookmarkListContainer">
-        <!-- List bookmarks -->
-      </div>
+      <div class="modal-body" id="bookmarkListContainer"></div>
     </div>
   </div>
 
@@ -452,6 +354,7 @@
     const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
     const BUCKET_NAME = "quran-audio";
 
+    // Link Ta'awudz Sesuai Permintaan Anda:
     const TAAWUDZ_ANAK_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzanak.mp3`;
     const TAAWUDZ_UNIVERSAL_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/taawudzuniversal.mp3`;
 
@@ -529,7 +432,6 @@
     let currentTotalAyahs = 7;
     let currentAyah = null; 
     let isPlaying = false;
-    let isPlayingTaawudzPhase = false;
     let showTranslations = localStorage.getItem('show_translations') !== 'false';
     let savedAyahs = JSON.parse(localStorage.getItem('saved_ayahs') || '[]');
 
@@ -591,15 +493,11 @@
 
     function toggleBookmarkModal() {
       bookmarkModal.classList.toggle('open');
-      if (bookmarkModal.classList.contains('open')) {
-        renderBookmarkList();
-      }
+      if (bookmarkModal.classList.contains('open')) renderBookmarkList();
     }
 
     function handleModalOutsideClick(event) {
-      if (event.target === bookmarkModal) {
-        toggleBookmarkModal();
-      }
+      if (event.target === bookmarkModal) toggleBookmarkModal();
     }
 
     function renderBookmarkList() {
@@ -614,9 +512,7 @@
         const surah = ALL_SURAHS.find(s => s.num === sNum);
         const surahName = surah ? surah.name : `Surah ${sNum}`;
         let ayahText = aNum === 0 ? 'Bismillah' : `Ayat ${aNum}`;
-        if (sNum === 1 && aNum === 0) {
-          ayahText = "Ta'awudz";
-        }
+        if (sNum === 1 && aNum === 0) ayahText = "Ta'awudz";
 
         html += `
           <div class="bookmark-item" onclick="jumpToBookmark(${sNum}, ${aNum})">
@@ -624,7 +520,7 @@
               <div class="bookmark-title">${surahName} (${sNum}:${aNum})</div>
               <div class="bookmark-sub">Surah ${surahName} • ${ayahText}</div>
             </div>
-            <button class="bookmark-delete" onclick="event.stopPropagation(); removeBookmarkItem('${itemKey}')" title="Hapus Bookmark">
+            <button class="bookmark-delete" onclick="event.stopPropagation(); removeBookmarkItem('${itemKey}')" title="Hapus">
               <svg><use href="#icon-close"></use></svg>
             </button>
           </div>
@@ -640,9 +536,7 @@
         localStorage.setItem('saved_ayahs', JSON.stringify(savedAyahs));
         renderBookmarkList();
         const [sNum, aNum] = itemKey.split(':').map(Number);
-        if (currentSurahNum === sNum) {
-          updateBookmarkUI(aNum);
-        }
+        if (currentSurahNum === sNum) updateBookmarkUI(aNum);
       }
     }
 
@@ -656,7 +550,6 @@
         stopAudio();
         await loadSurah();
       }
-      
       setTimeout(() => {
         const card = document.getElementById(`ayah-card-${ayahNum}`);
         if (card) {
@@ -721,15 +614,23 @@
       currentQariId = qariSelect.value;
       if (isPlaying && currentAyah !== null) {
         audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
-        audioElement.play().catch(() => {
-          playerStatus.innerText = "Gagal memutar audio qori ini";
-        });
+        audioElement.play().catch(() => { playerStatus.innerText = "Gagal memutar audio qori ini"; });
       }
     }
 
     function getAudioUrl(surahNumber, ayahNumber) {
       const qari = QARIS.find(q => q.id === currentQariId);
+
+      // KHUSUS TAAWUDZ (Ayat 0 di Surah 1)
+      if (surahNumber === 1 && ayahNumber === 0) {
+        if (qari && qari.type === 'supabase') {
+          return TAAWUDZ_ANAK_URL; // taawudzanak.mp3
+        } else {
+          return TAAWUDZ_UNIVERSAL_URL; // taawudzuniversal.mp3
+        }
+      }
       
+      // AUDIO REGULER AYAT
       if (qari && qari.type === 'supabase') {
         return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${surahNumber}/${ayahNumber}.mp3`;
       } else if (qari && qari.type === 'api') {
@@ -761,19 +662,9 @@
 
     function applyIndonesianQuranStandards(text) {
       return text
-        .replace(/لِلَّهِ/g, 'لِلَّٰهِ')
-        .replace(/اللَّهِ/g, 'اللَّٰهِ')
-        .replace(/اللَّهُ/g, 'اللَّٰهُ')
-        .replace(/ٱللَّهِ/g, 'ٱللَّٰهِ')
-        .replace(/ٱللَّهُ/g, 'ٱللَّٰهُ')
-        .replace(/لله/g, 'لِلَّٰهِ')
-        .replace(/بالله/g, 'بِٱللَّٰهِ')
-        .replace(/بِٱللَّهِ/g, 'بِٱللَّٰهِ')
-        .replace(/بِٱللَّ+[ِե]/g, 'بِٱللَِّٰ')
-        .replace(/اللَّ+[َُِ]/g, 'اللَّٰ')
-        .replace(/ٱلصِّرَٰطَ/g, 'ٱلصِّرَٰطَ')
-        .replace(/صِرَٰطَ/g, 'صِرَٰطَ')
-        .replace(/الصِّرَاطَ/g, 'ٱلصِّرَٰطَ');
+        .replace(/لِلَّهِ/g, 'لِلَّٰهِ').replace(/اللَّهِ/g, 'اللَّٰهِ').replace(/اللَّهُ/g, 'اللَّٰهُ')
+        .replace(/ٱللَّهِ/g, 'ٱللَّٰهِ').replace(/ٱللَّهُ/g, 'ٱللَّٰهُ').replace(/لله/g, 'لِلَّٰهِ')
+        .replace(/بالله/g, 'بِٱللَّٰهِ').replace(/بِٱللَّهِ/g, 'بِٱللَّٰهِ').replace(/ٱلصِّرَٰطَ/g, 'ٱلصِّرَٰطَ');
     }
 
     async function loadSurah() {
@@ -803,8 +694,7 @@
         if (currentSurahNum === 1) {
           const itemKeyTaawudz = `${currentSurahNum}:0`;
           const isTaawudzSaved = savedAyahs.includes(itemKeyTaawudz);
-          let taawudzText = "أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيْطَٰنِ ٱلرَّجِيمِ";
-          taawudzText = applyIndonesianQuranStandards(taawudzText);
+          let taawudzText = applyIndonesianQuranStandards("أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيْطَٰنِ ٱلرَّجِيمِ");
 
           html += `
             <div class="ayah-card bismillah-card" id="ayah-card-0">
@@ -823,8 +713,7 @@
         else if (currentSurahNum !== 9) {
           const itemKey0 = `${currentSurahNum}:0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
-          let bismillahText = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
-          bismillahText = applyIndonesianQuranStandards(bismillahText);
+          let bismillahText = applyIndonesianQuranStandards("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ");
 
           html += `
             <div class="ayah-card bismillah-card" id="ayah-card-0">
@@ -895,36 +784,20 @@
 
       const surahInfo = ALL_SURAHS.find(s => s.num === currentSurahNum);
       let titleLabel = ayahNum === 0 ? "Bismillah" : `Ayat ${ayahNum}`;
-      if (currentSurahNum === 1 && ayahNum === 0) {
-        titleLabel = "Ta'awudz";
-      }
+      if (currentSurahNum === 1 && ayahNum === 0) titleLabel = "Ta'awudz";
+      
       playerTitle.innerText = `${surahInfo.name} : ${titleLabel}`;
+      playerStatus.innerText = "Memutar audio...";
       
       masterPlayIcon.setAttribute('href', '#icon-stop');
       masterPlaySvg.classList.add('icon-fill-stop');
 
-      const qari = QARIS.find(q => q.id === currentQariId);
-
-      // Pastikan audio dihentikan dahulu untuk mencegah overlap / dobel suara
+      // Hentikan audio sebelumnya secara total untuk mencegah dobel suara
       audioElement.pause();
       audioElement.currentTime = 0;
 
-      // Logika Penentuan URL Audio yang Bersih & Aman
-      if (currentSurahNum === 1 && ayahNum === 0) {
-        // Memutar khusus Ta'awudz
-        isPlayingTaawudzPhase = false;
-        playerStatus.innerText = "Memutar Ta'awudz...";
-        audioElement.src = (qari && qari.type === 'supabase') ? TAAWUDZ_ANAK_URL : TAAWUDZ_UNIVERSAL_URL;
-      } else if (currentSurahNum === 1 && ayahNum === 1) {
-        // Jika ayat 1 Al-Fatihah diputar langsung (bukan dari urutan taawudz otomatis), putar murni ayat 1 saja
-        isPlayingTaawudzPhase = false;
-        playerStatus.innerText = "Memutar audio...";
-        audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
-      } else {
-        isPlayingTaawudzPhase = false;
-        playerStatus.innerText = "Memutar audio...";
-        audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
-      }
+      // Ambil URL murni berdasarkan qori yang aktif dan nomor ayat
+      audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
 
       audioElement.play().then(() => { 
         isPlaying = true; 
@@ -942,7 +815,6 @@
       audioElement.pause();
       audioElement.currentTime = 0;
       isPlaying = false;
-      isPlayingTaawudzPhase = false;
       masterPlayIcon.setAttribute('href', '#icon-play');
       masterPlaySvg.classList.remove('icon-fill-stop');
       if (currentAyah !== null) {
@@ -974,7 +846,6 @@
       } 
       else if (mode === 'surah') {
         const minAyah = (currentSurahNum === 1) ? 0 : (currentSurahNum === 9 ? 1 : 0);
-
         if (currentAyah < currentTotalAyahs) {
           playAyah(currentAyah + 1);
         } else {

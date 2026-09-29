@@ -452,11 +452,9 @@
     const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
     const BUCKET_NAME = "quran-audio";
 
-    // URL file ta'awudz khusus sesuai path Supabase Anda
     const TAAWUDZ_ANAK_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzanak.mp3`;
     const TAAWUDZ_UNIVERSAL_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/taawudzuniversal.mp3`;
 
-    // Daftar Qori
     const QARIS = [
       { id: 'supabase', name: 'Murottal Anak', type: 'supabase' },
       { id: 'mishary', name: 'Syaikh Misyari Rasyid', type: 'api', baseUrl: 'https://everyayah.com/data/Alafasy_128kbps/' },
@@ -801,7 +799,7 @@
         let html = '';
         const transHiddenClass = showTranslations ? '' : 'hidden';
 
-        // KHUSUS SURAT AL-FATIHAH: Tampilkan blok Ta'awudz di kartu nomor 0
+        // Kotak Ta'awudz (Khusus Surah 1)
         if (currentSurahNum === 1) {
           const itemKeyTaawudz = `${currentSurahNum}:0`;
           const isTaawudzSaved = savedAyahs.includes(itemKeyTaawudz);
@@ -821,7 +819,7 @@
               <div class="ayah-translation ${transHiddenClass}" id="translation-0">Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div>
             </div>`;
         } 
-        // UNTUK SURAT LAINNYA (Selain At-Taubah/9 dan Al-Fatihah/1), tampilkan Bismillah di indeks 0
+        // Kotak Bismillah (Selain Surah 9 dan 1)
         else if (currentSurahNum !== 9) {
           const itemKey0 = `${currentSurahNum}:0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
@@ -907,22 +905,31 @@
 
       const qari = QARIS.find(q => q.id === currentQariId);
 
-      // PENANGANAN TAAWUDZ OTOMATIS SESUAI PATH SUPABASE BARU:
+      // Pastikan audio dihentikan dahulu untuk mencegah overlap / dobel suara
+      audioElement.pause();
+      audioElement.currentTime = 0;
+
+      // Logika Penentuan URL Audio yang Bersih & Aman
       if (currentSurahNum === 1 && ayahNum === 0) {
+        // Memutar khusus Ta'awudz
         isPlayingTaawudzPhase = false;
         playerStatus.innerText = "Memutar Ta'awudz...";
         audioElement.src = (qari && qari.type === 'supabase') ? TAAWUDZ_ANAK_URL : TAAWUDZ_UNIVERSAL_URL;
       } else if (currentSurahNum === 1 && ayahNum === 1) {
-        isPlayingTaawudzPhase = true;
-        playerStatus.innerText = "Memutar Ta'awudz...";
-        audioElement.src = (qari && qari.type === 'supabase') ? TAAWUDZ_ANAK_URL : TAAWUDZ_UNIVERSAL_URL;
+        // Jika ayat 1 Al-Fatihah diputar langsung (bukan dari urutan taawudz otomatis), putar murni ayat 1 saja
+        isPlayingTaawudzPhase = false;
+        playerStatus.innerText = "Memutar audio...";
+        audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
       } else {
         isPlayingTaawudzPhase = false;
         playerStatus.innerText = "Memutar audio...";
         audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
       }
 
-      audioElement.play().then(() => { isPlaying = true; }).catch(() => {
+      audioElement.play().then(() => { 
+        isPlaying = true; 
+      }).catch((e) => {
+        console.error("Audio playback error:", e);
         isPlaying = false;
         masterPlayIcon.setAttribute('href', '#icon-play');
         masterPlaySvg.classList.remove('icon-fill-stop');
@@ -955,24 +962,6 @@
     }
 
     audioElement.onended = () => {
-      if (isPlayingTaawudzPhase) {
-        isPlayingTaawudzPhase = false;
-        playerStatus.innerText = "Memutar audio ayat...";
-        
-        setTimeout(() => {
-          if (!isPlaying) return; 
-          audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
-          audioElement.play().catch(() => {
-            isPlaying = false;
-            masterPlayIcon.setAttribute('href', '#icon-play');
-            masterPlaySvg.classList.remove('icon-fill-stop');
-            if (currentAyah !== null) setBtnPlayIcon(currentAyah, false);
-            playerStatus.innerText = "Gagal memutar audio ayat";
-          });
-        }, 600);
-        return;
-      }
-
       isPlaying = false;
       masterPlayIcon.setAttribute('href', '#icon-play');
       masterPlaySvg.classList.remove('icon-fill-stop');
@@ -981,7 +970,7 @@
       const mode = repeatModeSelect.value;
       
       if (mode === 'single') {
-        playAudioLoopSafe(currentAyah);
+        playAyah(currentAyah);
       } 
       else if (mode === 'surah') {
         const minAyah = (currentSurahNum === 1) ? 0 : (currentSurahNum === 9 ? 1 : 0);
@@ -998,10 +987,6 @@
         playAyah(currentAyah < end ? currentAyah + 1 : start);
       }
     };
-
-    function playAudioLoopSafe(ayahNum) {
-      playAyah(ayahNum);
-    }
 
     function toArabicDigits(num) { return String(num).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
 

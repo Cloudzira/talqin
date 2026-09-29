@@ -451,8 +451,6 @@
   <script>
     const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
     const BUCKET_NAME = "quran-audio";
-    // Link Taawudz universal dari Supabase Anda
-    const TAAWUDZ_UNIVERSAL_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzuniversal.mp3`;
 
     // Daftar Qori (Supabase dan API External Quran Central / EveryAyah)
     const QARIS = [
@@ -720,11 +718,7 @@
     function changeQari() {
       currentQariId = qariSelect.value;
       if (isPlaying && currentAyah !== null) {
-        if (currentSurahNum === 1 && currentAyah === 1 && currentQariId !== 'supabase') {
-          audioElement.src = TAAWUDZ_UNIVERSAL_URL;
-        } else {
-          audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
-        }
+        audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
         audioElement.play().catch(() => {
           playerStatus.innerText = "Gagal memutar audio qori ini";
         });
@@ -908,21 +902,17 @@
       masterPlayIcon.setAttribute('href', '#icon-stop');
       masterPlaySvg.classList.add('icon-fill-stop');
 
-      // Jika Al-Fatihah, saat user menekan Play pada Ayat 1 (ayahNum === 1) dan qori API dipilih,
-      // putar Ta'awudz universal terlebih dahulu.
+      // Cek apakah Qori Supabase (Murottal Anak) atau API Eksternal
       const qari = QARIS.find(q => q.id === currentQariId);
-      if (currentSurahNum === 1 && ayahNum === 1 && qari && qari.type === 'api') {
+
+      // Jika Murottal Anak dipilih, putar otomatis Ta'awudz (0) terlebih dahulu, lalu lanjut ke Ayat 1
+      if (currentSurahNum === 1 && ayahNum === 1 && qari && qari.type === 'supabase') {
         isPlayingTaawudzPhase = true;
         playerStatus.innerText = "Memutar Ta'awudz...";
-        audioElement.src = TAAWUDZ_UNIVERSAL_URL;
+        audioElement.src = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/0.mp3`;
       } else {
         isPlayingTaawudzPhase = false;
-        // Jika user secara manual menekan kartu Ta'awudz (ayahNum === 0 di Al-Fatihah)
-        if (currentSurahNum === 1 && ayahNum === 0) {
-          audioElement.src = TAAWUDZ_UNIVERSAL_URL;
-        } else {
-          audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
-        }
+        audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
       }
 
       audioElement.play().then(() => { isPlaying = true; }).catch(() => {

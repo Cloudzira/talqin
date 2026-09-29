@@ -452,8 +452,8 @@
     const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
     const BUCKET_NAME = "quran-audio";
 
-    // URL file ta'awudz khusus
-    const TAAWUDZ_ANAK_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/taawudzanak.mp3`;
+    // URL file ta'awudz khusus sesuai path Supabase Anda
+    const TAAWUDZ_ANAK_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzanak.mp3`;
     const TAAWUDZ_UNIVERSAL_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/taawudzuniversal.mp3`;
 
     // Daftar Qori
@@ -907,8 +907,7 @@
 
       const qari = QARIS.find(q => q.id === currentQariId);
 
-      // PENANGANAN TAAWUDZ OTOMATIS:
-      // Jika surat Al-Fatihah dan memutar Ayat 1 (atau jika diklik kartu Ta'awudz 0)
+      // PENANGANAN TAAWUDZ OTOMATIS SESUAI PATH SUPABASE BARU:
       if (currentSurahNum === 1 && ayahNum === 0) {
         isPlayingTaawudzPhase = false;
         playerStatus.innerText = "Memutar Ta'awudz...";
@@ -956,12 +955,10 @@
     }
 
     audioElement.onended = () => {
-      // Jika baru saja menyelesaikan fase pemutaran Ta'awudz untuk Al-Fatihah Ayat 1
       if (isPlayingTaawudzPhase) {
         isPlayingTaawudzPhase = false;
         playerStatus.innerText = "Memutar audio ayat...";
         
-        // Jeda waktu aman (600ms) sebelum lanjut ke Bismillah / Ayat 1
         setTimeout(() => {
           if (!isPlaying) return; 
           audioElement.src = getAudioUrl(currentSurahNum, currentAyah);

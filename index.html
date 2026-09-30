@@ -354,9 +354,10 @@
     const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
     const BUCKET_NAME = "quran-audio";
 
-    // Link Ta'awudz:
+    // Link Ta'awudz & Bismillah Khusus Murottal Anak / Supabase:
     const TAAWUDZ_ANAK_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzanak.mp3`;
     const TAAWUDZ_UNIVERSAL_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzuniversal.mp3`;
+    const BISMILLAH_ANAK_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/bismilahanak.mp3`; // atau sesuaikan path bismillah anak jika ada
 
     const QARIS = [
       { id: 'supabase', name: 'Murottal Anak', type: 'supabase' },
@@ -512,7 +513,7 @@
         const surah = ALL_SURAHS.find(s => s.num === sNum);
         const surahName = surah ? surah.name : `Surah ${sNum}`;
         
-        // Penamaan khusus Ta'awudz pada Surah Al-Fatihah (Ayat 0)
+        // Penamaan bookmark: Surah 1 ayat 0 = Ta'awudz, lainnya ayat 0 = Bismillah
         let ayahText = (sNum === 1 && aNum === 0) ? "Ta'awudz" : (aNum === 0 ? 'Bismillah' : `Ayat ${aNum}`);
 
         html += `
@@ -595,7 +596,7 @@
         if (parseInt(startAyahSelect.value) > parseInt(endAyahSelect.value)) endAyahSelect.value = startAyahSelect.value;
       };
       endAyahSelect.onchange = () => {
-        if (parseInt(endAyahSelect.value) < parseInt(startAyahSelect.value)) startAyahSelect.value = endAyahSelect.value;
+        if (parseInt(endAyahSelect.value) < parseInt(startAyahSelect.value)) endAyahSelect.value = startAyahSelect.value;
       };
     }
 
@@ -619,24 +620,31 @@
       }
     }
 
+    // FUNGSI GET AUDIO URL YANG DIPERBAIKI (Pemisah Ta'awudz vs Bismillah)
     function getAudioUrl(surahNumber, ayahNumber) {
       const qari = QARIS.find(q => q.id === currentQariId);
 
-      // Khusus Surah Al-Fatihah Ayat 0 (Ta'awudz)
+      // 1. Khusus Surah Al-Fatihah (1), Ayat 0 adalah Ta'awudz
       if (surahNumber === 1 && ayahNumber === 0) {
         if (qari && qari.type === 'supabase') {
-          return TAAWUDZ_ANAK_URL; 
+          return TAAWUDZ_ANAK_URL; // taawudzanak.mp3
         } else {
-          return TAAWUDZ_UNIVERSAL_URL; 
+          return TAAWUDZ_UNIVERSAL_URL; // taawudzuniversal.mp3
         }
       }
       
-      // Bismillah (Ayat 0 selain Surah 1 & 9)
+      // 2. Untuk Surah Lain, Ayat 0 adalah Bismillah
       if (ayahNumber === 0) {
-        return TAAWUDZ_UNIVERSAL_URL;
+        if (qari && qari.type === 'supabase') {
+          return BISMILLAH_ANAK_URL; // bismilahanak.mp3 dari supabase
+        } else if (qari && qari.type === 'api') {
+          // Qori API biasanya menggunakan file bismilah universal atau format audio bismillah qori tersebut (misal surah 1 ayat 1 sebagai bismillah atau file bismillah khusus)
+          // Jika menggunakan link universal / file bismillah tiap qori API:
+          return `${qari.baseUrl}001001.mp3`; // atau disesuaikan dengan file bismillah API
+        }
       }
 
-      // Audio Reguler Ayat
+      // 3. Audio Reguler Ayat (Ayat 1 dan seterusnya)
       if (qari && qari.type === 'supabase') {
         return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${surahNumber}/${ayahNumber}.mp3`;
       } else if (qari && qari.type === 'api') {
@@ -724,7 +732,7 @@
           html += `
             <div class="ayah-card bismillah-card" id="ayah-card-0">
               <div class="ayah-top-bar">
-                <div class="ayah-key">${currentSurahNum}:0</div>
+                <div class="ayah-key">${currentSurahNum}:0 (Bismillah)</div>
                 <div class="ayah-actions">
                   <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
                   <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
@@ -844,7 +852,7 @@
       masterPlaySvg.classList.remove('icon-fill-stop');
       if (currentAyah !== null) setBtnPlayIcon(currentAyah, false);
 
-      const mode = repeatModeSelect.value;
+      const mode = repeatModeSelect.repeatModeSelect || repeatModeSelect.value;
       
       if (mode === 'single') {
         playAyah(currentAyah);

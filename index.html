@@ -351,21 +351,17 @@
   <audio id="audio-element"></audio>
 
   <script>
-    const SUPABASE_URL = "https://wltnavoogxvoymhcdfwz.supabase.co"; 
-    const BUCKET_NAME = "quran-audio";
-
-    // Link Ta'awudz (Khusus Surah Al-Fatihah / 1):
-    const TAAWUDZ_ANAK_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzanak.mp3`;
-    const TAAWUDZ_UNIVERSAL_URL = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/1/taawudzuniversal.mp3`;
+    // Konfigurasi GitHub Raw Repository untuk Murottal Anak
+    const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/Cloudzira/talqin/main/audio-ayat";
 
     const QARIS = [
-      { id: 'supabase', name: 'Murottal Anak', type: 'supabase' },
+      { id: 'github_anak', name: 'Murottal Anak', type: 'github' },
       { id: 'mishary', name: 'Syaikh Misyari Rasyid', type: 'api', baseUrl: 'https://everyayah.com/data/Alafasy_128kbps/' },
       { id: 'husary', name: 'Syaikh Mahmud Khalil Al-Husary', type: 'api', baseUrl: 'https://everyayah.com/data/Husary_128kbps/' },
       { id: 'minshawi', name: 'Syaikh Muhammad Siddiq Al-Minshawi', type: 'api', baseUrl: 'https://everyayah.com/data/Minshawy_Murattal_128kbps/' }
     ];
 
-    let currentQariId = 'supabase';
+    let currentQariId = 'github_anak';
 
     const ALL_SURAHS = [
       { num: 1, name: "Al-Fatihah", ar: "سُورَةُ ٱلْفَاتِحَةِ", ayahs: 7 },
@@ -512,7 +508,6 @@
         const surah = ALL_SURAHS.find(s => s.num === sNum);
         const surahName = surah ? surah.name : `Surah ${sNum}`;
         
-        // Penamaan bookmark: Surah 1 ayat 0 = Ta'awudz, lainnya ayat 0 = Bismillah
         let ayahText = (sNum === 1 && aNum === 0) ? "Ta'awudz" : (aNum === 0 ? 'Bismillah' : `Ayat ${aNum}`);
 
         html += `
@@ -619,34 +614,22 @@
       }
     }
 
-    // FUNGSI GET AUDIO URL YANG DIPERBAIKI (Ayat 0 Surah lain mengambil 0.mp3 dari folder Supabase)
+    // FUNGSI GET AUDIO URL (Diperbarui menggunakan GitHub Raw URL)
     function getAudioUrl(surahNumber, ayahNumber) {
       const qari = QARIS.find(q => q.id === currentQariId);
 
-      // 1. Khusus Surah Al-Fatihah (1), Ayat 0 adalah Ta'awudz
-      if (surahNumber === 1 && ayahNumber === 0) {
-        if (qari && qari.type === 'supabase') {
-          return TAAWUDZ_ANAK_URL; // taawudzanak.mp3 di folder 1
-        } else {
-          return TAAWUDZ_UNIVERSAL_URL; // taawudzuniversal.mp3
-        }
-      }
+      // Jika menggunakan Qori Murottal Anak (mengarah ke GitHub Raw)
+      if (qari && qari.type === 'github') {
+        const formattedAyah = String(ayahNumber).padStart(3, '0');
+        // Contoh hasil: https://raw.githubusercontent.com/Cloudzira/talqin/main/audio-ayat/1/000_001.mp3 atau 000_000.mp3
+        return `${GITHUB_RAW_BASE}/${surahNumber}/000_${formattedAyah}.mp3`;
+      } 
       
-      // 2. Untuk Surah Lain, Ayat 0 adalah Bismillah
-      if (ayahNumber === 0) {
-        if (qari && qari.type === 'supabase') {
-          // Mengambil file 0.mp3 dari dalam folder masing-masing surah di Supabase Storage
-          return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${surahNumber}/0.mp3`;
-        } else if (qari && qari.type === 'api') {
-          // Qori API menggunakan file Bismillah (umumnya diambil dari file ayat 1 surah 1 atau url universal bismillah API)
-          return `${qari.baseUrl}001001.mp3`; 
+      // Jika menggunakan Qori API eksternal
+      else if (qari && qari.type === 'api') {
+        if (ayahNumber === 0) {
+          return `${qari.baseUrl}001001.mp3`; // Bismillah umum
         }
-      }
-
-      // 3. Audio Reguler Ayat (Ayat 1 dan seterusnya)
-      if (qari && qari.type === 'supabase') {
-        return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${surahNumber}/${ayahNumber}.mp3`;
-      } else if (qari && qari.type === 'api') {
         const formattedSurah = String(surahNumber).padStart(3, '0');
         const formattedAyah = String(ayahNumber).padStart(3, '0');
         return `${qari.baseUrl}${formattedSurah}${formattedAyah}.mp3`;
@@ -796,8 +779,6 @@
       setBtnPlayIcon(ayahNum, true);
 
       const surahInfo = ALL_SURAHS.find(s => s.num === currentSurahNum);
-      
-      // Penamaan judul di player bawah
       let titleLabel = (currentSurahNum === 1 && ayahNum === 0) ? "Ta'awudz" : (ayahNum === 0 ? "Bismillah" : `Ayat ${ayahNum}`);
       
       playerTitle.innerText = `${surahInfo.name} : ${titleLabel}`;

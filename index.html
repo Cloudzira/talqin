@@ -304,7 +304,7 @@
   <div class="surah-selector-wrapper">
     <div class="surah-selector-container">
       <div class="selector-group">
-        <label for="surahSelect">SURَAH</label>
+        <label for="surahSelect">SURAH</label>
         <select id="surahSelect" onchange="changeSurah()"></select>
       </div>
       <div class="selector-divider"></div>
@@ -351,7 +351,6 @@
   <audio id="audio-element"></audio>
 
   <script>
-    // Konfigurasi GitHub Raw Repository untuk Murottal Anak
     const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/Cloudzira/talqin/main/audio-ayat";
 
     const QARIS = [
@@ -614,21 +613,39 @@
       }
     }
 
-    // FUNGSI GET AUDIO URL (Diperbarui menggunakan GitHub Raw URL)
+    // FUNGSI GET AUDIO URL SESUAI KETENTUAN TERBARU
     function getAudioUrl(surahNumber, ayahNumber) {
       const qari = QARIS.find(q => q.id === currentQariId);
 
-      // Jika menggunakan Qori Murottal Anak (mengarah ke GitHub Raw)
+      // Jika menggunakan Murottal Anak (GitHub)
       if (qari && qari.type === 'github') {
+        // Jika ayat 0 (Ta'awudz / Bismillah)
+        if (ayahNumber === 0) {
+          if (surahNumber === 1) {
+            // Surah 1 (Al-Fatihah) Ta'awudz menggunakan 000_001.mp3
+            return `${GITHUB_RAW_BASE}/${surahNumber}/000_001.mp3`;
+          } else {
+            // Surah lain: bismillah menggunakan 0.mp3 di dalam masing-masing folder surat
+            return `${GITHUB_RAW_BASE}/${surahNumber}/0.mp3`;
+          }
+        }
+
+        // Ayat biasa format [nomor_surat]_[nomor_ayat].mp3 (contoh: 001_001.mp3)
+        const formattedSurah = String(surahNumber).padStart(3, '0');
         const formattedAyah = String(ayahNumber).padStart(3, '0');
-        // Contoh hasil: https://raw.githubusercontent.com/Cloudzira/talqin/main/audio-ayat/1/000_001.mp3 atau 000_000.mp3
-        return `${GITHUB_RAW_BASE}/${surahNumber}/000_${formattedAyah}.mp3`;
+        return `${GITHUB_RAW_BASE}/${surahNumber}/${formattedSurah}_${formattedAyah}.mp3`;
       } 
       
-      // Jika menggunakan Qori API eksternal
+      // Jika menggunakan Qori API Eksternal
       else if (qari && qari.type === 'api') {
         if (ayahNumber === 0) {
-          return `${qari.baseUrl}001001.mp3`; // Bismillah umum
+          if (surahNumber === 1) {
+            // Ta'awudz untuk API menggunakan 000_002.mp3 dari folder surah 1
+            return `${GITHUB_RAW_BASE}/1/000_002.mp3`;
+          } else {
+            // Bismillah API standar
+            return `${qari.baseUrl}001001.mp3`;
+          }
         }
         const formattedSurah = String(surahNumber).padStart(3, '0');
         const formattedAyah = String(ayahNumber).padStart(3, '0');

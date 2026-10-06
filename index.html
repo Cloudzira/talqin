@@ -3,55 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TalqinKu</title>
+  <title>TalqinKu - Ceria Belajar Al-Qur'an</title>
   <link rel="icon" href="favicon.png">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-dark: #030712;
-      --bg-radial-1: rgba(0, 240, 255, 0.12);
-      --bg-radial-2: rgba(0, 255, 204, 0.1);
-      --card-glass: rgba(15, 23, 42, 0.65);
-      --card-glass-hover: rgba(15, 23, 42, 0.85);
-      --card-border: rgba(56, 189, 248, 0.25);
-      --neon-primary: #00f0ff;
-      --neon-secondary: #00ffcc;
-      --text-main: #f3f4f6;
-      --text-arabic: #ffffff;
-      --text-muted: #9ca3af;
-      --accent-gold: #fbbf24;
-      --glass-blur: blur(16px);
-      --glow-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
-      --dropdown-bg: #0f172a;
-      --btn-glass-bg: rgba(0, 240, 255, 0.08);
-      --btn-glass-border: rgba(0, 240, 255, 0.35);
-      --btn-glass-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.2), inset 0 0 12px 0 rgba(255, 255, 255, 0.25);
-      --btn-glass-active-bg: rgba(0, 255, 204, 0.2);
-    }
-
-    body.theme-light {
-      --bg-dark: #f8fafc;
-      --bg-radial-1: rgba(236, 72, 153, 0.06);
-      --bg-radial-2: rgba(217, 70, 239, 0.06);
-      --card-glass: rgba(255, 255, 255, 0.8);
-      --card-glass-hover: rgba(255, 255, 255, 0.95);
-      --card-border: rgba(203, 213, 225, 0.8);
-      --neon-primary: #a855f7;
-      --neon-secondary: #ec4899;
+      --bg-dark: #f0fdf4;
+      --bg-radial-1: rgba(74, 222, 128, 0.15);
+      --bg-radial-2: rgba(56, 189, 248, 0.15);
+      --card-glass: rgba(255, 255, 255, 0.85);
+      --card-glass-hover: rgba(255, 255, 255, 1);
+      --card-border: rgba(187, 247, 208, 0.9);
+      --neon-primary: #10b981;
+      --neon-secondary: #0ea5e9;
       --text-main: #1e293b;
       --text-arabic: #0f172a;
       --text-muted: #64748b;
-      --accent-gold: #d97706;
-      --glow-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --accent-gold: #f59e0b;
+      --glass-blur: blur(12px);
+      --glow-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
       --dropdown-bg: #ffffff;
-      --btn-glass-bg: rgba(241, 245, 249, 0.9);
-      --btn-glass-border: rgba(203, 213, 225, 0.9);
-      --btn-glass-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-      --btn-glass-active-bg: rgba(233, 213, 255, 0.8);
+      --btn-glass-bg: rgba(240, 253, 244, 0.9);
+      --btn-glass-border: rgba(187, 247, 208, 1);
+      --btn-glass-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+      --btn-glass-active-bg: rgba(254, 243, 199, 0.9);
+    }
+
+    body.theme-light {
+      --bg-dark: #fffbeb;
+      --bg-radial-1: rgba(251, 191, 36, 0.12);
+      --bg-radial-2: rgba(244, 63, 94, 0.08);
+      --card-glass: rgba(255, 255, 255, 0.9);
+      --card-glass-hover: rgba(255, 255, 255, 1);
+      --card-border: rgba(253, 230, 138, 0.9);
+      --neon-primary: #f59e0b;
+      --neon-secondary: #f43f5e;
+      --text-main: #451a03;
+      --text-arabic: #292524;
+      --text-muted: #78716c;
+      --accent-gold: #fbbf24;
+      --glow-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+      --dropdown-bg: #ffffff;
+      --btn-glass-bg: rgba(254, 243, 199, 0.8);
+      --btn-glass-border: rgba(253, 230, 138, 1);
+      --btn-glass-shadow: 0 6px 20px rgba(245, 158, 11, 0.15);
+      --btn-glass-active-bg: rgba(254, 226, 226, 0.9);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -61,10 +61,10 @@
       background-image: 
         radial-gradient(circle at 15% 15%, var(--bg-radial-1) 0%, transparent 40%),
         radial-gradient(circle at 85% 85%, var(--bg-radial-2) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.05) 0%, var(--bg-dark) 100%);
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4) 0%, var(--bg-dark) 100%);
       background-attachment: fixed;
       color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Fredoka', cursive, sans-serif;
       padding-bottom: 140px;
       min-height: 100vh;
       transition: background-color 0.4s ease, color 0.4s ease;
@@ -72,29 +72,30 @@
       flex-direction: column;
     }
 
-    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar { width: 10px; }
     ::-webkit-scrollbar-track { background: var(--bg-dark); }
-    ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 8px; }
 
     .navbar {
-      background: rgba(3, 7, 18, 0.4);
+      background: rgba(255, 255, 255, 0.8);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       position: sticky;
       top: 0;
       z-index: 10;
-      border-bottom: 1px solid var(--card-border);
-      padding: 12px 20px;
+      border-bottom: 2px dashed var(--card-border);
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     }
 
-    body.theme-light .navbar { background: rgba(255, 255, 255, 0.7); }
+    body.theme-light .navbar { background: rgba(255, 251, 235, 0.85); }
 
     .brand-section { display: flex; flex-direction: column; gap: 2px; }
     .brand {
-      font-size: 20px;
+      font-size: 22px;
       text-transform: uppercase;
       font-weight: 700;
       background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
@@ -103,15 +104,16 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      letter-spacing: 0.5px;
     }
-    .header-subtext { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+    .header-subtext { font-size: 12px; color: var(--text-muted); font-weight: 500; }
 
     .surah-selector-wrapper {
       position: sticky;
-      top: 65px;
+      top: 70px;
       z-index: 20;
       max-width: 800px;
-      margin: 12px auto 0 auto;
+      margin: 14px auto 0 auto;
       padding: 0 20px;
       width: 100%;
       display: flex;
@@ -125,143 +127,143 @@
       gap: 12px;
       background: var(--card-glass);
       backdrop-filter: var(--glass-blur);
-      padding: 8px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      font-size: 13px;
+      padding: 10px 16px;
+      border-radius: 20px;
+      border: 2px solid var(--card-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      font-size: 14px;
       font-weight: 600;
       flex-wrap: wrap;
     }
 
-    .selector-group { display: inline-flex; align-items: center; gap: 6px; }
-    .selector-divider { width: 1px; height: 20px; background: var(--card-border); }
-    .surah-selector-container label { color: var(--neon-primary); text-transform: uppercase; font-size: 11px; }
-    .surah-selector-container select { background: transparent; color: var(--text-main); border: none; outline: none; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .selector-group { display: inline-flex; align-items: center; gap: 8px; }
+    .selector-divider { width: 2px; height: 22px; background: var(--card-border); border-radius: 2px; }
+    .surah-selector-container label { color: var(--neon-primary); text-transform: uppercase; font-size: 12px; font-weight: 700; }
+    .surah-selector-container select { background: transparent; color: var(--text-main); border: none; outline: none; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Fredoka', cursive, sans-serif; }
     .surah-selector-container select option { background: var(--dropdown-bg); color: var(--text-main); }
 
-    .nav-controls { display: flex; align-items: center; gap: 8px; }
+    .nav-controls { display: flex; align-items: center; gap: 10px; }
 
     .glass-btn {
       background: var(--btn-glass-bg);
       backdrop-filter: blur(12px);
-      border: 1px solid var(--btn-glass-border);
+      border: 2px solid var(--btn-glass-border);
       box-shadow: var(--btn-glass-shadow);
       color: var(--text-main);
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
     }
 
-    .glass-btn:hover { border-color: var(--neon-primary); transform: translateY(-2px); }
+    .glass-btn:hover { border-color: var(--neon-primary); transform: translateY(-3px) scale(1.05); }
     .glass-btn.active, .glass-btn.saved { background: var(--btn-glass-active-bg); border-color: var(--neon-secondary); }
     .glass-btn.saved svg { fill: var(--accent-gold); stroke: var(--accent-gold); }
-    .glass-btn svg { width: 18px; height: 18px; stroke: var(--neon-primary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .glass-btn svg { width: 20px; height: 20px; stroke: var(--neon-primary); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
     .glass-btn svg.icon-fill-stop { fill: var(--neon-primary); }
     .glass-btn.round { border-radius: 50%; }
 
-    .container { max-width: 800px; margin: 16px auto; padding: 0 20px; flex: 1; width: 100%; }
+    .container { max-width: 800px; margin: 20px auto; padding: 0 20px; flex: 1; width: 100%; }
 
-    .surah-header-standalone { text-align: center; margin-bottom: 20px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .surah-title-ar { font-family: 'Scheherazade New', serif; font-size: 32px; color: var(--neon-secondary); direction: rtl; line-height: 1.4; }
-    .surah-subtitle { color: var(--text-muted); font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .surah-header-standalone { text-align: center; margin-bottom: 24px; padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .surah-title-ar { font-family: 'Scheherazade New', serif; font-size: 36px; color: var(--neon-secondary); direction: rtl; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .surah-subtitle { color: var(--text-muted); font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
 
     .ayah-card {
       background: var(--card-glass);
       backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-      transition: all 0.3s ease;
+      border: 2px solid var(--card-border);
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .ayah-card.bismillah-card { border-color: rgba(251, 191, 36, 0.3); }
-    .ayah-card.active { border-color: var(--neon-secondary); box-shadow: var(--glow-shadow); }
+    .ayah-card.bismillah-card { border-color: rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(254, 243, 199, 0.4)); }
+    .ayah-card.active { border-color: var(--neon-secondary); box-shadow: var(--glow-shadow); transform: scale(1.01); }
 
-    .ayah-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
-    .ayah-actions { display: flex; align-items: center; gap: 8px; }
-    .ayah-key { padding: 0 10px; height: 32px; border-radius: 10px; background: var(--btn-glass-bg); border: 1px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .ayah-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 2px dashed var(--card-border); padding-bottom: 12px; }
+    .ayah-actions { display: flex; align-items: center; gap: 10px; }
+    .ayah-key { padding: 0 12px; height: 36px; border-radius: 12px; background: var(--btn-glass-bg); border: 2px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
     .ayah-arabic {
       font-family: 'Scheherazade New', serif;
-      font-size: 28px;
+      font-size: 30px;
       direction: rtl;
       text-align: right;
-      line-height: 2.4;
+      line-height: 2.5;
       color: var(--text-arabic);
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
-    .bismillah-text { text-align: center; color: var(--accent-gold); font-size: 30px; }
-    .ayah-number-icon { font-family: 'Scheherazade New', serif; display: inline-block; margin-right: 6px; color: var(--neon-secondary); font-size: 24px; }
-    .ayah-translation { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .bismillah-text { text-align: center; color: var(--accent-gold); font-size: 32px; }
+    .ayah-number-icon { font-family: 'Scheherazade New', serif; display: inline-block; margin-right: 6px; color: var(--neon-secondary); font-size: 26px; }
+    .ayah-translation { font-size: 14px; color: var(--text-muted); line-height: 1.7; font-weight: 500; }
     .ayah-translation.hidden { display: none; }
 
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(3, 7, 18, 0.7); backdrop-filter: blur(8px);
+      position: fixed; inset: 0; background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(8px);
       z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px;
       opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
     }
     .modal-overlay.open { opacity: 1; pointer-events: auto; }
     .modal-card {
-      background: var(--dropdown-bg); border: 1px solid var(--card-border); border-radius: 16px;
-      width: 100%; max-width: 480px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      background: var(--dropdown-bg); border: 2px solid var(--card-border); border-radius: 24px;
+      width: 100%; max-width: 480px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
     }
-    .modal-header { padding: 14px 18px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; }
-    .modal-title { font-size: 14px; font-weight: 700; color: var(--neon-primary); }
-    .modal-body { padding: 14px 18px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .modal-header { padding: 16px 20px; border-bottom: 2px dashed var(--card-border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-size: 16px; font-weight: 700; color: var(--neon-primary); }
+    .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; }
     .bookmark-item {
-      background: var(--card-glass); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 10px;
+      background: var(--card-glass); border: 2px solid var(--card-border); padding: 12px 16px; border-radius: 16px;
       display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease;
     }
     .bookmark-item:hover { border-color: var(--neon-secondary); transform: translateX(4px); }
-    .bookmark-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; padding-right: 10px; }
-    .bookmark-title { font-weight: 600; font-size: 13px; color: var(--text-main); }
-    .bookmark-sub { font-size: 11px; color: var(--text-muted); }
+    .bookmark-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; padding-right: 10px; }
+    .bookmark-title { font-weight: 700; font-size: 14px; color: var(--text-main); }
+    .bookmark-sub { font-size: 12px; color: var(--text-muted); }
     
     .bookmark-delete {
-      background: var(--btn-glass-bg); border: 1px solid var(--btn-glass-border); color: var(--text-muted);
-      width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      background: var(--btn-glass-bg); border: 2px solid var(--btn-glass-border); color: var(--text-muted);
+      width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
     }
-    .bookmark-delete:hover { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #ef4444; transform: scale(1.05); }
-    .bookmark-delete svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .bookmark-delete:hover { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #ef4444; transform: scale(1.1); }
+    .bookmark-delete svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
 
     .bottom-player {
-      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 800px;
-      background: var(--card-glass); backdrop-filter: var(--glass-blur); border: 1px solid var(--card-border); border-radius: 16px;
-      padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), var(--glow-shadow);
-      z-index: 100; gap: 14px;
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 800px;
+      background: var(--card-glass); backdrop-filter: var(--glass-blur); border: 2px solid var(--card-border); border-radius: 24px;
+      padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1), var(--glow-shadow);
+      z-index: 100; gap: 16px;
     }
 
     .player-left-content { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
-    .player-info { display: flex; flex-direction: column; gap: 1px; }
-    .player-title { font-size: 13px; font-weight: 600; color: var(--neon-primary); }
-    .player-subtitle { font-size: 11px; color: var(--text-muted); }
-    .player-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; }
+    .player-info { display: flex; flex-direction: column; gap: 2px; }
+    .player-title { font-size: 14px; font-weight: 700; color: var(--neon-primary); }
+    .player-subtitle { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .player-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
 
     .repeat-mode-select {
-      background: var(--btn-glass-bg); backdrop-filter: blur(12px); color: var(--text-main); border: 1px solid var(--btn-glass-border);
-      padding: 6px 10px; border-radius: 10px; font-size: 12px; outline: none; cursor: pointer;
+      background: var(--btn-glass-bg); backdrop-filter: blur(12px); color: var(--text-main); border: 2px solid var(--btn-glass-border);
+      padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; outline: none; cursor: pointer; font-family: 'Fredoka', cursive, sans-serif;
     }
     .repeat-mode-select option { background: var(--dropdown-bg); color: var(--text-main); }
 
     .range-picker {
-      display: none; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted);
-      background: var(--btn-glass-bg); padding: 5px 10px; border-radius: 10px; border: 1px solid var(--btn-glass-border);
+      display: none; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); font-weight: 600;
+      background: var(--btn-glass-bg); padding: 6px 12px; border-radius: 12px; border: 2px solid var(--btn-glass-border);
     }
-    .range-picker select { background: transparent; color: var(--neon-secondary); border: none; outline: none; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .range-picker select { background: transparent; color: var(--neon-secondary); border: none; outline: none; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Fredoka', cursive, sans-serif; }
     .range-picker select option { background: var(--dropdown-bg); color: var(--text-main); }
 
-    .main-play-btn { width: 44px; height: 44px; flex-shrink: 0; align-self: center; }
-    .main-play-btn svg { width: 22px; height: 22px; }
+    .main-play-btn { width: 50px; height: 50px; flex-shrink: 0; align-self: center; }
+    .main-play-btn svg { width: 24px; height: 24px; }
     #audio-element { display: none; }
   </style>
 </head>
@@ -271,7 +273,7 @@
     <symbol id="icon-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></symbol>
     <symbol id="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--neon-primary)"></polygon></symbol>
     <symbol id="icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1" fill="var(--neon-primary)"></rect><rect x="14" y="4" width="4" height="16" rx="1" fill="var(--neon-primary)"></rect></symbol>
-    <symbol id="icon-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2" fill="var(--neon-primary)"></rect></symbol>
+    <symbol id="icon-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3" fill="var(--neon-primary)"></rect></symbol>
     <symbol id="icon-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"></path></symbol>
     <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></symbol>
     <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></symbol>
@@ -280,8 +282,8 @@
 
   <nav class="navbar">
     <div class="brand-section">
-      <div class="brand"><span class="brand-icon">☆</span> TALQINKU</div>
-      <div class="header-subtext">Crafted with ♥ by <span style="color: #00f2fe; font-weight: 600;">Kurniapedia</span> 2026</div>
+      <div class="brand"><span class="brand-icon">⭐</span> TALQINKU</div>
+      <div class="header-subtext">Belajar Al-Qur'an Jadi Seru! • <span style="color: #10b981; font-weight: 700;">Kurniapedia</span> 2026</div>
     </div>
     <div class="nav-controls">
       <button class="glass-btn round" id="bookmarkListBtn" onclick="toggleBookmarkModal()" title="Daftar Bookmark"><svg><use href="#icon-bookmark"></use></svg></button>
@@ -294,8 +296,8 @@
   <div class="modal-overlay" id="bookmarkModal" onclick="handleModalOutsideClick(event)">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">DAFTAR BOOKMARK</div>
-        <button class="glass-btn round" onclick="toggleBookmarkModal()" style="width: 28px; height: 28px;"><svg style="width: 14px; height: 14px;"><use href="#icon-close"></use></svg></button>
+        <div class="modal-title">⭐ DAFTAR BOOKMARK</div>
+        <button class="glass-btn round" onclick="toggleBookmarkModal()" style="width: 32px; height: 32px;"><svg style="width: 16px; height: 16px;"><use href="#icon-close"></use></svg></button>
       </div>
       <div class="modal-body" id="bookmarkListContainer"></div>
     </div>
@@ -320,7 +322,7 @@
       <div class="surah-title-ar" id="surahTitleAr">سُورَةُ ٱلْفَاتِحَةِ</div>
       <div class="surah-subtitle" id="surahSubtitle">Al-Fatihah • Surah 1 • 7 Ayat</div>
     </div>
-    <div id="ayahs-container"><p style="text-align: center; color: var(--text-muted);">Memuat ayat...</p></div>
+    <div id="ayahs-container"><p style="text-align: center; color: var(--text-muted); font-weight: 600;">Memuat ayat...</p></div>
   </div>
 
   <div class="bottom-player">
@@ -497,7 +499,7 @@
 
     function renderBookmarkList() {
       if (savedAyahs.length === 0) {
-        bookmarkListContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 20px;">Belum ada bookmark</p>`;
+        bookmarkListContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 20px; font-weight: 600;">Belum ada bookmark</p>`;
         return;
       }
 
@@ -613,37 +615,27 @@
       }
     }
 
-    // FUNGSI GET AUDIO URL SESUAI KETENTUAN TERBARU
     function getAudioUrl(surahNumber, ayahNumber) {
       const qari = QARIS.find(q => q.id === currentQariId);
 
-      // Jika menggunakan Murottal Anak (GitHub)
       if (qari && qari.type === 'github') {
-        // Jika ayat 0 (Ta'awudz / Bismillah)
         if (ayahNumber === 0) {
           if (surahNumber === 1) {
-            // Surah 1 (Al-Fatihah) Ta'awudz menggunakan 000_001.mp3
             return `${GITHUB_RAW_BASE}/${surahNumber}/000_001.mp3`;
           } else {
-            // Surah lain: bismillah menggunakan 0.mp3 di dalam masing-masing folder surat
             return `${GITHUB_RAW_BASE}/${surahNumber}/0.mp3`;
           }
         }
 
-        // Ayat biasa format [nomor_surat]_[nomor_ayat].mp3 (contoh: 001_001.mp3)
         const formattedSurah = String(surahNumber).padStart(3, '0');
         const formattedAyah = String(ayahNumber).padStart(3, '0');
         return `${GITHUB_RAW_BASE}/${surahNumber}/${formattedSurah}_${formattedAyah}.mp3`;
       } 
-      
-      // Jika menggunakan Qori API Eksternal
       else if (qari && qari.type === 'api') {
         if (ayahNumber === 0) {
           if (surahNumber === 1) {
-            // Ta'awudz untuk API menggunakan 000_002.mp3 dari folder surah 1
             return `${GITHUB_RAW_BASE}/1/000_002.mp3`;
           } else {
-            // Bismillah API standar
             return `${qari.baseUrl}001001.mp3`;
           }
         }
@@ -687,7 +679,7 @@
 
       setupRangeSelector();
       const container = document.getElementById('ayahs-container');
-      container.innerHTML = `<p style="text-align: center; color: var(--text-muted);">Memuat ayat...</p>`;
+      container.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-weight: 600;">Memuat ayat...</p>`;
 
       try {
         const [resArab, resIndo] = await Promise.all([
@@ -703,7 +695,6 @@
         let html = '';
         const transHiddenClass = showTranslations ? '' : 'hidden';
 
-        // Kotak Ta'awudz khusus Surah 1 (Al-Fatihah)
         if (currentSurahNum === 1) {
           const itemKeyTaawudz = `${currentSurahNum}:0`;
           const isTaawudzSaved = savedAyahs.includes(itemKeyTaawudz);
@@ -722,7 +713,6 @@
               <div class="ayah-translation ${transHiddenClass}" id="translation-0">Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div>
             </div>`;
         } 
-        // Kotak Bismillah untuk surah lain (selain Surah 9 & 1)
         else if (currentSurahNum !== 9) {
           const itemKey0 = `${currentSurahNum}:0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
@@ -771,7 +761,7 @@
 
         container.innerHTML = html;
       } catch (err) {
-        container.innerHTML = `<p style="text-align:center; color:#ef4444;">Gagal memuat ayat. Periksa koneksi internet Anda.</p>`;
+        container.innerHTML = `<p style="text-align:center; color:#ef4444; font-weight: 600;">Gagal memuat ayat. Periksa koneksi internet Anda.</p>`;
       }
     }
 

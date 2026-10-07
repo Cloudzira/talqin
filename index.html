@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TalqinKu - Ceria Belajar Al-Qur'an</title>
+  <title>TalqinKu</title>
   <link rel="icon" href="favicon.png">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -283,7 +283,7 @@
   <nav class="navbar">
     <div class="brand-section">
       <div class="brand"><span class="brand-icon">⭐</span> TALQINKU</div>
-      <div class="header-subtext">Belajar Al-Qur'an Jadi Seru! • <span style="color: #10b981; font-weight: 700;">Kurniapedia</span> 2026</div>
+      <div class="header-subtext">Crafted with ♥ by <span style="color: #10b981; font-weight: 700;">Kurniapedia</span> 2026</div>
     </div>
     <div class="nav-controls">
       <button class="glass-btn round" id="bookmarkListBtn" onclick="toggleBookmarkModal()" title="Daftar Bookmark"><svg><use href="#icon-bookmark"></use></svg></button>
@@ -505,7 +505,7 @@
 
       let html = '';
       savedAyahs.forEach(itemKey => {
-        const [sNum, aNum] = itemKey.split(':').map(Number);
+        const [sNum, aNum] = itemKey.split(' : ').map(Number);
         const surah = ALL_SURAHS.find(s => s.num === sNum);
         const surahName = surah ? surah.name : `Surah ${sNum}`;
         

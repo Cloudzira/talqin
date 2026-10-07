@@ -505,7 +505,7 @@
 
       let html = '';
       savedAyahs.forEach(itemKey => {
-        const [sNum, aNum] = itemKey.split(' : ').map(Number);
+        const [sNum, aNum] = itemKey.split(' -- ').map(Number);
         const surah = ALL_SURAHS.find(s => s.num === sNum);
         const surahName = surah ? surah.name : `Surah ${sNum}`;
         

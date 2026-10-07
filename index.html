@@ -505,7 +505,7 @@
 
       let html = '';
       savedAyahs.forEach(itemKey => {
-        const [sNum, aNum] = itemKey.split(' -- ').map(Number);
+        const [sNum, aNum] = itemKey.split(':').map(Number);
         const surah = ALL_SURAHS.find(s => s.num === sNum);
         const surahName = surah ? surah.name : `Surah ${sNum}`;
         
@@ -514,7 +514,7 @@
         html += `
           <div class="bookmark-item" onclick="jumpToBookmark(${sNum}, ${aNum})">
             <div class="bookmark-info">
-              <div class="bookmark-title">${surahName} (${sNum}:${aNum})</div>
+              <div class="bookmark-title">${surahName} (${sNum} : ${aNum})</div>
               <div class="bookmark-sub">Surah ${surahName} • ${ayahText}</div>
             </div>
             <button class="bookmark-delete" onclick="event.stopPropagation(); removeBookmarkItem('${itemKey}')" title="Hapus">
@@ -532,7 +532,7 @@
         savedAyahs.splice(index, 1);
         localStorage.setItem('saved_ayahs', JSON.stringify(savedAyahs));
         renderBookmarkList();
-        const [sNum, aNum] = itemKey.split(' : ').map(Number);
+        const [sNum, aNum] = itemKey.split(':').map(Number);
         if (currentSurahNum === sNum) updateBookmarkUI(aNum);
       }
     }

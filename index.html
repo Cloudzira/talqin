@@ -648,7 +648,7 @@
     }
 
     function toggleSaveAyah(ayahNum) {
-      const itemKey = `${currentSurahNum}:${ayahNum}`;
+      const itemKey = `${currentSurahNum} : ${ayahNum}`;
       const index = savedAyahs.indexOf(itemKey);
       if (index > -1) savedAyahs.splice(index, 1);
       else savedAyahs.push(itemKey);
@@ -657,7 +657,7 @@
     }
 
     function updateBookmarkUI(ayahNum) {
-      const itemKey = `${currentSurahNum}:${ayahNum}`;
+      const itemKey = `${currentSurahNum} : ${ayahNum}`;
       const btn = document.getElementById(`btn-bookmark-${ayahNum}`);
       if (btn) {
         if (savedAyahs.includes(itemKey)) btn.classList.add('saved');
@@ -714,14 +714,14 @@
             </div>`;
         } 
         else if (currentSurahNum !== 9) {
-          const itemKey0 = `${currentSurahNum}:0`;
+          const itemKey0 = `${currentSurahNum} : 0`;
           const isBismillahSaved = savedAyahs.includes(itemKey0);
           let bismillahText = applyIndonesianQuranStandards("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ");
 
           html += `
             <div class="ayah-card bismillah-card" id="ayah-card-0">
               <div class="ayah-top-bar">
-                <div class="ayah-key">${currentSurahNum}:0 (Bismillah)</div>
+                <div class="ayah-key">${currentSurahNum} : 0 (Bismillah)</div>
                 <div class="ayah-actions">
                   <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
                   <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
@@ -742,13 +742,13 @@
           
           formattedText = applyIndonesianQuranStandards(formattedText);
           const endOfAyahSymbol = `\u06DD${toArabicDigits(ayahNum)}`;
-          const itemKey = `${currentSurahNum}:${ayahNum}`;
+          const itemKey = `${currentSurahNum} : ${ayahNum}`;
           const isSaved = savedAyahs.includes(itemKey);
 
           html += `
             <div class="ayah-card" id="ayah-card-${ayahNum}">
               <div class="ayah-top-bar">
-                <div class="ayah-key">${currentSurahNum}:${ayahNum}</div>
+                <div class="ayah-key">${currentSurahNum} : ${ayahNum}</div>
                 <div class="ayah-actions">
                   <button class="glass-btn ${isSaved ? 'saved' : ''}" id="btn-bookmark-${ayahNum}" onclick="toggleSaveAyah(${ayahNum})"><svg><use href="#icon-bookmark"></use></svg></button>
                   <button class="glass-btn round" id="btn-play-${ayahNum}" onclick="playAyah(${ayahNum})"><svg id="icon-play-${ayahNum}"><use href="#icon-play"></use></svg></button>

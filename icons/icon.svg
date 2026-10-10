@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><defs>
+    <linearGradient id="sbgbase" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10b981"/><stop offset=".55" stop-color="#0d9488"/><stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+    <radialGradient id="sglow">
+      <stop offset="0" stop-color="#fef9c3" stop-opacity=".55"/><stop offset="1" stop-color="#fef08a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sbowl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#fde68a"/>
+    </linearGradient>
+    <linearGradient id="sdot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fde047"/><stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <radialGradient id="shi" cx=".25" cy=".12" r=".9">
+      <stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+</defs><rect width="512" height="512" rx="116" fill="url(#sbgbase)"/><rect width="512" height="512" rx="116" fill="url(#shi)"/><g transform="translate(256 240) scale(1.02) translate(-256 -240)">
+  <g fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="6" stroke-linejoin="round"><polygon points="394.6,376.6 117.4,376.6 117.4,99.4 394.6,99.4" /><polygon points="452.0,238.0 256.0,434.0 60.0,238.0 256.0,42.0" /></g>
+  <circle cx="256" cy="236" r="150" fill="url(#sglow)"/>
+  <!-- gelombang suara -->
+  <g class="mk-sparkles" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="13">
+    <path d="M82 196 Q58 240 82 284" opacity=".95"/>
+    <path d="M52 172 Q14 240 52 308" opacity=".45"/>
+    <path d="M446 196 Q470 240 446 284" opacity=".95"/>
+    <path d="M476 172 Q498 240 476 308" opacity=".45"/>
+  </g>
+  <!-- huruf ta -->
+  <path d="M118 226 C112 336 214 396 312 366 C378 345 414 276 408 166 Q408 150 392 150 Q374 150 374 166 C378 252 350 306 296 322 C222 344 162 304 156 226 Q154 206 136 206 Q120 208 118 226 Z" fill="#065f46" fill-opacity=".32" stroke="#065f46" stroke-opacity=".32" stroke-width="12" stroke-linejoin="round" transform="translate(0 14)"/>
+  <path d="M118 226 C112 336 214 396 312 366 C378 345 414 276 408 166 Q408 150 392 150 Q374 150 374 166 C378 252 350 306 296 322 C222 344 162 304 156 226 Q154 206 136 206 Q120 208 118 226 Z" fill="url(#sbowl)" stroke="url(#sbowl)" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M150 262 C168 328 232 356 290 346" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="8" stroke-linecap="round"/>
+  <!-- titik -->
+  <g class="mk-star">
+    <circle cx="206" cy="112" r="38" fill="#065f46" fill-opacity=".32" transform="translate(0 10)"/>
+    <circle cx="310" cy="112" r="38" fill="#065f46" fill-opacity=".32" transform="translate(0 10)"/>
+    <circle cx="206" cy="112" r="38" fill="url(#sdot)"/>
+    <circle cx="310" cy="112" r="38" fill="url(#sdot)"/>
+    <ellipse cx="194" cy="98" rx="11" ry="8" fill="#fff" opacity=".8" transform="rotate(-30 202 98)"/>
+    <ellipse cx="298" cy="98" rx="11" ry="8" fill="#fff" opacity=".8" transform="rotate(-30 290 98)"/>
+  </g>
+  <path d="M392 78 Q395.92 88.08 406 92 Q395.92 95.92 392 106 Q388.08 95.92 378 92 Q388.08 88.08 392 78Z" fill="#fef08a" opacity="0.95"/><path d="M124 94 Q126.8 101.2 134 104 Q126.8 106.8 124 114 Q121.2 106.8 114 104 Q121.2 101.2 124 94Z" fill="#fff" opacity="0.9"/><path d="M398 363 Q400.52 369.48 407 372 Q400.52 374.52 398 381 Q395.48 374.52 389 372 Q395.48 369.48 398 363Z" fill="#fef9c3" opacity="0.85"/>
+</g></svg>

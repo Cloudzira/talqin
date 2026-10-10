@@ -3,8 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TalqinKu</title>
-  <link rel="icon" href="favicon.png">
+  <title>TalqinKu - Belajar Mengaji Ceria</title>
+  <meta name="description" content="TalqinKu: belajar membaca Al-Qur'an dengan cara menyenangkan. Dengarkan, tirukan, dan ulangi ayat bersama qari pilihan.">
+
+  <!-- ===== PWA: bisa di-install ===== -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#10b981">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="TalqinKu">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="application-name" content="TalqinKu">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <!-- Splash screen iOS -->
+  <link rel="apple-touch-startup-image" href="splash/splash-1290x2796.jpg" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-1179x2556.jpg" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-1284x2778.jpg" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-1170x2532.jpg" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-1125x2436.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-1242x2688.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-828x1792.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-750x1334.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-1668x2388.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-1640x2360.jpg" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-2048x2732.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-1620x2160.jpg" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="splash/splash-1536x2048.jpg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -265,9 +292,194 @@
     .main-play-btn { width: 50px; height: 50px; flex-shrink: 0; align-self: center; }
     .main-play-btn svg { width: 24px; height: 24px; }
     #audio-element { display: none; }
+
+    /* =====================================================
+       LOGO, SPLASH SCREEN & INSTALL (tema anak)
+       ===================================================== */
+    .glass-btn[hidden] { display: none; }
+    .brand-logo { width: 34px; height: 34px; flex-shrink: 0; filter: drop-shadow(0 3px 6px rgba(16, 185, 129, 0.35)); -webkit-text-fill-color: initial; }
+    .brand-logo svg { width: 100%; height: 100%; display: block; }
+
+    #splash {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+      background: linear-gradient(165deg, #d1fae5 0%, #a7f3d0 42%, #bae6fd 100%);
+      font-family: 'Fredoka', cursive, sans-serif;
+      overflow: hidden;
+      transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s;
+    }
+    #splash.hide { opacity: 0; transform: scale(1.06); visibility: hidden; pointer-events: none; }
+    #splash .sp-hills { position: absolute; left: 0; bottom: 0; width: 100%; height: 22vh; min-height: 120px; }
+    #splash .sp-cloud { position: absolute; width: 120px; opacity: 0.85; animation: spDrift 26s linear infinite; }
+    #splash .sp-cloud.c1 { top: 12%; left: -140px; }
+    #splash .sp-cloud.c2 { top: 26%; left: -140px; width: 84px; opacity: 0.65; animation-duration: 38s; animation-delay: -14s; }
+    #splash .sp-mark { width: min(50vw, 220px); aspect-ratio: 1; animation: spPop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+    #splash .sp-mark svg { width: 100%; height: 100%; overflow: visible; display: block; filter: drop-shadow(0 18px 24px rgba(4, 120, 87, 0.22)); }
+    #splash .mk-star { animation: spBob 2.4s ease-in-out 0.9s infinite; }
+    #splash .mk-sparkles { animation: spTwinkle 1.8s ease-in-out infinite; }
+    #splash .sp-title { display: flex; margin-top: 6px; font-size: clamp(40px, 12vw, 56px); font-weight: 700; line-height: 1.1; letter-spacing: 0.5px; }
+    #splash .sp-title span {
+      display: inline-block; opacity: 0;
+      background: linear-gradient(135deg, #059669, #0284c7); -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: spLetter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: calc(0.55s + var(--i) * 0.07s);
+    }
+    #splash .sp-tag { font-size: 16px; font-weight: 500; color: #047857; opacity: 0; animation: spFade 0.7s ease 1.25s forwards; }
+    #splash .sp-dots { display: flex; gap: 9px; margin-top: 22px; opacity: 0; animation: spFade 0.5s ease 1.4s forwards; }
+    #splash .sp-dots i { width: 11px; height: 11px; border-radius: 50%; animation: spDot 1s ease-in-out infinite; }
+    #splash .sp-dots i:nth-child(1) { background: #f59e0b; }
+    #splash .sp-dots i:nth-child(2) { background: #10b981; animation-delay: 0.15s; }
+    #splash .sp-dots i:nth-child(3) { background: #0ea5e9; animation-delay: 0.3s; }
+    #splash .sp-credit { position: absolute; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 500; color: #065f46; opacity: 0; animation: spFade 0.6s ease 1.5s forwards; }
+
+    @keyframes spPop { 0% { transform: scale(0.4) translateY(30px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+    @keyframes spBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+    @keyframes spTwinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    @keyframes spLetter { 0% { opacity: 0; transform: translateY(24px) scale(0.6); } 100% { opacity: 1; transform: none; } }
+    @keyframes spFade { to { opacity: 1; } }
+    @keyframes spDot { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+    @keyframes spDrift { to { transform: translateX(calc(100vw + 280px)); } }
+
+    /* Kartu ajakan install */
+    .install-card {
+      position: fixed; top: 96px; left: 50%; z-index: 40; width: calc(100% - 32px); max-width: 460px;
+      transform: translate(-50%, -24px); opacity: 0; visibility: hidden; pointer-events: none;
+      background: var(--dropdown-bg); border: 2px solid var(--card-border); border-radius: 24px; padding: 16px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.14), var(--glow-shadow);
+      display: flex; gap: 14px; align-items: flex-start;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, visibility 0.3s;
+    }
+    .install-card.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; pointer-events: auto; }
+    .install-card .ic-logo { width: 56px; height: 56px; flex-shrink: 0; }
+    .install-card .ic-logo svg { width: 100%; height: 100%; display: block; }
+    .install-card .ic-body { flex: 1; min-width: 0; }
+    .install-card .ic-title { font-size: 16px; font-weight: 700; color: var(--neon-primary); margin-bottom: 2px; }
+    .install-card .ic-text { font-size: 13px; line-height: 1.55; color: var(--text-muted); font-weight: 500; }
+    .install-card .ic-text svg { width: 16px; height: 16px; vertical-align: -3px; stroke: var(--neon-secondary); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .install-card .ic-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .ic-btn {
+      font-family: 'Fredoka', cursive, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer;
+      padding: 9px 18px; border-radius: 14px; border: 2px solid var(--btn-glass-border); background: var(--btn-glass-bg); color: var(--text-main);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .ic-btn:hover { transform: translateY(-2px) scale(1.04); }
+    .ic-btn.primary { background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary)); border-color: transparent; color: #fff; box-shadow: var(--glow-shadow); }
+
+    @media (max-width: 430px) {
+      .navbar { padding: 12px 14px; }
+      .nav-controls { gap: 7px; }
+      .nav-controls .glass-btn { width: 37px; height: 37px; }
+      .nav-controls .glass-btn svg { width: 18px; height: 18px; }
+      .header-subtext { font-size: 11px; }
+      .brand { font-size: 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #splash *, #splash { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
+      #splash .sp-title span, #splash .sp-tag, #splash .sp-dots, #splash .sp-credit { opacity: 1; }
+      .install-card { transition: none; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- ===== SPLASH SCREEN ===== -->
+  <div id="splash" role="status" aria-label="Memuat TalqinKu">
+    <script>try{if(sessionStorage.getItem('tk_splash')){document.getElementById('splash').style.display='none';}}catch(e){}</script>
+    <svg class="sp-cloud c1" viewBox="0 0 120 60" aria-hidden="true"><path d="M26 54a20 20 0 0 1-2-39.9A28 28 0 0 1 78 18a18 18 0 0 1 20 17 14 14 0 0 1-4 19Z" fill="#fff"/></svg>
+    <svg class="sp-cloud c2" viewBox="0 0 120 60" aria-hidden="true"><path d="M26 54a20 20 0 0 1-2-39.9A28 28 0 0 1 78 18a18 18 0 0 1 20 17 14 14 0 0 1-4 19Z" fill="#fff"/></svg>
+    <svg class="sp-hills" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 18C20 6 40 6 60 16S90 22 100 12V40H0Z" fill="#6ee7b7" opacity=".7"/>
+      <path d="M0 28C25 16 50 22 70 26S92 28 100 22V40H0Z" fill="#34d399" opacity=".75"/>
+    </svg>
+    <div class="sp-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><defs>
+    <linearGradient id="sbgbase" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10b981"/><stop offset=".55" stop-color="#0d9488"/><stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+    <radialGradient id="sglow">
+      <stop offset="0" stop-color="#fef9c3" stop-opacity=".55"/><stop offset="1" stop-color="#fef08a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sbowl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#fde68a"/>
+    </linearGradient>
+    <linearGradient id="sdot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fde047"/><stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <radialGradient id="shi" cx=".25" cy=".12" r=".9">
+      <stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+</defs><rect width="512" height="512" rx="116" fill="url(#sbgbase)"/><rect width="512" height="512" rx="116" fill="url(#shi)"/><g transform="translate(256 240) scale(1.02) translate(-256 -240)">
+  <g fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="6" stroke-linejoin="round"><polygon points="394.6,376.6 117.4,376.6 117.4,99.4 394.6,99.4" /><polygon points="452.0,238.0 256.0,434.0 60.0,238.0 256.0,42.0" /></g>
+  <circle cx="256" cy="236" r="150" fill="url(#sglow)"/>
+  <!-- gelombang suara -->
+  <g class="mk-sparkles" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="13">
+    <path d="M82 196 Q58 240 82 284" opacity=".95"/>
+    <path d="M52 172 Q14 240 52 308" opacity=".45"/>
+    <path d="M446 196 Q470 240 446 284" opacity=".95"/>
+    <path d="M476 172 Q498 240 476 308" opacity=".45"/>
+  </g>
+  <!-- huruf ta -->
+  <path d="M118 226 C112 336 214 396 312 366 C378 345 414 276 408 166 Q408 150 392 150 Q374 150 374 166 C378 252 350 306 296 322 C222 344 162 304 156 226 Q154 206 136 206 Q120 208 118 226 Z" fill="#065f46" fill-opacity=".32" stroke="#065f46" stroke-opacity=".32" stroke-width="12" stroke-linejoin="round" transform="translate(0 14)"/>
+  <path d="M118 226 C112 336 214 396 312 366 C378 345 414 276 408 166 Q408 150 392 150 Q374 150 374 166 C378 252 350 306 296 322 C222 344 162 304 156 226 Q154 206 136 206 Q120 208 118 226 Z" fill="url(#sbowl)" stroke="url(#sbowl)" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M150 262 C168 328 232 356 290 346" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="8" stroke-linecap="round"/>
+  <!-- titik -->
+  <g class="mk-star">
+    <circle cx="206" cy="112" r="38" fill="#065f46" fill-opacity=".32" transform="translate(0 10)"/>
+    <circle cx="310" cy="112" r="38" fill="#065f46" fill-opacity=".32" transform="translate(0 10)"/>
+    <circle cx="206" cy="112" r="38" fill="url(#sdot)"/>
+    <circle cx="310" cy="112" r="38" fill="url(#sdot)"/>
+    <ellipse cx="194" cy="98" rx="11" ry="8" fill="#fff" opacity=".8" transform="rotate(-30 202 98)"/>
+    <ellipse cx="298" cy="98" rx="11" ry="8" fill="#fff" opacity=".8" transform="rotate(-30 290 98)"/>
+  </g>
+  <path d="M392 78 Q395.92 88.08 406 92 Q395.92 95.92 392 106 Q388.08 95.92 378 92 Q388.08 88.08 392 78Z" fill="#fef08a" opacity="0.95"/><path d="M124 94 Q126.8 101.2 134 104 Q126.8 106.8 124 114 Q121.2 106.8 114 104 Q121.2 101.2 124 94Z" fill="#fff" opacity="0.9"/><path d="M398 363 Q400.52 369.48 407 372 Q400.52 374.52 398 381 Q395.48 374.52 389 372 Q395.48 369.48 398 363Z" fill="#fef9c3" opacity="0.85"/>
+</g></svg></div>
+    <div class="sp-title" aria-label="TalqinKu"><span style="--i:0">T</span><span style="--i:1">a</span><span style="--i:2">l</span><span style="--i:3">q</span><span style="--i:4">i</span><span style="--i:5">n</span><span style="--i:6">K</span><span style="--i:7">u</span></div>
+    <div class="sp-tag">Belajar mengaji jadi ceria</div>
+    <div class="sp-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="sp-credit">Dibuat dengan ♥ oleh Kurniapedia</div>
+  </div>
+
+  <!-- Sprite logo (jangan pakai display:none agar gradien tampil) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="logo-tile" viewBox="0 0 512 512"><defs>
+    <linearGradient id="nbgbase" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10b981"/><stop offset=".55" stop-color="#0d9488"/><stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+    <radialGradient id="nglow">
+      <stop offset="0" stop-color="#fef9c3" stop-opacity=".55"/><stop offset="1" stop-color="#fef08a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="nbowl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#fde68a"/>
+    </linearGradient>
+    <linearGradient id="ndot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fde047"/><stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <radialGradient id="nhi" cx=".25" cy=".12" r=".9">
+      <stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+</defs><rect width="512" height="512" rx="116" fill="url(#nbgbase)"/><rect width="512" height="512" rx="116" fill="url(#nhi)"/><g transform="translate(256 240) scale(1.02) translate(-256 -240)">
+  <g fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="6" stroke-linejoin="round"><polygon points="394.6,376.6 117.4,376.6 117.4,99.4 394.6,99.4" /><polygon points="452.0,238.0 256.0,434.0 60.0,238.0 256.0,42.0" /></g>
+  <circle cx="256" cy="236" r="150" fill="url(#nglow)"/>
+  <!-- gelombang suara -->
+  <g class="mk-sparkles" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="13">
+    <path d="M82 196 Q58 240 82 284" opacity=".95"/>
+    <path d="M52 172 Q14 240 52 308" opacity=".45"/>
+    <path d="M446 196 Q470 240 446 284" opacity=".95"/>
+    <path d="M476 172 Q498 240 476 308" opacity=".45"/>
+  </g>
+  <!-- huruf ta -->
+  <path d="M118 226 C112 336 214 396 312 366 C378 345 414 276 408 166 Q408 150 392 150 Q374 150 374 166 C378 252 350 306 296 322 C222 344 162 304 156 226 Q154 206 136 206 Q120 208 118 226 Z" fill="#065f46" fill-opacity=".32" stroke="#065f46" stroke-opacity=".32" stroke-width="12" stroke-linejoin="round" transform="translate(0 14)"/>
+  <path d="M118 226 C112 336 214 396 312 366 C378 345 414 276 408 166 Q408 150 392 150 Q374 150 374 166 C378 252 350 306 296 322 C222 344 162 304 156 226 Q154 206 136 206 Q120 208 118 226 Z" fill="url(#nbowl)" stroke="url(#nbowl)" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M150 262 C168 328 232 356 290 346" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="8" stroke-linecap="round"/>
+  <!-- titik -->
+  <g class="mk-star">
+    <circle cx="206" cy="112" r="38" fill="#065f46" fill-opacity=".32" transform="translate(0 10)"/>
+    <circle cx="310" cy="112" r="38" fill="#065f46" fill-opacity=".32" transform="translate(0 10)"/>
+    <circle cx="206" cy="112" r="38" fill="url(#ndot)"/>
+    <circle cx="310" cy="112" r="38" fill="url(#ndot)"/>
+    <ellipse cx="194" cy="98" rx="11" ry="8" fill="#fff" opacity=".8" transform="rotate(-30 202 98)"/>
+    <ellipse cx="298" cy="98" rx="11" ry="8" fill="#fff" opacity=".8" transform="rotate(-30 290 98)"/>
+  </g>
+  <path d="M392 78 Q395.92 88.08 406 92 Q395.92 95.92 392 106 Q388.08 95.92 378 92 Q388.08 88.08 392 78Z" fill="#fef08a" opacity="0.95"/><path d="M124 94 Q126.8 101.2 134 104 Q126.8 106.8 124 114 Q121.2 106.8 114 104 Q121.2 101.2 124 94Z" fill="#fff" opacity="0.9"/><path d="M398 363 Q400.52 369.48 407 372 Q400.52 374.52 398 381 Q395.48 374.52 389 372 Q395.48 369.48 398 363Z" fill="#fef9c3" opacity="0.85"/>
+</g></symbol></svg>
 
   <svg style="display: none;">
     <symbol id="icon-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></symbol>
@@ -277,15 +489,17 @@
     <symbol id="icon-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"></path></symbol>
     <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></symbol>
     <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></symbol>
     <symbol id="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></symbol>
   </svg>
 
   <nav class="navbar">
     <div class="brand-section">
-      <div class="brand"><span class="brand-icon">⭐</span> TALQINKU</div>
+      <div class="brand"><span class="brand-logo"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#logo-tile"></use></svg></span> TALQINKU</div>
       <div class="header-subtext">Crafted with ♥ by <span style="color: #10b981; font-weight: 700;">Kurniapedia</span> 2026</div>
     </div>
     <div class="nav-controls">
+      <button class="glass-btn round" id="installBtn" onclick="handleInstallClick()" title="Pasang aplikasi" aria-label="Pasang aplikasi" hidden><svg><use href="#icon-download"></use></svg></button>
       <button class="glass-btn round" id="bookmarkListBtn" onclick="toggleBookmarkModal()" title="Daftar Bookmark"><svg><use href="#icon-bookmark"></use></svg></button>
       <button class="glass-btn round" id="globalTransToggleBtn" onclick="toggleGlobalTranslation()" title="Terjemahan"><svg><use href="#icon-globe"></use></svg></button>
       <button class="glass-btn round" id="themeToggleBtn" onclick="toggleTheme()" title="Tema"><svg id="themeIcon"><use href="#icon-moon"></use></svg></button>
@@ -867,6 +1081,146 @@
       populateDropdowns();
       loadSurah();
     });
+  </script>
+
+  <!-- ===== KARTU AJAKAN INSTALL ===== -->
+  <div class="install-card" id="installCard" role="dialog" aria-labelledby="icTitle">
+    <div class="ic-logo"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#logo-tile"></use></svg></div>
+    <div class="ic-body">
+      <div class="ic-title" id="icTitle">Pasang TalqinKu di HP-mu!</div>
+      <div class="ic-text" id="icText">Buka lebih cepat dari layar utama, tampil layar penuh seperti aplikasi, dan ayat yang pernah dibuka bisa dibaca tanpa internet.</div>
+      <div class="ic-actions">
+        <button class="ic-btn primary" id="icInstall" onclick="doInstall()">Pasang</button>
+        <button class="ic-btn" onclick="dismissInstallCard()">Nanti saja</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =====================================================
+       PWA: splash, install, service worker
+       ===================================================== */
+    (function () {
+      /* ---- Splash: tampil minimal 2 detik, hilang setelah halaman siap ---- */
+      const splash = document.getElementById('splash');
+      const startedAt = Date.now();
+      const MIN_MS = 2000, MAX_MS = 5000;
+      let hidden = false;
+
+      function hideSplash() {
+        if (hidden || !splash) return;
+        hidden = true;
+        splash.classList.add('hide');
+        try { sessionStorage.setItem('tk_splash', '1'); } catch (e) {}
+        setTimeout(() => splash.remove(), 700);
+        setTimeout(maybeShowInstallCard, 2500);
+      }
+      function scheduleHide() {
+        const wait = Math.max(0, MIN_MS - (Date.now() - startedAt));
+        setTimeout(hideSplash, wait);
+      }
+      if (splash && splash.style.display !== 'none') {
+        if (document.readyState === 'complete') scheduleHide();
+        else window.addEventListener('load', scheduleHide);
+        setTimeout(hideSplash, MAX_MS);
+      } else if (splash) {
+        splash.remove();
+        setTimeout(maybeShowInstallCard, 3000);
+      }
+
+      /* ---- Warna status bar mengikuti tema ---- */
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      function syncThemeColor() {
+        if (!themeMeta) return;
+        themeMeta.setAttribute('content', document.body.classList.contains('theme-light') ? '#f59e0b' : '#10b981');
+      }
+      new MutationObserver(syncThemeColor).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      document.addEventListener('DOMContentLoaded', syncThemeColor);
+      syncThemeColor();
+
+      /* ---- Install ---- */
+      const INSTALL_DISMISS_KEY = 'tk_install_dismissed';
+      const DISMISS_DAYS = 7;
+      let deferredPrompt = null;
+
+      const installBtn = document.getElementById('installBtn');
+      const installCard = document.getElementById('installCard');
+      const icText = document.getElementById('icText');
+      const icTitle = document.getElementById('icTitle');
+      const icInstall = document.getElementById('icInstall');
+
+      const isStandalone = () =>
+        window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      const isIOS = () =>
+        /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+      function recentlyDismissed() {
+        try {
+          const t = parseInt(localStorage.getItem(INSTALL_DISMISS_KEY) || '0', 10);
+          return t && (Date.now() - t) < DISMISS_DAYS * 86400000;
+        } catch (e) { return false; }
+      }
+
+      function setIOSMode() {
+        icTitle.textContent = 'Pasang TalqinKu di iPhone / iPad';
+        icText.innerHTML = 'Ketuk tombol <b>Bagikan</b> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> di Safari, lalu pilih <b>Tambah ke Layar Utama</b>.';
+        icInstall.textContent = 'Mengerti';
+      }
+
+      function showInstallCard() { installCard.classList.add('show'); }
+      function hideInstallCard() { installCard.classList.remove('show'); }
+
+      window.dismissInstallCard = function () {
+        hideInstallCard();
+        try { localStorage.setItem(INSTALL_DISMISS_KEY, String(Date.now())); } catch (e) {}
+      };
+
+      window.doInstall = async function () {
+        if (deferredPrompt) {
+          hideInstallCard();
+          deferredPrompt.prompt();
+          try { await deferredPrompt.userChoice; } catch (e) {}
+          deferredPrompt = null;
+          installBtn.hidden = true;
+        } else {
+          dismissInstallCard();
+        }
+      };
+
+      window.handleInstallClick = function () {
+        if (isIOS() && !deferredPrompt) setIOSMode();
+        showInstallCard();
+      };
+
+      window.maybeShowInstallCard = function () {
+        if (isStandalone() || recentlyDismissed()) return;
+        if (isIOS() && !deferredPrompt && !installBtn.hidden) { setIOSMode(); showInstallCard(); }
+        else if (deferredPrompt) showInstallCard();
+      };
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (!isStandalone()) installBtn.hidden = false;
+        if (hidden || !splash || splash.style.display === 'none') setTimeout(maybeShowInstallCard, 1500);
+      });
+
+      window.addEventListener('appinstalled', () => {
+        deferredPrompt = null;
+        installBtn.hidden = true;
+        hideInstallCard();
+      });
+
+      // iOS Safari tidak punya prompt otomatis -> tampilkan tombol panduan
+      if (isIOS() && !isStandalone()) installBtn.hidden = false;
+
+      /* ---- Service Worker (offline) ---- */
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js').catch((err) => console.warn('SW gagal didaftarkan:', err));
+        });
+      }
+    })();
   </script>
 </body>
 </html>

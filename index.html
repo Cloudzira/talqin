@@ -198,7 +198,14 @@
     .container { max-width: 800px; margin: 20px auto; padding: 0 20px; flex: 1; width: 100%; }
 
     .surah-header-standalone { text-align: center; margin-bottom: 24px; padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-    .surah-title-ar { font-family: 'Scheherazade New', serif; font-size: 36px; color: var(--neon-secondary); direction: rtl; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    /* Font resmi Mushaf Standar Indonesia (LPMQ Isep Misbah) - opsional.
+       Taruh file-nya di: fonts/LPMQ-IsepMisbah.ttf  (bila tidak ada, otomatis memakai Scheherazade New) */
+    @font-face {
+      font-family: 'LPMQ Isep Misbah';
+      src: local('LPMQ Isep Misbah'), local('LPMQ IsepMisbah'), url('fonts/LPMQ-IsepMisbah.ttf') format('truetype');
+      font-display: swap;
+    }
+    .surah-title-ar { font-family: 'LPMQ Isep Misbah', 'Scheherazade New', serif; font-size: 36px; color: var(--neon-secondary); direction: rtl; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .surah-subtitle { color: var(--text-muted); font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
 
     .ayah-card {
@@ -219,7 +226,7 @@
     .ayah-key { padding: 0 12px; height: 36px; border-radius: 12px; background: var(--btn-glass-bg); border: 2px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
     .ayah-arabic {
-      font-family: 'Scheherazade New', serif;
+      font-family: 'LPMQ Isep Misbah', 'Scheherazade New', serif;
       font-size: 30px;
       direction: rtl;
       text-align: right;
@@ -940,11 +947,18 @@
         // ---- 1. Tatwil + fathah berdiri: gabungkan ke huruf sebelumnya, buang fathah miring
         for (let i = 1; i < cl.length; i++) {
           const k = cl[i];
-          if (baseIs(k, C.TATWEEL) && has(k, C.DAGGER) && !has(k, C.FATHA) && !has(k, C.KASRA) && !has(k, C.DAMMA) && cl[i - 1].b !== ' ') {
+          if (baseIs(k, C.TATWEEL) && has(k, C.DAGGER) && cl[i - 1].b !== ' ') {
             const prev = cl[i - 1];
             drop(prev, C.FATHA);
-            k.m.forEach(x => { if (!prev.m.includes(x)) prev.m.push(x); });
+            k.m.forEach(x => { if (x !== C.FATHA && x !== C.KASRA && x !== C.DAMMA && !prev.m.includes(x)) prev.m.push(x); });
             cl.splice(i, 1); i--;
+          }
+        }
+        // alif maqshurah + fathah berdiri (عَلَىٰ -> عَلٰى): fathah berdiri pindah ke huruf sebelumnya, fathah miring dibuang
+        for (let i = 1; i < cl.length; i++) {
+          const k = cl[i], prev = cl[i - 1];
+          if (baseIs(k, 0x0649) && has(k, C.DAGGER) && prev.b !== ' ' && has(prev, C.FATHA)) {
+            drop(k, C.DAGGER); drop(prev, C.FATHA); prev.m.push(C.DAGGER);
           }
         }
         // fathah miring + fathah berdiri pada huruf yang sama -> cukup fathah berdiri
@@ -1010,10 +1024,16 @@
           }
         }
 
+        // ---- 5c. Ya akhir kata yang di data ditulis ى (فِى, ٱلَّذِى, ٱلنَّبِىِّ) -> ي bertitik (فِيْ, الَّذِيْ, النَّبِيِّ)
+        for (let i = 1; i < cl.length; i++) {
+          const k = cl[i], prev = cl[i - 1];
+          if (baseIs(k, 0x0649) && !has(k, C.DAGGER) && prev.b !== ' ' && (has(prev, C.KASRA) || has(prev, C.SUB_ALEF))) k.b = ch(C.YEH);
+        }
+
         // ---- 6. Huruf mad diberi sukun: waw setelah dammah, ya setelah kasrah
         for (let i = 1; i < cl.length; i++) {
           const k = cl[i], prev = cl[i - 1];
-          if (k.m.length !== 0 || prev.b === ' ') continue;
+          if (k.m.some(x => x !== 0x0653) || prev.b === ' ') continue;
           const wordEnd = (i === cl.length - 1 || cl[i + 1].b === ' ');
           if (baseIs(k, C.WAW) && (has(prev, C.DAMMA) || has(prev, C.INV_DAMMA))) {
             if (wordEnd && prev.b === '\u0630') continue;          // "ذُو" tidak diberi sukun
@@ -1023,8 +1043,34 @@
           }
         }
 
+        // ---- 6b. Nun sukun pada ikhfa haqiqi & idgham: nun yang di teks Madinah polos (tanpa tanda) diberi sukun
+        //          مِن جُوعٍ -> مِنْ جُوْعٍ ,  مِن رَّبِّهِمْ -> مِنْ رَّبِّهِمْ ,  عَن صَلَاتِهِمْ -> عَنْ صَلَاتِهِمْ
+        const NUN_RULE_LETTERS = new Set([
+          // ikhfa haqiqi: ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك
+          0x062A, 0x062B, 0x062C, 0x062F, 0x0630, 0x0632, 0x0633, 0x0634, 0x0635, 0x0636, 0x0637, 0x0638, 0x0641, 0x0642, 0x0643,
+          // idgham: ي ر م ل و ن
+          0x064A, 0x0631, 0x0645, 0x0644, 0x0648, 0x0646
+        ]);
+        for (let i = 0; i < cl.length; i++) {
+          const k = cl[i];
+          if (!baseIs(k, 0x0646) || k.m.length !== 0) continue;          // hanya nun yang polos
+          let j = i + 1;
+          while (j < cl.length) {                                          // lompati spasi & tanda waqaf lepas
+            const cp = cl[j].b.codePointAt(0);
+            if (cl[j].b === ' ' || (cp >= 0x06D6 && cp <= 0x06DC) || cp === 0x06DE || cp === 0x06E9) j++; else break;
+          }
+          if (j < cl.length && NUN_RULE_LETTERS.has(cl[j].b.codePointAt(0))) k.m.push(SUK);
+        }
+
         // ---- 7. Tanda "huruf tidak dibaca" (۟) dibuang -> قَالُوا۟ menjadi قَالُوْا
         cl.forEach(k => drop(k, C.ROUND_ZERO));
+
+        // ---- 8. Pemeriksaan akhir: harakat miring + berdiri pada 1 huruf -> sisakan yang berdiri saja
+        cl.forEach(k => {
+          if (has(k, C.DAGGER)) { drop(k, C.FATHA); }
+          if (has(k, C.SUB_ALEF)) drop(k, C.KASRA);
+          if (has(k, C.INV_DAMMA)) drop(k, C.DAMMA);
+        });
 
         return fromClusters(cl);
       }

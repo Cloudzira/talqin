@@ -4,7 +4,7 @@
  * - Audio TIDAK disimpan (file besar), jadi audio tetap butuh internet
  * Ganti VERSION setiap kali kamu mengubah file agar cache diperbarui.
  */
-const VERSION = 'v1.0.2';
+const VERSION = 'v1.0.4';
 const SHELL_CACHE = `talqinku-shell-${VERSION}`;
 const RUNTIME_CACHE = `talqinku-runtime-${VERSION}`;
 const API_CACHE = `talqinku-api-${VERSION}`;
@@ -18,7 +18,8 @@ const SHELL_FILES = [
   './icons/icon-512.png',
   './icons/maskable-192.png',
   './icons/maskable-512.png',
-  './icons/apple-touch-icon.png'
+  './icons/apple-touch-icon.png',
+  './fonts/LPMQ-IsepMisbah.ttf'
 ];
 
 const API_HOSTS = ['api.quran.com', 'api.alquran.cloud'];

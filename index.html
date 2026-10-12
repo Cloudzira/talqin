@@ -1024,6 +1024,15 @@
           }
         }
 
+        // ---- 5b. Lam + alif bermaddah (لَآ): maddah ditulis sebagai tanda terpisah (ۤ) agar font tidak menggabungkannya
+        //          dengan fathah lam. Hasilnya fathah tampil di atas LAM dan maddah di atas ALIF, seperti mushaf.
+        for (let i = 1; i < cl.length; i++) {
+          const k = cl[i], prev = cl[i - 1];
+          if (!baseIs(prev, C.LAM)) continue;
+          if (baseIs(k, 0x0622)) { k.b = ch(C.ALEF); k.m.push(0x06E4); }                        // آ (satu huruf) -> ا + ۤ
+          else if (baseIs(k, C.ALEF) && has(k, 0x0653)) { drop(k, 0x0653); k.m.push(0x06E4); }   // ا + ٓ -> ا + ۤ
+        }
+
         // ---- 5c. Ya akhir kata yang di data ditulis ى (فِى, ٱلَّذِى, ٱلنَّبِىِّ) -> ي bertitik (فِيْ, الَّذِيْ, النَّبِيِّ)
         for (let i = 1; i < cl.length; i++) {
           const k = cl[i], prev = cl[i - 1];
@@ -1059,7 +1068,35 @@
             const cp = cl[j].b.codePointAt(0);
             if (cl[j].b === ' ' || (cp >= 0x06D6 && cp <= 0x06DC) || cp === 0x06DE || cp === 0x06E9) j++; else break;
           }
-          if (j < cl.length && NUN_RULE_LETTERS.has(cl[j].b.codePointAt(0))) k.m.push(SUK);
+          if (j < cl.length && NUN_RULE_LETTERS.has(cl[j].b.codePointAt(0))) { k.m.push(SUK); k.idg = true; }
+        }
+
+        // ---- 6c. Idgham bighunnah: ya/waw setelah nun sukun atau tanwin diberi tasydid
+        //          لَهَبٍ وَتَبَّ -> لَهَبٍ وَّتَبَّ ,  فَمَن يَعْمَلْ -> فَمَنْ يَّعْمَلْ ,  خَيْرًا يَرَهُۥ -> خَيْرًا يَّرَهٗ
+        const isWaqf = (k) => { const cp = k.b.codePointAt(0); return (cp >= 0x06D6 && cp <= 0x06DC) || cp === 0x06DE || cp === 0x06E9; };
+        const hasTanwin = (k) => k && k.m.some(x => x === 0x064B || x === 0x064C || x === 0x064D || (x >= 0x08F0 && x <= 0x08F2));
+        for (let i = 2; i < cl.length; i++) {
+          const k = cl[i];
+          if (!(baseIs(k, C.YEH) || baseIs(k, C.WAW)) || cl[i - 1].b !== ' ') continue;      // huruf pertama kata
+          if (!k.m.some(x => x === C.FATHA || x === C.DAMMA || x === C.KASRA) || has(k, C.SHADDA) || has(k, SUK)) continue;
+          let p = cl[i - 2];
+          if (!p || isWaqf(p)) continue;                                                         // ada tanda waqaf di antara -> jangan
+          if ((baseIs(p, C.ALEF) || baseIs(p, 0x0649)) && p.m.length === 0 && cl[i - 3]) p = cl[i - 3];   // tanwin fathah: خَيْرًا / هُدًى
+          if (p.idg || hasTanwin(p)) k.m.unshift(C.SHADDA);
+        }
+
+        // ---- 6d. Idgham lainnya: huruf polos sebelum huruf bertasydid diberi sukun
+        //          عَبَدتُّمْ -> عَبَدْتُّمْ ,  هُم مَّغْفِرَةٌ -> هُمْ مَّغْفِرَةٌ ,  قُل رَّبِّ -> قُلْ رَّبِّ
+        //          (lam "ال" sebelum huruf syamsiyah tidak diberi sukun: الرَّحْمٰنِ)
+        for (let i = 1; i < cl.length; i++) {
+          const k = cl[i], cp = k.b.codePointAt(0);
+          if (k.m.length !== 0 || cp < 0x0628 || cp > 0x064A) continue;
+          if (cp === C.WAW || cp === C.YEH || cp === 0x0649 || cp === C.TATWEEL) continue;
+          if (cl[i - 1].b === ' ') continue;
+          if (cp === C.LAM && baseIs(cl[i - 1], C.ALEF)) continue;                               // lam alif-lam (ta'rif)
+          let j = i + 1;
+          while (j < cl.length && (cl[j].b === ' ' || isWaqf(cl[j]))) j++;
+          if (j < cl.length && has(cl[j], C.SHADDA)) k.m.push(SUK);
         }
 
         // ---- 7. Tanda "huruf tidak dibaca" (۟) dibuang -> قَالُوا۟ menjadi قَالُوْا

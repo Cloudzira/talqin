@@ -4,7 +4,7 @@
  * - Audio TIDAK disimpan (file besar), jadi audio tetap butuh internet
  * Ganti VERSION setiap kali kamu mengubah file agar cache diperbarui.
  */
-const VERSION = 'v1.0.5';
+const VERSION = 'v1.0.6';
 const SHELL_CACHE = `talqinku-shell-${VERSION}`;
 const RUNTIME_CACHE = `talqinku-runtime-${VERSION}`;
 const API_CACHE = `talqinku-api-${VERSION}`;

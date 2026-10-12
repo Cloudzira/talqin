@@ -879,11 +879,163 @@
       }
     }
 
+    /* ===== Ubah ke TRUE / FALSE untuk menyalakan / mematikan gaya mushaf Indonesia ===== */
+    const USE_MUSHAF_ID_STYLE = true;
+
+    /* =====================================================================
+       GAYA PENULISAN MUSHAF STANDAR INDONESIA
+       Mengubah teks Utsmani (api.quran.com) agar sama dengan contoh mushaf:
+       1. Harakat berdiri (fathah/kasrah/dammah berdiri) -> harakat miring dibuang
+       2. Huruf mad (waw setelah dammah, ya setelah kasrah) -> diberi sukun
+       3. Alif wasal jadi alif biasa, hamzah di atas/bawah alif dihilangkan
+       4. Lafaz Allah ditulis dengan fathah berdiri: اللّٰهِ
+       ===================================================================== */
+    const MushafID = (function () {
+      const C = {
+        FATHA: 0x064E, DAMMA: 0x064F, KASRA: 0x0650, SHADDA: 0x0651, SUKUN: 0x0652,
+        SUB_ALEF: 0x0656, INV_DAMMA: 0x0657, DAGGER: 0x0670,
+        TATWEEL: 0x0640, ALEF: 0x0627, ALEF_WASLA: 0x0671, ALEF_HAMZA_ABOVE: 0x0623, ALEF_HAMZA_BELOW: 0x0625,
+        HAMZA: 0x0621, LAM: 0x0644, HEH: 0x0647, WAW: 0x0648, YEH: 0x064A, SAD: 0x0635, RA: 0x0631, TAH: 0x0637,
+        SMALL_WAW: 0x06E5, SMALL_YEH: 0x06E6, ROUND_ZERO: 0x06DF, SUKUN_ALT: 0x06E1, YEH_HAMZA: 0x0626
+      };
+      const ch = (cp) => String.fromCodePoint(cp);
+
+      // tanda yang menempel pada huruf sebelumnya (harakat, shadda, tanda waqaf kecil, dll.)
+      function isMark(cp) {
+        return (cp >= 0x0610 && cp <= 0x061A) || (cp >= 0x064B && cp <= 0x065F) || cp === 0x0670 ||
+               (cp >= 0x06D6 && cp <= 0x06DC) || (cp >= 0x06DF && cp <= 0x06E4) ||
+               (cp >= 0x06E7 && cp <= 0x06E8) || (cp >= 0x06EA && cp <= 0x06ED) || (cp >= 0x08D3 && cp <= 0x08FF);
+      }
+
+      // pecah teks menjadi "kluster": 1 huruf dasar + tanda-tandanya. Spasi = batas kata.
+      function toClusters(text) {
+        const out = [];
+        for (const c of Array.from(text)) {
+          const cp = c.codePointAt(0);
+          if (isMark(cp) && out.length && out[out.length - 1].b !== ' ') out[out.length - 1].m.push(cp);
+          else out.push({ b: c, m: [] });
+        }
+        return out;
+      }
+      const fromClusters = (cl) => cl.map(k => k.b + k.m.map(ch).join('')).join('');
+      const has = (k, cp) => k && k.m.includes(cp);
+      const drop = (k, cp) => { k.m = k.m.filter(x => x !== cp); };
+      const baseIs = (k, cp) => k && k.b.codePointAt(0) === cp;
+
+      function convert(text, opts) {
+        if (!text) return text;
+        opts = opts || {};
+        // pakai bentuk sukun yang sama dengan teks sumber (agar tampilan seragam)
+        const SUK = text.indexOf(ch(C.SUKUN_ALT)) !== -1 && text.indexOf(ch(C.SUKUN)) === -1 ? C.SUKUN_ALT : C.SUKUN;
+        let cl = toClusters(text);
+
+        // ---- 0. Kata "Shirath": di mushaf Indonesia ditulis dengan alif penuh (الصِّرَاطَ), bukan alif kecil
+        for (let i = 0; i < cl.length - 2; i++) {
+          if (baseIs(cl[i], C.SAD) && has(cl[i], C.KASRA) && baseIs(cl[i + 1], C.RA) && has(cl[i + 1], C.DAGGER) && baseIs(cl[i + 2], C.TAH)) {
+            drop(cl[i + 1], C.DAGGER);
+            cl.splice(i + 2, 0, { b: ch(C.ALEF), m: [] });
+          }
+        }
+
+        // ---- 1. Tatwil + fathah berdiri: gabungkan ke huruf sebelumnya, buang fathah miring
+        for (let i = 1; i < cl.length; i++) {
+          const k = cl[i];
+          if (baseIs(k, C.TATWEEL) && has(k, C.DAGGER) && !has(k, C.FATHA) && !has(k, C.KASRA) && !has(k, C.DAMMA) && cl[i - 1].b !== ' ') {
+            const prev = cl[i - 1];
+            drop(prev, C.FATHA);
+            k.m.forEach(x => { if (!prev.m.includes(x)) prev.m.push(x); });
+            cl.splice(i, 1); i--;
+          }
+        }
+        // fathah miring + fathah berdiri pada huruf yang sama -> cukup fathah berdiri
+        cl.forEach(k => { if (has(k, C.DAGGER)) drop(k, C.FATHA); });
+
+        // ---- 2. Waw/ya kecil penanda mad pada "ه" (لَهُۥ / بِهِۦ) -> dammah berdiri / kasrah berdiri (لَهٗ / بِهٖ)
+        for (let i = 1; i < cl.length; i++) {
+          const k = cl[i], prev = cl[i - 1];
+          if (k.m.length === 0 && baseIs(k, C.SMALL_WAW) && has(prev, C.DAMMA)) {
+            drop(prev, C.DAMMA); prev.m.push(C.INV_DAMMA); cl.splice(i, 1); i--;
+          } else if (k.m.length === 0 && baseIs(k, C.SMALL_YEH) && has(prev, C.KASRA)) {
+            drop(prev, C.KASRA); prev.m.push(C.SUB_ALEF); cl.splice(i, 1); i--;
+          }
+        }
+
+        // ---- 3. Lafaz Allah: ٱللَّهِ -> اللّٰهِ  dan  لِلَّهِ -> لِلّٰهِ
+        for (let i = 1; i < cl.length - 1; i++) {
+          const k = cl[i];
+          if (baseIs(k, C.LAM) && has(k, C.SHADDA) && has(k, C.FATHA) && !has(k, C.DAGGER)) {
+            let j = i + 1;
+            if (baseIs(cl[j], C.TATWEEL) && cl[j].m.length === 0) j++;      // ٱللَّـهِ (ada tatwil)
+            const heh = cl[j];
+            const before = cl[i - 1], before2 = cl[i - 2];
+            const afterArticle = baseIs(before, C.LAM) && before2 && (baseIs(before2, C.ALEF_WASLA) || baseIs(before2, C.ALEF));
+            const afterLi = baseIs(before, C.LAM) && has(before, C.KASRA);
+            if (heh && baseIs(heh, C.HEH) && (afterArticle || afterLi)) {
+              drop(k, C.FATHA); k.m.push(C.DAGGER);
+              if (j !== i + 1) cl.splice(i + 1, 1);
+            }
+          }
+        }
+
+        // ---- 4. Alif wasal (ٱ): jadi alif biasa. Di awal kata (selain "ال") diberi harakat awal.
+        for (let i = 0; i < cl.length; i++) {
+          if (!baseIs(cl[i], C.ALEF_WASLA)) continue;
+          cl[i].b = ch(C.ALEF);
+          const atStart = (i === 0 || cl[i - 1].b === ' ');
+          const next = cl[i + 1];
+          if (atStart && next && !baseIs(next, C.LAM)) {
+            // cari huruf ke-3 pada kata (ٱ + h1 + h2): bila berharakat dammah -> mulai dengan dammah, selain itu kasrah
+            let w = []; for (let j = i + 1; j < cl.length && cl[j].b !== ' '; j++) w.push(cl[j]);
+            const rootStr = w.slice(0, 3).map(k => k.b).join('');
+            const nounKasra = /^(\u0628\u0646|\u0633\u0645|\u0627?\u0645\u0631|\u062B\u0646)/.test(rootStr); // ابن، اسم، امرؤ، اثنين
+            const hamzaSeat = w[0] && (baseIs(w[0], C.YEH_HAMZA) || baseIs(w[0], C.HAMZA)); // ٱئْتُوا -> kasrah
+            // huruf bertasydid (ٱتَّقُوا) dihitung dua huruf: harakat huruf ke-2 ada pada huruf itu sendiri
+            const third = (w[0] && has(w[0], C.SHADDA)) ? w[0] : w[1];
+            const dammaStart = third && has(third, C.DAMMA) && !nounKasra && !hamzaSeat;
+            cl[i].m.push(dammaStart ? C.DAMMA : C.KASRA);
+          }
+        }
+
+        // ---- 5. Hamzah di atas/bawah alif dihilangkan (أَنْعَمْتَ -> اَنْعَمْتَ, إِيَّاكَ -> اِيَّاكَ)
+        // (hamzah yang bersukun, mis. يَأْكُلُ / فَأْتُوا, tetap dipertahankan)
+        cl.forEach(k => {
+          if ((baseIs(k, C.ALEF_HAMZA_ABOVE) || baseIs(k, C.ALEF_HAMZA_BELOW)) && !has(k, C.SUKUN) && !has(k, C.SUKUN_ALT)) k.b = ch(C.ALEF);
+        });
+        // ءَا (hamzah + fathah + alif) -> اٰ  (ءَامَنُوا -> اٰمَنُوا, ٱلْقُرْءَانَ -> الْقُرْاٰنَ)
+        for (let i = 0; i < cl.length - 1; i++) {
+          if (baseIs(cl[i], C.HAMZA) && cl[i].m.length === 1 && has(cl[i], C.FATHA) && baseIs(cl[i + 1], C.ALEF) && cl[i + 1].m.every(x => x === 0x0653)) {
+            const a = cl[i + 1];
+            if (!a.m.includes(C.DAGGER)) a.m.unshift(C.DAGGER);
+            cl.splice(i, 1);
+          }
+        }
+
+        // ---- 6. Huruf mad diberi sukun: waw setelah dammah, ya setelah kasrah
+        for (let i = 1; i < cl.length; i++) {
+          const k = cl[i], prev = cl[i - 1];
+          if (k.m.length !== 0 || prev.b === ' ') continue;
+          const wordEnd = (i === cl.length - 1 || cl[i + 1].b === ' ');
+          if (baseIs(k, C.WAW) && (has(prev, C.DAMMA) || has(prev, C.INV_DAMMA))) {
+            if (wordEnd && prev.b === '\u0630') continue;          // "ذُو" tidak diberi sukun
+            k.m.push(SUK);
+          } else if (baseIs(k, C.YEH) && (has(prev, C.KASRA) || has(prev, C.SUB_ALEF))) {
+            k.m.push(SUK);
+          }
+        }
+
+        // ---- 7. Tanda "huruf tidak dibaca" (۟) dibuang -> قَالُوا۟ menjadi قَالُوْا
+        cl.forEach(k => drop(k, C.ROUND_ZERO));
+
+        return fromClusters(cl);
+      }
+
+      return { convert };
+    })();
+
+    /* Dipanggil untuk setiap teks Arab (ayat, Bismillah, Ta'awudz) */
     function applyIndonesianQuranStandards(text) {
-      return text
-        .replace(/لِلَّهِ/g, 'لِلَّٰهِ').replace(/اللَّهِ/g, 'اللَّٰهِ').replace(/اللَّهُ/g, 'اللَّٰهُ')
-        .replace(/ٱللَّهِ/g, 'ٱللَّٰهِ').replace(/ٱللَّهُ/g, 'ٱللَّٰهُ').replace(/لله/g, 'لِلَّٰهِ')
-        .replace(/بالله/g, 'بِٱللَّٰهِ').replace(/بِٱللَّهِ/g, 'بِٱللَّٰهِ').replace(/ٱلصِّرَٰطَ/g, 'ٱلصِّرَٰطَ');
+      if (!USE_MUSHAF_ID_STYLE) return text;
+      try { return MushafID.convert(text); } catch (e) { console.warn('Gaya mushaf gagal, memakai teks asli:', e); return text; }
     }
 
     async function loadSurah() {

@@ -23,7 +23,7 @@ const SHELL_FILES = [
 ];
 
 const API_HOSTS = ['api.quran.com', 'api.alquran.cloud'];
-const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
+const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'cdn.jsdelivr.net'];
 const MAX_API_ENTRIES = 240;
 
 self.addEventListener('install', (event) => {

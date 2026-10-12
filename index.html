@@ -198,11 +198,14 @@
     .container { max-width: 800px; margin: 20px auto; padding: 0 20px; flex: 1; width: 100%; }
 
     .surah-header-standalone { text-align: center; margin-bottom: 24px; padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-    /* Font resmi Mushaf Standar Indonesia (LPMQ Isep Misbah) - opsional.
-       Taruh file-nya di: fonts/LPMQ-IsepMisbah.ttf  (bila tidak ada, otomatis memakai Scheherazade New) */
+    /* Font resmi Mushaf Standar Indonesia (LPMQ Isep Misbah).
+       Urutan sumber: (1) terpasang di perangkat, (2) file lokal fonts/LPMQ-IsepMisbah.ttf, (3) CDN.
+       Jika semuanya gagal, otomatis memakai Scheherazade New. */
     @font-face {
       font-family: 'LPMQ Isep Misbah';
-      src: local('LPMQ Isep Misbah'), local('LPMQ IsepMisbah'), url('fonts/LPMQ-IsepMisbah.ttf') format('truetype');
+      src: local('LPMQ Isep Misbah'), local('LPMQ-IsepMisbah'),
+           url('fonts/LPMQ-IsepMisbah.ttf') format('truetype'),
+           url('https://cdn.jsdelivr.net/gh/utrodus/flutter-ayatnesia-quran-search@main/assets/fonts/LPMQ-IsepMisbah.ttf') format('truetype');
       font-display: swap;
     }
     .surah-title-ar { font-family: 'LPMQ Isep Misbah', 'Scheherazade New', serif; font-size: 36px; color: var(--neon-secondary); direction: rtl; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.05); }
@@ -889,6 +892,20 @@
     /* ===== Ubah ke TRUE / FALSE untuk menyalakan / mematikan gaya mushaf Indonesia ===== */
     const USE_MUSHAF_ID_STYLE = true;
 
+    /* Font mushaf Indonesia (LPMQ Isep Misbah): dicek saat halaman dibuka.
+       Bila berhasil dimuat -> dipakai (harakat lam-alif tepat di atas lam, seperti mushaf).
+       Bila gagal (offline / file tidak ada) -> otomatis kembali ke Scheherazade New. */
+    let MUSHAF_FONT_OK = false;
+    const mushafFontReady = (async () => {
+      try {
+        const list = await Promise.race([
+          document.fonts.load("32px 'LPMQ Isep Misbah'", "\u0644\u0627"),
+          new Promise(res => setTimeout(() => res([]), 3500))
+        ]);
+        MUSHAF_FONT_OK = list.length > 0 && list.some(f => f.status === 'loaded');
+      } catch (e) { MUSHAF_FONT_OK = false; }
+    })();
+
     /* =====================================================================
        GAYA PENULISAN MUSHAF STANDAR INDONESIA
        Mengubah teks Utsmani (api.quran.com) agar sama dengan contoh mushaf:
@@ -1024,13 +1041,17 @@
           }
         }
 
+        // Font LPMQ (font resmi mushaf Indonesia) sudah menata lam-alif dengan benar -> pakai maddah standar.
+        // Font lain (mis. Scheherazade) -> pakai maddah terpisah U+06E4 agar tidak menumpuk dengan fathah lam.
+        const MADD = opts.lpmq ? 0x0653 : 0x06E4;
+
         // ---- 5b. Lam + alif bermaddah (لَآ): maddah ditulis sebagai tanda terpisah (ۤ) agar font tidak menggabungkannya
         //          dengan fathah lam. Hasilnya fathah tampil di atas LAM dan maddah di atas ALIF, seperti mushaf.
         for (let i = 1; i < cl.length; i++) {
           const k = cl[i], prev = cl[i - 1];
           if (!baseIs(prev, C.LAM)) continue;
-          if (baseIs(k, 0x0622)) { k.b = ch(C.ALEF); k.m.push(0x06E4); }                        // آ (satu huruf) -> ا + ۤ
-          else if (baseIs(k, C.ALEF) && has(k, 0x0653)) { drop(k, 0x0653); k.m.push(0x06E4); }   // ا + ٓ -> ا + ۤ
+          if (baseIs(k, 0x0622)) { k.b = ch(C.ALEF); k.m.push(MADD); }                          // آ (satu huruf) -> ا + maddah
+          else if (baseIs(k, C.ALEF) && has(k, 0x0653)) { drop(k, 0x0653); k.m.push(MADD); }     // ا + ٓ -> ا + maddah
         }
 
         // ---- 5c. Ya akhir kata yang di data ditulis ى (فِى, ٱلَّذِى, ٱلنَّبِىِّ) -> ي bertitik (فِيْ, الَّذِيْ, النَّبِيِّ)
@@ -1118,7 +1139,7 @@
     /* Dipanggil untuk setiap teks Arab (ayat, Bismillah, Ta'awudz) */
     function applyIndonesianQuranStandards(text) {
       if (!USE_MUSHAF_ID_STYLE) return text;
-      try { return MushafID.convert(text); } catch (e) { console.warn('Gaya mushaf gagal, memakai teks asli:', e); return text; }
+      try { return MushafID.convert(text, { lpmq: MUSHAF_FONT_OK }); } catch (e) { console.warn('Gaya mushaf gagal, memakai teks asli:', e); return text; }
     }
 
     async function loadSurah() {
@@ -1136,6 +1157,7 @@
           fetch(`https://api.alquran.cloud/v1/surah/${currentSurahNum}/id.indonesian`)
         ]);
 
+        await mushafFontReady;   // pastikan font sudah dicek sebelum teks Arab dibentuk
         const dataArab = await resArab.json();
         const dataIndo = await resIndo.json();
         const ayahsArab = dataArab.verses;

@@ -947,8 +947,20 @@
       const A3 = String(ayahNumber).padStart(3, '0');
 
       if (qari.type === 'github') {
-        if (ayahNumber === 0) return [surahNumber === 1 ? gh('000_001.mp3') : gh('0.mp3')];
-        return [gh(`${S3}_${A3}.mp3`)];
+        // Suara Anak dulu; bila belum diunggah ke GitHub -> pakai suara Syaikh Alafasy sebagai cadangan
+        const primary = ayahNumber === 0 ? (surahNumber === 1 ? gh('000_001.mp3') : gh('0.mp3')) : gh(`${S3}_${A3}.mp3`);
+        const fb = QARIS.find(q => q.id === 'mishary');
+        const fbm = QARI_MIRRORS.mishary || {};
+        const out = [primary];
+        if (ayahNumber === 0 && surahNumber === 1) out.push(`${fb.baseUrl}audhubillah.mp3`);
+        else {
+          const a = ayahNumber === 0 ? 1 : ayahNumber, s = ayahNumber === 0 ? 1 : surahNumber;
+          const SS = String(s).padStart(3, '0'), AA = String(a).padStart(3, '0');
+          out.push(`${fb.baseUrl}${SS}${AA}.mp3`);
+          out.push(`${QURANCOM_CDN}${fbm.qc}/${SS}${AA}.mp3`);
+          out.push(`${ISLAMIC_CDN}${fbm.isl}/${globalAyahNumber(s, a)}.mp3`);
+        }
+        return out;
       }
 
       const mir = QARI_MIRRORS[qari.id] || {};
@@ -1513,7 +1525,8 @@
     audioElement.addEventListener('playing', () => {
       clearTimeout(audioStallTimer);
       isPlaying = true;
-      playerStatus.innerText = audioSrcIdx > 0 ? "Memutar audio (server cadangan)" : "Memutar audio...";
+      playerStatus.innerText = audioSrcIdx === 0 ? "Memutar audio..."
+        : (currentQariId === 'github_anak' && audioSrcIdx === 1 ? "Suara Anak belum tersedia, memutar suara Syaikh Alafasy" : "Memutar audio (server cadangan)");
     });
 
     function stopAudio() {
@@ -1607,7 +1620,7 @@
         splash.classList.add('hide');
         try { sessionStorage.setItem('tk_splash', '1'); } catch (e) {}
         setTimeout(() => splash.remove(), 700);
-        setTimeout(maybeShowInstallCard, 2500);
+        setTimeout(() => window.maybeShowInstallCard && window.maybeShowInstallCard(), 2500);
       }
       function scheduleHide() {
         const wait = Math.max(0, MIN_MS - (Date.now() - startedAt));
@@ -1619,7 +1632,7 @@
         setTimeout(hideSplash, MAX_MS);
       } else if (splash) {
         splash.remove();
-        setTimeout(maybeShowInstallCard, 3000);
+        setTimeout(() => window.maybeShowInstallCard && window.maybeShowInstallCard(), 3000);
       }
 
       /* ---- Warna status bar mengikuti tema ---- */
@@ -1696,7 +1709,7 @@
         e.preventDefault();
         deferredPrompt = e;
         if (!isStandalone()) installBtn.hidden = false;
-        if (hidden || !splash || splash.style.display === 'none') setTimeout(maybeShowInstallCard, 1500);
+        if (hidden || !splash || splash.style.display === 'none') setTimeout(() => window.maybeShowInstallCard && window.maybeShowInstallCard(), 1500);
       });
 
       window.addEventListener('appinstalled', () => {

@@ -4,7 +4,7 @@
  * - Audio TIDAK disimpan (file besar), jadi audio tetap butuh internet
  * Ganti VERSION setiap kali kamu mengubah file agar cache diperbarui.
  */
-const VERSION = 'v1.0.10';
+const VERSION = 'v1.0.11';
 const SHELL_CACHE = `talqinku-shell-${VERSION}`;
 const RUNTIME_CACHE = `talqinku-runtime-${VERSION}`;
 const API_CACHE = `talqinku-api-${VERSION}`;
@@ -83,6 +83,9 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
+
+  // Audio / streaming (Range): jangan disentuh service worker, biar browser yang menangani
+  if (request.destination === 'audio' || request.destination === 'video' || request.headers.has('range')) return;
 
   // Halaman utama
   if (request.mode === 'navigate') {

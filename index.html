@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="referrer" content="no-referrer">
   <title>TalqinKu</title>
   <meta name="description" content="TalqinKu: belajar membaca Al-Qur'an dengan cara menyenangkan. Dengarkan, tirukan, dan ulangi ayat bersama qari pilihan.">
 
@@ -387,6 +388,66 @@
       #splash .sp-title span, #splash .sp-tag, #splash .sp-dots, #splash .sp-credit { opacity: 1; }
       .install-card { transition: none; }
     }
+
+    /* =====================================================
+       PERBAIKAN TAMPILAN: tidak ada elemen yang melebar keluar layar
+       ===================================================== */
+    html { overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+    body { overflow-x: clip; width: 100%; max-width: 100%; padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
+    select { max-width: 100%; }
+
+    .navbar { gap: 10px; }
+    .brand-section { min-width: 0; flex: 1 1 auto; }
+    .brand { white-space: nowrap; }
+    .header-subtext { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nav-controls { flex-shrink: 0; }
+
+    /* Bar pilih surah & qori: dua kolom rapi, nama panjang dipotong (...) bukan melebar */
+    .surah-selector-wrapper { top: var(--nav-h, 64px); padding: 0 16px; margin-top: 12px; }
+    .surah-selector-container {
+      display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 8px 12px; width: 100%; padding: 10px 12px; align-items: end;
+    }
+    .selector-divider { display: none; }
+    .selector-group { display: flex; flex-direction: column; align-items: stretch; gap: 4px; min-width: 0; }
+    .surah-selector-container select {
+      width: 100%; min-width: 0; max-width: 100%; padding: 8px 10px; border-radius: 12px;
+      background: var(--btn-glass-bg); border: 2px solid var(--btn-glass-border);
+      font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .container { padding: 0 16px; }
+    .ayah-arabic { font-size: clamp(24px, 6.6vw, 30px); overflow-wrap: anywhere; }
+    .bismillah-text { font-size: clamp(24px, 7vw, 32px); }
+    .surah-title-ar { font-size: clamp(28px, 8vw, 36px); max-width: 100%; }
+    .ayah-translation { overflow-wrap: anywhere; }
+    .ayah-top-bar { gap: 8px; }
+    .ayah-key { min-width: 0; white-space: nowrap; }
+
+    /* Pemutar di bawah */
+    .bottom-player { width: calc(100% - 24px); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); padding: 12px 16px; gap: 12px; }
+    .player-info { min-width: 0; }
+    .player-title, .player-subtitle { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .player-controls { gap: 8px; }
+    .repeat-mode-select { max-width: 100%; }
+    .range-picker { flex-wrap: wrap; max-width: 100%; padding: 4px 10px; gap: 6px; }
+    .range-picker select { max-width: 64px; }
+
+    .install-card { top: calc(var(--nav-h, 64px) + 14px); }
+
+    @media (max-width: 430px) {
+      .ayah-card { padding: 16px; border-radius: 20px; }
+      .ayah-key { font-size: 12px; padding: 0 10px; }
+    }
+    @media (max-width: 380px) {
+      .brand { font-size: 17px; gap: 4px; }
+      .brand-logo { width: 28px; height: 28px; }
+      .nav-controls { gap: 5px; }
+      .nav-controls .glass-btn { width: 34px; height: 34px; border-radius: 12px; }
+      .nav-controls .glass-btn svg { width: 17px; height: 17px; }
+      .header-subtext { font-size: 10px; }
+      .surah-selector-container { grid-template-columns: minmax(0, 1fr); }
+    }
   </style>
 </head>
 <body>
@@ -605,6 +666,29 @@
     ];
 
     let currentQariId = 'github_anak';
+
+    /* Server cadangan: bila everyayah.com gagal/lambat, app otomatis mencoba server di bawah ini */
+    const QURANCOM_CDN = 'https://verses.quran.foundation/';
+    const ISLAMIC_CDN  = 'https://cdn.islamic.app/quran/audio/';
+    const QARI_MIRRORS = {
+      mishary:           { qc: 'Alafasy/mp3',              isl: 'ar.alafasy' },
+      husary:            { qc: 'Husary/mp3' },
+      husary_muallim:    { qc: 'Husary/Muallim/mp3' },
+      minshawi:          { qc: 'Minshawi/Murattal/mp3' },
+      minshawi_mujawwad: { qc: 'Minshawi/Mujawwad/mp3' },
+      basit:             { qc: 'AbdulBaset/Murattal/mp3' },
+      basit_mujawwad:    { qc: 'AbdulBaset/Mujawwad/mp3' },
+      sudais:            { qc: 'Sudais/mp3',               isl: 'ar.abdurrahmaansudais' },
+      shuraim:           { qc: 'Shuraym/mp3' }
+    };
+
+    /* Jumlah ayat tiap surah (untuk nomor ayat global di server cadangan) */
+    const SURAH_AYAH_COUNTS = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
+    function globalAyahNumber(surah, ayah) {
+      let n = 0;
+      for (let i = 0; i < surah - 1; i++) n += SURAH_AYAH_COUNTS[i];
+      return n + ayah;
+    }
 
     const ALL_SURAHS = [
       { num: 1, name: "Al-Fatihah", ar: "سُورَةُ ٱلْفَاتِحَةِ", ayahs: 7 },
@@ -851,42 +935,45 @@
 
     function changeQari() {
       currentQariId = qariSelect.value;
-      if (isPlaying && currentAyah !== null) {
-        audioElement.src = getAudioUrl(currentSurahNum, currentAyah);
-        audioElement.play().catch(() => { playerStatus.innerText = "Gagal memutar audio qori ini"; });
+      if (isPlaying && currentAyah !== null) startPlayback(currentAyah);
+    }
+
+    /* Daftar alamat audio (urut: utama dulu, lalu cadangan) */
+    function getAudioSources(surahNumber, ayahNumber) {
+      const qari = QARIS.find(q => q.id === currentQariId);
+      if (!qari) return [];
+      const gh = (file) => `${GITHUB_RAW_BASE}/${surahNumber}/${file}`;
+      const S3 = String(surahNumber).padStart(3, '0');
+      const A3 = String(ayahNumber).padStart(3, '0');
+
+      if (qari.type === 'github') {
+        if (ayahNumber === 0) return [surahNumber === 1 ? gh('000_001.mp3') : gh('0.mp3')];
+        return [gh(`${S3}_${A3}.mp3`)];
       }
+
+      const mir = QARI_MIRRORS[qari.id] || {};
+      const list = [];
+      if (ayahNumber === 0) {
+        if (surahNumber === 1) {
+          // Ta'awudz
+          list.push(gh('000_002.mp3'));
+          list.push(`${qari.baseUrl}audhubillah.mp3`);
+        } else {
+          // Bismillah = ayat 1 Al-Fatihah
+          list.push(`${qari.baseUrl}001001.mp3`);
+          if (mir.qc) list.push(`${QURANCOM_CDN}${mir.qc}/001001.mp3`);
+          if (mir.isl) list.push(`${ISLAMIC_CDN}${mir.isl}/1.mp3`);
+        }
+        return list;
+      }
+      list.push(`${qari.baseUrl}${S3}${A3}.mp3`);
+      if (mir.qc)  list.push(`${QURANCOM_CDN}${mir.qc}/${S3}${A3}.mp3`);
+      if (mir.isl) list.push(`${ISLAMIC_CDN}${mir.isl}/${globalAyahNumber(surahNumber, ayahNumber)}.mp3`);
+      return list;
     }
 
     function getAudioUrl(surahNumber, ayahNumber) {
-      const qari = QARIS.find(q => q.id === currentQariId);
-
-      if (qari && qari.type === 'github') {
-        if (ayahNumber === 0) {
-          if (surahNumber === 1) {
-            return `${GITHUB_RAW_BASE}/${surahNumber}/000_001.mp3`;
-          } else {
-            return `${GITHUB_RAW_BASE}/${surahNumber}/0.mp3`;
-          }
-        }
-
-        const formattedSurah = String(surahNumber).padStart(3, '0');
-        const formattedAyah = String(ayahNumber).padStart(3, '0');
-        return `${GITHUB_RAW_BASE}/${surahNumber}/${formattedSurah}_${formattedAyah}.mp3`;
-      } 
-      else if (qari && qari.type === 'api') {
-        if (ayahNumber === 0) {
-          if (surahNumber === 1) {
-            return `${GITHUB_RAW_BASE}/1/000_002.mp3`;
-          } else {
-            return `${qari.baseUrl}001001.mp3`;
-          }
-        }
-        const formattedSurah = String(surahNumber).padStart(3, '0');
-        const formattedAyah = String(ayahNumber).padStart(3, '0');
-        return `${qari.baseUrl}${formattedSurah}${formattedAyah}.mp3`;
-      }
-      
-      return '';
+      return getAudioSources(surahNumber, ayahNumber)[0] || '';
     }
 
     function toggleSaveAyah(ayahNum) {
@@ -1352,24 +1439,86 @@
       masterPlayIcon.setAttribute('href', '#icon-stop');
       masterPlaySvg.classList.add('icon-fill-stop');
 
-      audioElement.pause();
-      audioElement.currentTime = 0;
-
-      audioElement.src = getAudioUrl(currentSurahNum, ayahNum);
-
-      audioElement.play().then(() => { 
-        isPlaying = true; 
-      }).catch((e) => {
-        console.error("Audio playback error:", e);
-        isPlaying = false;
-        masterPlayIcon.setAttribute('href', '#icon-play');
-        masterPlaySvg.classList.remove('icon-fill-stop');
-        setBtnPlayIcon(ayahNum, false);
-        playerStatus.innerText = "Gagal memutar audio";
-      });
+      startPlayback(ayahNum);
     }
 
+    /* ===== Pemutaran audio dengan server cadangan & penanganan error ===== */
+    let audioSources = [];
+    let audioSrcIdx = 0;
+    let audioToken = 0;
+    let audioStallTimer = null;
+
+    function startPlayback(ayahNum) {
+      audioToken++;
+      clearTimeout(audioStallTimer);
+      audioSources = getAudioSources(currentSurahNum, ayahNum);
+      audioSrcIdx = 0;
+      audioElement.pause();
+      playerStatus.innerText = "Memuat audio...";
+      tryAudioSource(ayahNum, audioToken);
+    }
+
+    function tryAudioSource(ayahNum, token) {
+      if (token !== audioToken) return;
+      clearTimeout(audioStallTimer);
+      if (audioSrcIdx >= audioSources.length) {
+        failAudio(ayahNum, navigator.onLine === false
+          ? "Tidak ada koneksi internet"
+          : "Suara gagal dimuat. Coba lagi atau pilih qori lain.");
+        return;
+      }
+      const idx = audioSrcIdx;
+      audioElement.src = audioSources[idx];
+      audioElement.load();
+      // bila 12 detik tidak kunjung siap -> coba server berikutnya
+      audioStallTimer = setTimeout(() => {
+        if (token === audioToken && idx === audioSrcIdx && audioElement.readyState < 3) nextAudioSource(ayahNum, token, idx);
+      }, 12000);
+
+      const p = audioElement.play();
+      if (p && p.then) {
+        p.then(() => { if (token === audioToken) isPlaying = true; })
+         .catch((err) => {
+           if (token !== audioToken) return;
+           if (err && err.name === 'AbortError') return;
+           if (err && err.name === 'NotAllowedError') { failAudio(ayahNum, "Browser menahan suara. Ketuk tombol putar sekali lagi."); return; }
+           console.warn('Audio gagal:', audioSources[idx], err);
+           nextAudioSource(ayahNum, token, idx);
+         });
+      }
+    }
+
+    function nextAudioSource(ayahNum, token, idx) {
+      if (token !== audioToken || idx !== audioSrcIdx) return;   // sudah ditangani
+      audioSrcIdx++;
+      tryAudioSource(ayahNum, token);
+    }
+
+    function failAudio(ayahNum, message) {
+      clearTimeout(audioStallTimer);
+      audioToken++;
+      try { audioElement.pause(); } catch (e) {}
+      isPlaying = false;
+      masterPlayIcon.setAttribute('href', '#icon-play');
+      masterPlaySvg.classList.remove('icon-fill-stop');
+      setBtnPlayIcon(ayahNum, false);
+      playerStatus.innerText = message;
+    }
+
+    audioElement.addEventListener('error', () => {
+      if (currentAyah === null) return;
+      nextAudioSource(currentAyah, audioToken, audioSrcIdx);
+    });
+    audioElement.addEventListener('waiting', () => { if (isPlaying || currentAyah !== null) playerStatus.innerText = "Memuat audio..."; });
+    audioElement.addEventListener('playing', () => {
+      clearTimeout(audioStallTimer);
+      isPlaying = true;
+      playerStatus.innerText = audioSrcIdx > 0 ? "Memutar audio (server cadangan)" : "Memutar audio...";
+    });
+
     function stopAudio() {
+      audioToken++;
+      clearTimeout(audioStallTimer);
       audioElement.pause();
       audioElement.currentTime = 0;
       isPlaying = false;
@@ -1392,6 +1541,7 @@
     }
 
     audioElement.onended = () => {
+      clearTimeout(audioStallTimer);
       isPlaying = false;
       masterPlayIcon.setAttribute('href', '#icon-play');
       masterPlaySvg.classList.remove('icon-fill-stop');
@@ -1564,6 +1714,19 @@
           navigator.serviceWorker.register('sw.js').catch((err) => console.warn('SW gagal didaftarkan:', err));
         });
       }
+    })();
+  </script>
+
+  <script>
+    /* Ukur tinggi navbar agar bar pilih surah menempel tepat di bawahnya */
+    (function () {
+      const nav = document.querySelector('.navbar');
+      function setNavH() { if (nav) document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px'); }
+      window.addEventListener('resize', setNavH);
+      window.addEventListener('load', setNavH);
+      document.addEventListener('DOMContentLoaded', setNavH);
+      if (window.ResizeObserver && nav) new ResizeObserver(setNavH).observe(nav);
+      setNavH();
     })();
   </script>
 </body>

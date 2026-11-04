@@ -939,8 +939,8 @@
     }
 
     /* Daftar alamat audio (urut: utama dulu, lalu cadangan) */
-    function getAudioSources(surahNumber, ayahNumber) {
-      const qari = QARIS.find(q => q.id === currentQariId);
+    function getAudioSources(surahNumber, ayahNumber, qariId = currentQariId) {
+      const qari = QARIS.find(q => q.id === qariId);
       if (!qari) return [];
       const gh = (file) => `${GITHUB_RAW_BASE}/${surahNumber}/${file}`;
       const S3 = String(surahNumber).padStart(3, '0');
@@ -1459,11 +1459,22 @@
     let audioSrcIdx = 0;
     let audioToken = 0;
     let audioStallTimer = null;
+    let audioOwnCount = 0;
+    let audioFailedHosts = new Set();
+    const hostOf = (u) => { try { return new URL(u).hostname; } catch (e) { return ''; } };
 
     function startPlayback(ayahNum) {
       audioToken++;
       clearTimeout(audioStallTimer);
-      audioSources = getAudioSources(currentSurahNum, ayahNum);
+      const own = getAudioSources(currentSurahNum, ayahNum);
+      audioOwnCount = own.length;
+      audioFailedHosts = new Set();
+      audioSources = own;
+      // Qori syaikh yang gagal -> otomatis pindah ke suara Syaikh Alafasy (punya 3 server)
+      const cur = QARIS.find(q => q.id === currentQariId);
+      if (cur && cur.type === 'api' && cur.id !== 'mishary') {
+        audioSources = own.concat(getAudioSources(currentSurahNum, ayahNum, 'mishary'));
+      }
       audioSrcIdx = 0;
       audioElement.pause();
       playerStatus.innerText = "Memuat audio...";
@@ -1479,13 +1490,16 @@
           : "Suara gagal dimuat. Coba lagi atau pilih qori lain.");
         return;
       }
+      // pada suara pengganti, lewati server yang baru saja gagal agar tidak menunggu lagi
+      while (audioSrcIdx >= audioOwnCount && audioSrcIdx < audioSources.length && audioFailedHosts.has(hostOf(audioSources[audioSrcIdx]))) audioSrcIdx++;
+      if (audioSrcIdx >= audioSources.length) { tryAudioSource(ayahNum, token); return; }
       const idx = audioSrcIdx;
       audioElement.src = audioSources[idx];
       audioElement.load();
       // bila 12 detik tidak kunjung siap -> coba server berikutnya
       audioStallTimer = setTimeout(() => {
         if (token === audioToken && idx === audioSrcIdx && audioElement.readyState < 3) nextAudioSource(ayahNum, token, idx);
-      }, 12000);
+      }, 8000);
 
       const p = audioElement.play();
       if (p && p.then) {
@@ -1502,6 +1516,7 @@
 
     function nextAudioSource(ayahNum, token, idx) {
       if (token !== audioToken || idx !== audioSrcIdx) return;   // sudah ditangani
+      audioFailedHosts.add(hostOf(audioSources[idx]));
       audioSrcIdx++;
       tryAudioSource(ayahNum, token);
     }
@@ -1526,7 +1541,8 @@
       clearTimeout(audioStallTimer);
       isPlaying = true;
       playerStatus.innerText = audioSrcIdx === 0 ? "Memutar audio..."
-        : (currentQariId === 'github_anak' && audioSrcIdx === 1 ? "Suara Anak belum tersedia, memutar suara Syaikh Alafasy" : "Memutar audio (server cadangan)");
+        : (currentQariId === 'github_anak' && audioSrcIdx === 1 ? "Suara Anak belum tersedia, memutar suara Syaikh Alafasy"
+          : (currentQariId !== 'github_anak' && audioSrcIdx >= audioOwnCount ? "Qori ini sedang tidak bisa dimuat, memutar suara Syaikh Alafasy" : "Memutar audio (server cadangan)"));
     });
 
     function stopAudio() {

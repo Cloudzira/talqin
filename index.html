@@ -3,458 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="referrer" content="no-referrer">
+  <meta name="referrer" content="no-referrer" />
   <title>TalqinKu</title>
-  <meta name="description" content="TalqinKu: belajar membaca Al-Qur'an dengan cara menyenangkan. Dengarkan, tirukan, dan ulangi ayat bersama qari pilihan.">
+  <meta name="description" content="TalqinKu: belajar membaca Al-Qur'an dengan cara menyenangkan. Dengarkan, tirukan, dan ulangi ayat bersama qari pilihan." />
 
-  <!-- ===== PWA: bisa di-install ===== -->
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#10b981">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="TalqinKu">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="application-name" content="TalqinKu">
-  <meta name="format-detection" content="telephone=no">
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <!-- Splash screen iOS -->
-  <link rel="apple-touch-startup-image" href="splash/splash-1290x2796.jpg" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-1179x2556.jpg" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-1284x2778.jpg" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-1170x2532.jpg" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-1125x2436.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-1242x2688.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-828x1792.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-750x1334.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-1668x2388.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-1640x2360.jpg" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-2048x2732.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-1620x2160.jpg" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="splash/splash-1536x2048.jpg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+  <!-- =====================================================================
+       TalqinKu - index.html (kerangka halaman / "tulang")
+       Struktur proyek:
+         index.html            -> kerangka halaman (file ini)
+         css/themes.css        -> warna 4 tema (2 futuristik + 2 ceria)
+         css/style.css         -> gaya komponen
+         css/splash-install.css-> gaya splash screen & kartu pasang aplikasi
+         js/*.js               -> logika aplikasi (urutan pemuatan ada di bagian bawah)
+         sw.js                 -> service worker (agar bisa offline)
+         manifest.webmanifest  -> data agar aplikasi bisa dipasang (PWA)
+       ===================================================================== -->
 
-  <style>
-    :root {
-      --bg-dark: #f0fdf4;
-      --bg-radial-1: rgba(74, 222, 128, 0.15);
-      --bg-radial-2: rgba(56, 189, 248, 0.15);
-      --card-glass: rgba(255, 255, 255, 0.85);
-      --card-glass-hover: rgba(255, 255, 255, 1);
-      --card-border: rgba(187, 247, 208, 0.9);
-      --neon-primary: #10b981;
-      --neon-secondary: #0ea5e9;
-      --text-main: #1e293b;
-      --text-arabic: #0f172a;
-      --text-muted: #64748b;
-      --accent-gold: #f59e0b;
-      --glass-blur: blur(12px);
-      --glow-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
-      --dropdown-bg: #ffffff;
-      --btn-glass-bg: rgba(240, 253, 244, 0.9);
-      --btn-glass-border: rgba(187, 247, 208, 1);
-      --btn-glass-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
-      --btn-glass-active-bg: rgba(254, 243, 199, 0.9);
-    }
+  <!-- ===== PWA: bisa dipasang di layar utama ===== -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#10b981" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="TalqinKu" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="application-name" content="TalqinKu" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 
-    body.theme-light {
-      --bg-dark: #fffbeb;
-      --bg-radial-1: rgba(251, 191, 36, 0.12);
-      --bg-radial-2: rgba(244, 63, 94, 0.08);
-      --card-glass: rgba(255, 255, 255, 0.9);
-      --card-glass-hover: rgba(255, 255, 255, 1);
-      --card-border: rgba(253, 230, 138, 0.9);
-      --neon-primary: #f59e0b;
-      --neon-secondary: #f43f5e;
-      --text-main: #451a03;
-      --text-arabic: #292524;
-      --text-muted: #78716c;
-      --accent-gold: #fbbf24;
-      --glow-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
-      --dropdown-bg: #ffffff;
-      --btn-glass-bg: rgba(254, 243, 199, 0.8);
-      --btn-glass-border: rgba(253, 230, 138, 1);
-      --btn-glass-shadow: 0 6px 20px rgba(245, 158, 11, 0.15);
-      --btn-glass-active-bg: rgba(254, 226, 226, 0.9);
-    }
+  <!-- Splash screen iOS (gambar pembuka saat dibuka dari layar utama iPhone/iPad) -->
+  <link rel="apple-touch-startup-image" href="splash/splash-1290x2796.jpg" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-1179x2556.jpg" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-1284x2778.jpg" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-1170x2532.jpg" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-1125x2436.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-1242x2688.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-828x1792.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-750x1334.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-1668x2388.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-1640x2360.jpg" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-2048x2732.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-1620x2160.jpg" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="splash/splash-1536x2048.jpg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  <!-- ===== Font Google: Fredoka (ceria), Exo 2 + Orbitron (futuristik), Scheherazade New (Arab) ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&family=Orbitron:wght@500;700;800&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet" />
 
-    body {
-      background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(circle at 15% 15%, var(--bg-radial-1) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, var(--bg-radial-2) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4) 0%, var(--bg-dark) 100%);
-      background-attachment: fixed;
-      color: var(--text-main);
-      font-family: 'Fredoka', cursive, sans-serif;
-      padding-bottom: 140px;
-      min-height: 100vh;
-      transition: background-color 0.4s ease, color 0.4s ease;
-      display: flex;
-      flex-direction: column;
-    }
+  <!-- ===== Skrip awal: dijalankan SEBELUM halaman digambar agar tidak berkedip =====
+       1. Memasang tema tersimpan (data-theme pada <html>)
+       2. Menandai jika splash sudah pernah tampil di sesi ini
+       Catatan: daftar tema & tema bawaan harus sama dengan js/config.js -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var validThemes = ['futuristik-gelap', 'futuristik-terang', 'ceria-hijau', 'ceria-kuning'];
+      var legacyThemes = { dark: 'ceria-hijau', light: 'ceria-kuning' };   // nilai lama dari versi sebelumnya
+      var theme = 'ceria-hijau';
+      try {
+        var saved = localStorage.getItem('theme');
+        saved = legacyThemes[saved] || saved;
+        if (validThemes.indexOf(saved) !== -1) theme = saved;
+      } catch (e) {}
+      root.setAttribute('data-theme', theme);
+      try { if (sessionStorage.getItem('tk_splash')) root.classList.add('splash-seen'); } catch (e) {}
+    })();
+  </script>
 
-    ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-track { background: var(--bg-dark); }
-    ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 8px; }
-
-    .navbar {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom: 2px dashed var(--card-border);
-      padding: 14px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-    }
-
-    body.theme-light .navbar { background: rgba(255, 251, 235, 0.85); }
-
-    .brand-section { display: flex; flex-direction: column; gap: 2px; }
-    .brand {
-      font-size: 22px;
-      text-transform: uppercase;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      letter-spacing: 0.5px;
-    }
-    .header-subtext { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-
-    .surah-selector-wrapper {
-      position: sticky;
-      top: 70px;
-      z-index: 20;
-      max-width: 800px;
-      margin: 14px auto 0 auto;
-      padding: 0 20px;
-      width: 100%;
-      display: flex;
-      pointer-events: none;
-    }
-
-    .surah-selector-container {
-      pointer-events: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--card-glass);
-      backdrop-filter: var(--glass-blur);
-      padding: 10px 16px;
-      border-radius: 20px;
-      border: 2px solid var(--card-border);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      font-size: 14px;
-      font-weight: 600;
-      flex-wrap: wrap;
-    }
-
-    .selector-group { display: inline-flex; align-items: center; gap: 8px; }
-    .selector-divider { width: 2px; height: 22px; background: var(--card-border); border-radius: 2px; }
-    .surah-selector-container label { color: var(--neon-primary); text-transform: uppercase; font-size: 12px; font-weight: 700; }
-    .surah-selector-container select { background: transparent; color: var(--text-main); border: none; outline: none; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Fredoka', cursive, sans-serif; }
-    .surah-selector-container select option { background: var(--dropdown-bg); color: var(--text-main); }
-
-    .nav-controls { display: flex; align-items: center; gap: 10px; }
-
-    .glass-btn {
-      background: var(--btn-glass-bg);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--btn-glass-border);
-      box-shadow: var(--btn-glass-shadow);
-      color: var(--text-main);
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      position: relative;
-    }
-
-    .glass-btn:hover { border-color: var(--neon-primary); transform: translateY(-3px) scale(1.05); }
-    .glass-btn.active, .glass-btn.saved { background: var(--btn-glass-active-bg); border-color: var(--neon-secondary); }
-    .glass-btn.saved svg { fill: var(--accent-gold); stroke: var(--accent-gold); }
-    .glass-btn svg { width: 20px; height: 20px; stroke: var(--neon-primary); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-    .glass-btn svg.icon-fill-stop { fill: var(--neon-primary); }
-    .glass-btn.round { border-radius: 50%; }
-
-    .container { max-width: 800px; margin: 20px auto; padding: 0 20px; flex: 1; width: 100%; }
-
-    .surah-header-standalone { text-align: center; margin-bottom: 24px; padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-    /* Harakat di atas huruf lam pada ligatur lam-alif (posisi diukur otomatis oleh skrip) */
-    .la::after {
-      content: "\00A0" attr(data-a);
-      position: relative;
-      left: calc(var(--la-left, 0) * 1em);
-      top: calc(var(--la-up, 0) * -1em);
-      margin-inline-end: calc(var(--la-w, 0.25) * -1em);
-      pointer-events: none;
-    }
-    .surah-title-ar { font-family: 'Scheherazade New', serif; font-size: 36px; color: var(--neon-secondary); direction: rtl; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .surah-subtitle { color: var(--text-muted); font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
-
-    .ayah-card {
-      background: var(--card-glass);
-      backdrop-filter: var(--glass-blur);
-      border: 2px solid var(--card-border);
-      border-radius: 24px;
-      padding: 22px;
-      margin-bottom: 18px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .ayah-card.bismillah-card { border-color: rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(254, 243, 199, 0.4)); }
-    .ayah-card.active { border-color: var(--neon-secondary); box-shadow: var(--glow-shadow); transform: scale(1.01); }
-
-    .ayah-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 2px dashed var(--card-border); padding-bottom: 12px; }
-    .ayah-actions { display: flex; align-items: center; gap: 10px; }
-    .ayah-key { padding: 0 12px; height: 36px; border-radius: 12px; background: var(--btn-glass-bg); border: 2px solid var(--btn-glass-border); color: var(--neon-primary); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-
-    .ayah-arabic {
-      font-family: 'Scheherazade New', serif;
-      font-size: 30px;
-      direction: rtl;
-      text-align: right;
-      line-height: 2.5;
-      color: var(--text-arabic);
-      margin-bottom: 16px;
-    }
-
-    .bismillah-text { text-align: center; color: var(--accent-gold); font-size: 32px; }
-    .ayah-number-icon { font-family: 'Scheherazade New', serif; display: inline-block; margin-right: 6px; color: var(--neon-secondary); font-size: 26px; }
-    .ayah-translation { font-size: 14px; color: var(--text-muted); line-height: 1.7; font-weight: 500; }
-    .ayah-translation.hidden { display: none; }
-
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(8px);
-      z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-    }
-    .modal-overlay.open { opacity: 1; pointer-events: auto; }
-    .modal-card {
-      background: var(--dropdown-bg); border: 2px solid var(--card-border); border-radius: 24px;
-      width: 100%; max-width: 480px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-    }
-    .modal-header { padding: 16px 20px; border-bottom: 2px dashed var(--card-border); display: flex; justify-content: space-between; align-items: center; }
-    .modal-title { font-size: 16px; font-weight: 700; color: var(--neon-primary); }
-    .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; }
-    .bookmark-item {
-      background: var(--card-glass); border: 2px solid var(--card-border); padding: 12px 16px; border-radius: 16px;
-      display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease;
-    }
-    .bookmark-item:hover { border-color: var(--neon-secondary); transform: translateX(4px); }
-    .bookmark-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; padding-right: 10px; }
-    .bookmark-title { font-weight: 700; font-size: 14px; color: var(--text-main); }
-    .bookmark-sub { font-size: 12px; color: var(--text-muted); }
-    
-    .bookmark-delete {
-      background: var(--btn-glass-bg); border: 2px solid var(--btn-glass-border); color: var(--text-muted);
-      width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
-    }
-    .bookmark-delete:hover { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #ef4444; transform: scale(1.1); }
-    .bookmark-delete svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
-
-    .bottom-player {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 800px;
-      background: var(--card-glass); backdrop-filter: var(--glass-blur); border: 2px solid var(--card-border); border-radius: 24px;
-      padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1), var(--glow-shadow);
-      z-index: 100; gap: 16px;
-    }
-
-    .player-left-content { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
-    .player-info { display: flex; flex-direction: column; gap: 2px; }
-    .player-title { font-size: 14px; font-weight: 700; color: var(--neon-primary); }
-    .player-subtitle { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-    .player-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
-
-    .repeat-mode-select {
-      background: var(--btn-glass-bg); backdrop-filter: blur(12px); color: var(--text-main); border: 2px solid var(--btn-glass-border);
-      padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; outline: none; cursor: pointer; font-family: 'Fredoka', cursive, sans-serif;
-    }
-    .repeat-mode-select option { background: var(--dropdown-bg); color: var(--text-main); }
-
-    .range-picker {
-      display: none; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); font-weight: 600;
-      background: var(--btn-glass-bg); padding: 6px 12px; border-radius: 12px; border: 2px solid var(--btn-glass-border);
-    }
-    .range-picker select { background: transparent; color: var(--neon-secondary); border: none; outline: none; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Fredoka', cursive, sans-serif; }
-    .range-picker select option { background: var(--dropdown-bg); color: var(--text-main); }
-
-    .main-play-btn { width: 50px; height: 50px; flex-shrink: 0; align-self: center; }
-    .main-play-btn svg { width: 24px; height: 24px; }
-    #audio-element { display: none; }
-
-    /* =====================================================
-       LOGO, SPLASH SCREEN & INSTALL (tema anak)
-       ===================================================== */
-    .glass-btn[hidden] { display: none; }
-    .brand-logo { width: 34px; height: 34px; flex-shrink: 0; filter: drop-shadow(0 3px 6px rgba(16, 185, 129, 0.35)); -webkit-text-fill-color: initial; }
-    .brand-logo svg { width: 100%; height: 100%; display: block; }
-
-    #splash {
-      position: fixed; inset: 0; z-index: 9999;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-      background: linear-gradient(165deg, #d1fae5 0%, #a7f3d0 42%, #bae6fd 100%);
-      font-family: 'Fredoka', cursive, sans-serif;
-      overflow: hidden;
-      transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s;
-    }
-    #splash.hide { opacity: 0; transform: scale(1.06); visibility: hidden; pointer-events: none; }
-    #splash .sp-hills { position: absolute; left: 0; bottom: 0; width: 100%; height: 22vh; min-height: 120px; }
-    #splash .sp-cloud { position: absolute; width: 120px; opacity: 0.85; animation: spDrift 26s linear infinite; }
-    #splash .sp-cloud.c1 { top: 12%; left: -140px; }
-    #splash .sp-cloud.c2 { top: 26%; left: -140px; width: 84px; opacity: 0.65; animation-duration: 38s; animation-delay: -14s; }
-    #splash .sp-mark { width: min(50vw, 220px); aspect-ratio: 1; animation: spPop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-    #splash .sp-mark svg { width: 100%; height: 100%; overflow: visible; display: block; filter: drop-shadow(0 18px 24px rgba(4, 120, 87, 0.22)); }
-    #splash .mk-star { animation: spBob 2.4s ease-in-out 0.9s infinite; }
-    #splash .mk-sparkles { animation: spTwinkle 1.8s ease-in-out infinite; }
-    #splash .sp-title { display: flex; margin-top: 6px; font-size: clamp(40px, 12vw, 56px); font-weight: 700; line-height: 1.1; letter-spacing: 0.5px; }
-    #splash .sp-title span {
-      display: inline-block; opacity: 0;
-      background: linear-gradient(135deg, #059669, #0284c7); -webkit-background-clip: text; background-clip: text; color: transparent;
-      animation: spLetter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: calc(0.55s + var(--i) * 0.07s);
-    }
-    #splash .sp-tag { font-size: 16px; font-weight: 500; color: #047857; opacity: 0; animation: spFade 0.7s ease 1.25s forwards; }
-    #splash .sp-dots { display: flex; gap: 9px; margin-top: 22px; opacity: 0; animation: spFade 0.5s ease 1.4s forwards; }
-    #splash .sp-dots i { width: 11px; height: 11px; border-radius: 50%; animation: spDot 1s ease-in-out infinite; }
-    #splash .sp-dots i:nth-child(1) { background: #f59e0b; }
-    #splash .sp-dots i:nth-child(2) { background: #10b981; animation-delay: 0.15s; }
-    #splash .sp-dots i:nth-child(3) { background: #0ea5e9; animation-delay: 0.3s; }
-    #splash .sp-credit { position: absolute; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 500; color: #065f46; opacity: 0; animation: spFade 0.6s ease 1.5s forwards; }
-
-    @keyframes spPop { 0% { transform: scale(0.4) translateY(30px); opacity: 0; } 100% { transform: none; opacity: 1; } }
-    @keyframes spBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
-    @keyframes spTwinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-    @keyframes spLetter { 0% { opacity: 0; transform: translateY(24px) scale(0.6); } 100% { opacity: 1; transform: none; } }
-    @keyframes spFade { to { opacity: 1; } }
-    @keyframes spDot { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
-    @keyframes spDrift { to { transform: translateX(calc(100vw + 280px)); } }
-
-    /* Kartu ajakan install */
-    .install-card {
-      position: fixed; top: 96px; left: 50%; z-index: 40; width: calc(100% - 32px); max-width: 460px;
-      transform: translate(-50%, -24px); opacity: 0; visibility: hidden; pointer-events: none;
-      background: var(--dropdown-bg); border: 2px solid var(--card-border); border-radius: 24px; padding: 16px;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.14), var(--glow-shadow);
-      display: flex; gap: 14px; align-items: flex-start;
-      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, visibility 0.3s;
-    }
-    .install-card.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; pointer-events: auto; }
-    .install-card .ic-logo { width: 56px; height: 56px; flex-shrink: 0; }
-    .install-card .ic-logo svg { width: 100%; height: 100%; display: block; }
-    .install-card .ic-body { flex: 1; min-width: 0; }
-    .install-card .ic-title { font-size: 16px; font-weight: 700; color: var(--neon-primary); margin-bottom: 2px; }
-    .install-card .ic-text { font-size: 13px; line-height: 1.55; color: var(--text-muted); font-weight: 500; }
-    .install-card .ic-text svg { width: 16px; height: 16px; vertical-align: -3px; stroke: var(--neon-secondary); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-    .install-card .ic-actions { display: flex; gap: 8px; margin-top: 12px; }
-    .ic-btn {
-      font-family: 'Fredoka', cursive, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer;
-      padding: 9px 18px; border-radius: 14px; border: 2px solid var(--btn-glass-border); background: var(--btn-glass-bg); color: var(--text-main);
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .ic-btn:hover { transform: translateY(-2px) scale(1.04); }
-    .ic-btn.primary { background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary)); border-color: transparent; color: #fff; box-shadow: var(--glow-shadow); }
-
-    @media (max-width: 430px) {
-      .navbar { padding: 12px 14px; }
-      .nav-controls { gap: 7px; }
-      .nav-controls .glass-btn { width: 37px; height: 37px; }
-      .nav-controls .glass-btn svg { width: 18px; height: 18px; }
-      .header-subtext { font-size: 11px; }
-      .brand { font-size: 20px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      #splash *, #splash { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
-      #splash .sp-title span, #splash .sp-tag, #splash .sp-dots, #splash .sp-credit { opacity: 1; }
-      .install-card { transition: none; }
-    }
-
-    /* =====================================================
-       PERBAIKAN TAMPILAN: tidak ada elemen yang melebar keluar layar
-       ===================================================== */
-    html { overflow-x: hidden; -webkit-text-size-adjust: 100%; }
-    body { overflow-x: clip; width: 100%; max-width: 100%; padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
-    select { max-width: 100%; }
-
-    .navbar { gap: 10px; }
-    .brand-section { min-width: 0; flex: 1 1 auto; }
-    .brand { white-space: nowrap; }
-    .header-subtext { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .nav-controls { flex-shrink: 0; }
-
-    /* Bar pilih surah & qori: dua kolom rapi, nama panjang dipotong (...) bukan melebar */
-    .surah-selector-wrapper { top: var(--nav-h, 64px); padding: 0 16px; margin-top: 12px; }
-    .surah-selector-container {
-      display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-      gap: 8px 12px; width: 100%; padding: 10px 12px; align-items: end;
-    }
-    .selector-divider { display: none; }
-    .selector-group { display: flex; flex-direction: column; align-items: stretch; gap: 4px; min-width: 0; }
-    .surah-selector-container select {
-      width: 100%; min-width: 0; max-width: 100%; padding: 8px 10px; border-radius: 12px;
-      background: var(--btn-glass-bg); border: 2px solid var(--btn-glass-border);
-      font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    .container { padding: 0 16px; }
-    .ayah-arabic { font-size: clamp(24px, 6.6vw, 30px); overflow-wrap: anywhere; }
-    .bismillah-text { font-size: clamp(24px, 7vw, 32px); }
-    .surah-title-ar { font-size: clamp(28px, 8vw, 36px); max-width: 100%; }
-    .ayah-translation { overflow-wrap: anywhere; }
-    .ayah-top-bar { gap: 8px; }
-    .ayah-key { min-width: 0; white-space: nowrap; }
-
-    /* Pemutar di bawah */
-    .bottom-player { width: calc(100% - 24px); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); padding: 12px 16px; gap: 12px; }
-    .player-info { min-width: 0; }
-    .player-title, .player-subtitle { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .player-controls { gap: 8px; }
-    .repeat-mode-select { max-width: 100%; }
-    .range-picker { flex-wrap: wrap; max-width: 100%; padding: 4px 10px; gap: 6px; }
-    .range-picker select { max-width: 64px; }
-
-    .install-card { top: calc(var(--nav-h, 64px) + 14px); }
-
-    @media (max-width: 430px) {
-      .ayah-card { padding: 16px; border-radius: 20px; }
-      .ayah-key { font-size: 12px; padding: 0 10px; }
-    }
-    @media (max-width: 380px) {
-      .brand { font-size: 17px; gap: 4px; }
-      .brand-logo { width: 28px; height: 28px; }
-      .nav-controls { gap: 5px; }
-      .nav-controls .glass-btn { width: 34px; height: 34px; border-radius: 12px; }
-      .nav-controls .glass-btn svg { width: 17px; height: 17px; }
-      .header-subtext { font-size: 10px; }
-      .surah-selector-container { grid-template-columns: minmax(0, 1fr); }
-    }
-  </style>
+  <!-- ===== CSS ===== -->
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/splash-install.css" />
 </head>
 <body>
 
-  <!-- ===== SPLASH SCREEN ===== -->
+  <!-- =================================================================
+       1. SPLASH SCREEN (layar pembuka)
+       ================================================================= -->
   <div id="splash" role="status" aria-label="Memuat TalqinKu">
-    <script>try{if(sessionStorage.getItem('tk_splash')){document.getElementById('splash').style.display='none';}}catch(e){}</script>
     <svg class="sp-cloud c1" viewBox="0 0 120 60" aria-hidden="true"><path d="M26 54a20 20 0 0 1-2-39.9A28 28 0 0 1 78 18a18 18 0 0 1 20 17 14 14 0 0 1-4 19Z" fill="#fff"/></svg>
     <svg class="sp-cloud c2" viewBox="0 0 120 60" aria-hidden="true"><path d="M26 54a20 20 0 0 1-2-39.9A28 28 0 0 1 78 18a18 18 0 0 1 20 17 14 14 0 0 1-4 19Z" fill="#fff"/></svg>
     <svg class="sp-hills" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
@@ -505,10 +133,13 @@
     <div class="sp-title" aria-label="TalqinKu"><span style="--i:0">T</span><span style="--i:1">a</span><span style="--i:2">l</span><span style="--i:3">q</span><span style="--i:4">i</span><span style="--i:5">n</span><span style="--i:6">K</span><span style="--i:7">u</span></div>
     <div class="sp-tag">Menghafal lebih mudah</div>
     <div class="sp-dots" aria-hidden="true"><i></i><i></i><i></i></div>
-    <div class="header-subtext">Crafted with ♥ by <span style="color: #10b981; font-weight: 700;">Kurniapedia</span> 2026</div>
+    <div class="sp-credit">Crafted with <span class="heart">♥</span> by <strong>Kurniapedia</strong> 2026</div>
   </div>
 
-  <!-- Sprite logo (jangan pakai display:none agar gradien tampil) -->
+  <!-- =================================================================
+       2. KUMPULAN LOGO & IKON (sprite SVG, dipanggil dengan <use href="#id">)
+          Jangan diberi display:none agar gradien logo tetap tampil.
+       ================================================================= -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="logo-tile" viewBox="0 0 512 512"><defs>
     <linearGradient id="nbgbase" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#10b981"/><stop offset=".55" stop-color="#0d9488"/><stop offset="1" stop-color="#0369a1"/>
@@ -551,64 +182,87 @@
   <path d="M392 78 Q395.92 88.08 406 92 Q395.92 95.92 392 106 Q388.08 95.92 378 92 Q388.08 88.08 392 78Z" fill="#fef08a" opacity="0.95"/><path d="M124 94 Q126.8 101.2 134 104 Q126.8 106.8 124 114 Q121.2 106.8 114 104 Q121.2 101.2 124 94Z" fill="#fff" opacity="0.9"/><path d="M398 363 Q400.52 369.48 407 372 Q400.52 374.52 398 381 Q395.48 374.52 389 372 Q395.48 369.48 398 363Z" fill="#fef9c3" opacity="0.85"/>
 </g></symbol></svg>
 
-  <svg style="display: none;">
+  <svg style="display: none;" aria-hidden="true">
     <symbol id="icon-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></symbol>
-    <symbol id="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--neon-primary)"></polygon></symbol>
-    <symbol id="icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1" fill="var(--neon-primary)"></rect><rect x="14" y="4" width="4" height="16" rx="1" fill="var(--neon-primary)"></rect></symbol>
-    <symbol id="icon-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3" fill="var(--neon-primary)"></rect></symbol>
+    <symbol id="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--primary)"></polygon></symbol>
+    <symbol id="icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1" fill="var(--primary)"></rect><rect x="14" y="4" width="4" height="16" rx="1" fill="var(--primary)"></rect></symbol>
+    <symbol id="icon-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3" fill="var(--primary)"></rect></symbol>
     <symbol id="icon-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"></path></symbol>
-    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></symbol>
-    <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></symbol>
+    <symbol id="icon-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></symbol>
     <symbol id="icon-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></symbol>
     <symbol id="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></symbol>
   </svg>
 
+  <!-- =================================================================
+       3. NAVBAR (bagian atas)
+       ================================================================= -->
   <nav class="navbar">
     <div class="brand-section">
       <div class="brand"><span class="brand-logo"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#logo-tile"></use></svg></span> TALQINKU</div>
-      <div class="header-subtext">Crafted with ♥ by <span style="color: #10b981; font-weight: 700;">Kurniapedia</span> 2026</div>
+      <div class="header-subtext">Crafted with <span class="heart">♥</span> by <a class="credit-link" href="https://kurniapedia.my.id/" target="_blank" rel="noopener">Kurniapedia</a> 2026</div>
     </div>
     <div class="nav-controls">
-      <button class="glass-btn round" id="installBtn" onclick="handleInstallClick()" title="Pasang aplikasi" aria-label="Pasang aplikasi" hidden><svg><use href="#icon-download"></use></svg></button>
-      <button class="glass-btn round" id="bookmarkListBtn" onclick="toggleBookmarkModal()" title="Daftar Bookmark"><svg><use href="#icon-bookmark"></use></svg></button>
-      <button class="glass-btn round" id="globalTransToggleBtn" onclick="toggleGlobalTranslation()" title="Terjemahan"><svg><use href="#icon-globe"></use></svg></button>
-      <button class="glass-btn round" id="themeToggleBtn" onclick="toggleTheme()" title="Tema"><svg id="themeIcon"><use href="#icon-moon"></use></svg></button>
+      <button class="glass-btn round" id="installBtn" title="Pasang aplikasi" aria-label="Pasang aplikasi" hidden><svg><use href="#icon-download"></use></svg></button>
+      <button class="glass-btn round" id="bookmarkListBtn" title="Daftar Bookmark" aria-label="Daftar Bookmark"><svg><use href="#icon-bookmark"></use></svg></button>
+      <button class="glass-btn round" id="translationToggleBtn" title="Terjemahan" aria-label="Terjemahan"><svg><use href="#icon-globe"></use></svg></button>
+      <button class="glass-btn round" id="themeBtn" title="Pilih tema" aria-label="Pilih tema"><svg><use href="#icon-palette"></use></svg></button>
     </div>
   </nav>
 
-  <!-- Modal Bookmark -->
-  <div class="modal-overlay" id="bookmarkModal" onclick="handleModalOutsideClick(event)">
+  <!-- =================================================================
+       4. JENDELA (MODAL): Bookmark & Pilih Tema
+          Ditutup dengan: tombol X, klik area gelap, atau tombol Esc.
+       ================================================================= -->
+  <div class="modal-overlay" id="bookmarkModal" role="dialog" aria-modal="true" aria-labelledby="bookmarkModalTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">⭐ DAFTAR BOOKMARK</div>
-        <button class="glass-btn round" onclick="toggleBookmarkModal()" style="width: 32px; height: 32px;"><svg style="width: 16px; height: 16px;"><use href="#icon-close"></use></svg></button>
+        <div class="modal-title" id="bookmarkModalTitle">⭐ DAFTAR BOOKMARK</div>
+        <button class="glass-btn round modal-close" data-close-modal aria-label="Tutup"><svg><use href="#icon-close"></use></svg></button>
       </div>
       <div class="modal-body" id="bookmarkListContainer"></div>
     </div>
   </div>
 
+  <div class="modal-overlay" id="themeModal" role="dialog" aria-modal="true" aria-labelledby="themeModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="themeModalTitle">🎨 PILIH TEMA</div>
+        <button class="glass-btn round modal-close" data-close-modal aria-label="Tutup"><svg><use href="#icon-close"></use></svg></button>
+      </div>
+      <div class="modal-body" id="themeListContainer"></div>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       5. PILIH SURAH & QORI
+       ================================================================= -->
   <div class="surah-selector-wrapper">
     <div class="surah-selector-container">
       <div class="selector-group">
         <label for="surahSelect">SURAH</label>
-        <select id="surahSelect" onchange="changeSurah()"></select>
+        <select id="surahSelect"></select>
       </div>
-      <div class="selector-divider"></div>
       <div class="selector-group">
         <label for="qariSelect">QORI</label>
-        <select id="qariSelect" onchange="changeQari()"></select>
+        <select id="qariSelect"></select>
       </div>
     </div>
   </div>
 
-  <div class="container">
-    <div class="surah-header-standalone" id="surahHeader">
-      <div class="surah-title-ar" id="surahTitleAr">سُورَةُ ٱلْفَاتِحَةِ</div>
-      <div class="surah-subtitle" id="surahSubtitle">Al-Fatihah • Surah 1 • 7 Ayat</div>
+  <!-- =================================================================
+       6. ISI UTAMA: judul surah + daftar ayat (diisi oleh js/reader.js)
+       ================================================================= -->
+  <main class="container">
+    <div class="surah-header-standalone">
+      <div class="surah-title-ar" id="surahTitleAr"></div>
+      <div class="surah-subtitle" id="surahSubtitle"></div>
     </div>
-    <div id="ayahs-container"><p style="text-align: center; color: var(--text-muted); font-weight: 600;">Memuat ayat...</p></div>
-  </div>
+    <div id="ayahs-container"><p class="status-message">Memuat ayat...</p></div>
+  </main>
 
+  <!-- =================================================================
+       7. PEMUTAR AUDIO (bagian bawah)
+       ================================================================= -->
   <div class="bottom-player">
     <div class="player-left-content">
       <div class="player-info">
@@ -616,1147 +270,62 @@
         <div class="player-subtitle" id="player-status">Dihentikan</div>
       </div>
       <div class="player-controls">
-        <select id="repeatMode" class="repeat-mode-select" onchange="handleRepeatModeChange()">
+        <select id="repeatMode" class="repeat-mode-select" aria-label="Mode ulang">
           <option value="single">Ulang ayat</option>
           <option value="surah">Ulang surat</option>
           <option value="range">Pilih ayat</option>
         </select>
         <div class="range-picker" id="rangePicker">
           <span>Ayat:</span>
-          <select id="startAyahSelect"></select>
+          <select id="startAyahSelect" aria-label="Ayat awal"></select>
           <span>s/d</span>
-          <select id="endAyahSelect"></select>
+          <select id="endAyahSelect" aria-label="Ayat akhir"></select>
         </div>
       </div>
     </div>
-    <button class="glass-btn round main-play-btn" id="masterPlayBtn" onclick="toggleMasterPlay()">
+    <button class="glass-btn round main-play-btn" id="masterPlayBtn" aria-label="Putar / hentikan">
       <svg id="masterPlaySvg"><use id="masterPlayIcon" href="#icon-play"></use></svg>
     </button>
   </div>
-
   <audio id="audio-element"></audio>
 
-  <script>
-    const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/Cloudzira/talqin/main/audio-ayat";
-
-    const QARIS = [
-      { id: 'github_anak', name: 'Anak (Dalam Pengembangan Kurniapedia)', type: 'github' },
-      { id: 'mishary', name: 'Syaikh Misyari Rasyid Alafasy', type: 'api', baseUrl: 'https://everyayah.com/data/Alafasy_128kbps/' },
-      { id: 'husary', name: 'Syaikh Mahmud Khalil Al-Husary', type: 'api', baseUrl: 'https://everyayah.com/data/Husary_128kbps/' },
-      { id: 'husary_muallim', name: 'Syaikh Al-Husary (Muallim - pelan, untuk belajar)', type: 'api', baseUrl: 'https://everyayah.com/data/Husary_Muallim_128kbps/' },
-      { id: 'minshawi', name: 'Syaikh Muhammad Siddiq Al-Minshawi', type: 'api', baseUrl: 'https://everyayah.com/data/Minshawy_Murattal_128kbps/' },
-      { id: 'minshawi_teacher', name: 'Syaikh Al-Minshawi (Teacher - bersama anak)', type: 'api', baseUrl: 'https://everyayah.com/data/Minshawy_Teacher_128kbps/' },
-      { id: 'minshawi_mujawwad', name: 'Syaikh Al-Minshawi (Mujawwad)', type: 'api', baseUrl: 'https://everyayah.com/data/Minshawy_Mujawwad_192kbps/' },
-      { id: 'basit', name: 'Syaikh Abdul Basit Abdus Samad (Murattal)', type: 'api', baseUrl: 'https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/' },
-      { id: 'basit_mujawwad', name: 'Syaikh Abdul Basit Abdus Samad (Mujawwad)', type: 'api', baseUrl: 'https://everyayah.com/data/Abdul_Basit_Mujawwad_128kbps/' },
-      { id: 'sudais', name: 'Syaikh Abdurrahman As-Sudais', type: 'api', baseUrl: 'https://everyayah.com/data/Abdurrahmaan_As-Sudais_192kbps/' },
-      { id: 'shuraim', name: 'Syaikh Sa\'ud Asy-Syuraim', type: 'api', baseUrl: 'https://everyayah.com/data/Saood_ash-Shuraym_128kbps/' },
-      { id: 'maher', name: 'Syaikh Maher Al-Muaiqly', type: 'api', baseUrl: 'https://everyayah.com/data/Maher_AlMuaiqly_64kbps/' },
-      { id: 'hudhaify', name: 'Syaikh Ali Al-Hudzaifi', type: 'api', baseUrl: 'https://everyayah.com/data/Hudhaify_128kbps/' },
-      { id: 'shatri', name: 'Syaikh Abu Bakr Asy-Syatiri', type: 'api', baseUrl: 'https://everyayah.com/data/Abu_Bakr_Ash-Shaatree_128kbps/' },
-      { id: 'ajamy', name: 'Syaikh Ahmad bin Ali Al-Ajmi', type: 'api', baseUrl: 'https://everyayah.com/data/Ahmed_ibn_Ali_al-Ajamy_128kbps_ketaab.net/' },
-      { id: 'ghamadi', name: 'Syaikh Sa\'ad Al-Ghamidi', type: 'api', baseUrl: 'https://everyayah.com/data/Ghamadi_40kbps/' },
-      { id: 'rifai', name: 'Syaikh Hani Ar-Rifa\'i', type: 'api', baseUrl: 'https://everyayah.com/data/Hani_Rifai_192kbps/' },
-      { id: 'ayyoub', name: 'Syaikh Muhammad Ayyub', type: 'api', baseUrl: 'https://everyayah.com/data/Muhammad_Ayyoub_128kbps/' },
-      { id: 'jibreel', name: 'Syaikh Muhammad Jibril', type: 'api', baseUrl: 'https://everyayah.com/data/Muhammad_Jibreel_128kbps/' },
-      { id: 'dussary', name: 'Syaikh Yasser Ad-Dausari', type: 'api', baseUrl: 'https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/' },
-      { id: 'qatami', name: 'Syaikh Nasser Al-Qatami', type: 'api', baseUrl: 'https://everyayah.com/data/Nasser_Alqatami_128kbps/' },
-      { id: 'bukhatir', name: 'Syaikh Shalah Bukhatir', type: 'api', baseUrl: 'https://everyayah.com/data/Salaah_AbdulRahman_Bukhatir_128kbps/' },
-      { id: 'basfar', name: 'Syaikh Abdullah Basfar', type: 'api', baseUrl: 'https://everyayah.com/data/Abdullah_Basfar_192kbps/' }
-    ];
-
-    let currentQariId = 'github_anak';
-
-    /* Server cadangan: bila everyayah.com gagal/lambat, app otomatis mencoba server di bawah ini */
-    const QURANCOM_CDN = 'https://verses.quran.foundation/';
-    const ISLAMIC_CDN  = 'https://cdn.islamic.app/quran/audio/';
-    const QARI_MIRRORS = {
-      mishary:           { qc: 'Alafasy/mp3',              isl: 'ar.alafasy' },
-      husary:            { qc: 'Husary/mp3' },
-      husary_muallim:    { qc: 'Husary/Muallim/mp3' },
-      minshawi:          { qc: 'Minshawi/Murattal/mp3' },
-      minshawi_mujawwad: { qc: 'Minshawi/Mujawwad/mp3' },
-      basit:             { qc: 'AbdulBaset/Murattal/mp3' },
-      basit_mujawwad:    { qc: 'AbdulBaset/Mujawwad/mp3' },
-      sudais:            { qc: 'Sudais/mp3',               isl: 'ar.abdurrahmaansudais' },
-      shuraim:           { qc: 'Shuraym/mp3' }
-    };
-
-    /* Jumlah ayat tiap surah (untuk nomor ayat global di server cadangan) */
-    const SURAH_AYAH_COUNTS = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
-    function globalAyahNumber(surah, ayah) {
-      let n = 0;
-      for (let i = 0; i < surah - 1; i++) n += SURAH_AYAH_COUNTS[i];
-      return n + ayah;
-    }
-
-    const ALL_SURAHS = [
-      { num: 1, name: "Al-Fatihah", ar: "سُورَةُ ٱلْفَاتِحَةِ", ayahs: 7 },
-      { num: 58, name: "Al-Mujadilah", ar: "سُورَةُ ٱلْمُجَادَلَةِ", ayahs: 22 },
-      { num: 59, name: "Al-Hasyr", ar: "سُورَةُ ٱلْحَشْرِ", ayahs: 24 },
-      { num: 60, name: "Al-Mumtahanah", ar: "سُورَةُ ٱلْمُمْتَحَنَةِ", ayahs: 13 },
-      { num: 61, name: "As-Saff", ar: "سُورَةُ ٱلصَّفِّ", ayahs: 14 },
-      { num: 62, name: "Al-Jumu'ah", ar: "سُورَةُ ٱلجُمُعَةِ", ayahs: 11 },
-      { num: 63, name: "Al-Munafiqun", ar: "سُورَةُ ٱلنَّافِقُونَ", ayahs: 11 },
-      { num: 64, name: "At-Tagabun", ar: "سُورَةُ ٱلتَّغَابُنِ", ayahs: 18 },
-      { num: 65, name: "At-Talaq", ar: "سُورَةُ ٱلطَّلَاقِ", ayahs: 12 },
-      { num: 66, name: "At-Tahrim", ar: "سُورَةُ ٱلتَّحْرِيمِ", ayahs: 12 },
-      { num: 67, name: "Al-Mulk", ar: "سُورَةُ ٱلْمُلْكِ", ayahs: 30 },
-      { num: 68, name: "Al-Qalam", ar: "سُورَةُ ٱلْقَلَمِ", ayahs: 52 },
-      { num: 69, name: "Al-Haqqah", ar: "سُورَةُ ٱلْحَاقَّةِ", ayahs: 52 },
-      { num: 70, name: "Al-Ma'arij", ar: "سُورَةُ ٱلْمَعَارِجِ", ayahs: 44 },
-      { num: 71, name: "Nuh", ar: "سُورَةُ نُوحٍ", ayahs: 28 },
-      { num: 72, name: "Al-Jinn", ar: "سُورَةُ ٱلْجِنِّ", ayahs: 28 },
-      { num: 73, name: "Al-Muzzammil", ar: "سُورَةُ ٱلْمُزَّمِّلِ", ayahs: 20 },
-      { num: 74, name: "Al-Muddassir", ar: "سُورَةُ ٱلْمُدَّثِّرِ", ayahs: 56 },
-      { num: 75, name: "Al-Qiyamah", ar: "سُورَةُ ٱلْقِيَامَةِ", ayahs: 40 },
-      { num: 76, name: "Al-Insan", ar: "سُورَةُ ٱلْإِنسَانِ", ayahs: 31 },
-      { num: 77, name: "Al-Mursalat", ar: "سُورَةُ ٱلْمُرْسَلَاتِ", ayahs: 50 },
-      { num: 78, name: "An-Naba'", ar: "سُورَةُ ٱلنَّبَإِ", ayahs: 40 },
-      { num: 79, name: "An-Nazi'at", ar: "سُورَةُ ٱلنَّازِعَاتِ", ayahs: 46 },
-      { num: 80, name: "'Abasa", ar: "سُورَةُ عَبَسَ", ayahs: 42 },
-      { num: 81, name: "At-Takwir", ar: "سُورَةُ ٱلتَّكْوِيرِ", ayahs: 29 },
-      { num: 82, name: "Al-Infitar", ar: "سُورَةُ ٱلْإِنْفِطَارِ", ayahs: 19 },
-      { num: 83, name: "Al-Mutaffifin", ar: "سُورَةُ ٱلْمُطَفِّفِينَ", ayahs: 36 },
-      { num: 84, name: "Al-Insyiqaq", ar: "سُورَةُ ٱلْإِنْشِقَاقِ", ayahs: 25 },
-      { num: 85, name: "Al-Buruj", ar: "سُورَةُ ٱلْبُرُوجِ", ayahs: 22 },
-      { num: 86, name: "At-Tariq", ar: "سُورَةُ ٱلطَّارِقِ", ayahs: 17 },
-      { num: 87, name: "Al-A'la", ar: "سُورَةُ ٱلْأَعْلَىٰ", ayahs: 19 },
-      { num: 88, name: "Al-Gasyiyah", ar: "سُورَةُ ٱلْغَاشِيَةِ", ayahs: 26 },
-      { num: 89, name: "Al-Fajr", ar: "سُورَةُ ٱلْفَجْرِ", ayahs: 30 },
-      { num: 90, name: "Al-Balad", ar: "سُورَةُ ٱلْبَلَدِ", ayahs: 20 },
-      { num: 91, name: "Asy-Syams", ar: "سُورَةُ ٱلشَّمْسِ", ayahs: 15 },
-      { num: 92, name: "Al-Lail", ar: "سُورَةُ ٱلَّيْلِ", ayahs: 21 },
-      { num: 93, name: "Ad-Duha", ar: "سُورَةُ ٱلضُّحَىٰ", ayahs: 11 },
-      { num: 94, name: "Asy-Syarh", ar: "سُورَةُ ٱلشَّرْحِ", ayahs: 8 },
-      { num: 95, name: "At-Tin", ar: "سُورَةُ ٱلتِّينِ", ayahs: 8 },
-      { num: 96, name: "Al-'Alaq", ar: "سُورَةُ ٱلْعَلَقِ", ayahs: 19 },
-      { num: 97, name: "Al-Qadr", ar: "سُورَةُ ٱلْقَدْرِ", ayahs: 5 },
-      { num: 98, name: "Al-Bayyinah", ar: "سُورَةُ ٱلْبَيِّنَةِ", ayahs: 8 },
-      { num: 99, name: "Az-Zalzalah", ar: "سُورَةُ ٱلزَّلْزَلَةِ", ayahs: 8 },
-      { num: 100, name: "Al-'Adiyat", ar: "سُورَةُ ٱلْعَادِيَاتِ", ayahs: 11 },
-      { num: 101, name: "Al-Qari'ah", ar: "سُورَةُ ٱلْقَارِعَةِ", ayahs: 11 },
-      { num: 102, name: "At-Takasur", ar: "سُورَةُ ٱلتَّكَاثُرِ", ayahs: 8 },
-      { num: 103, name: "Al-'Asr", ar: "سُورَةُ ٱلْعَصْرِ", ayahs: 3 },
-      { num: 104, name: "Al-Humazah", ar: "سُورَةُ ٱلْهُمَزَةِ", ayahs: 9 },
-      { num: 105, name: "Al-Fil", ar: "سُورَةُ ٱلْفِيلِ", ayahs: 5 },
-      { num: 106, name: "Quraisy", ar: "سُورَةُ قُرَيْشٍ", ayahs: 4 },
-      { num: 107, name: "Al-Ma'un", ar: "سُورَةُ ٱلْمَاعُونِ", ayahs: 7 },
-      { num: 108, name: "Al-Kausar", ar: "سُورَةُ ٱلْكَوْثَرِ", ayahs: 3 },
-      { num: 109, name: "Al-Kafirun", ar: "سُورَةُ ٱلْكَافِرُونَ", ayahs: 6 },
-      { num: 110, name: "An-Nasr", ar: "سُورَةُ ٱلنَّصْرِ", ayahs: 3 },
-      { num: 111, name: "Al-Lahab", ar: "سُورَةُ ٱللَّهَبِ", ayahs: 5 },
-      { num: 112, name: "Al-Ikhlas", ar: "سُورَةُ ٱلْإِخْلَاصِ", ayahs: 4 },
-      { num: 113, name: "Al-Falaq", ar: "سُورَةُ ٱلْفَلَقِ", ayahs: 5 },
-      { num: 114, name: "An-Nas", ar: "سُورَةُ ٱلنَّاسِ", ayahs: 6 }
-    ];
-
-    let currentSurahNum = 1; 
-    let currentTotalAyahs = 7;
-    let currentAyah = null; 
-    let isPlaying = false;
-    let showTranslations = localStorage.getItem('show_translations') !== 'false';
-    let savedAyahs = JSON.parse(localStorage.getItem('saved_ayahs') || '[]');
-
-    const audioElement = document.getElementById('audio-element');
-    const playerTitle = document.getElementById('player-title');
-    const playerStatus = document.getElementById('player-status');
-    const masterPlaySvg = document.getElementById('masterPlaySvg');
-    const masterPlayIcon = document.getElementById('masterPlayIcon');
-    const surahSelect = document.getElementById('surahSelect');
-    const qariSelect = document.getElementById('qariSelect');
-    const repeatModeSelect = document.getElementById('repeatMode');
-    const rangePicker = document.getElementById('rangePicker');
-    const startAyahSelect = document.getElementById('startAyahSelect');
-    const endAyahSelect = document.getElementById('endAyahSelect');
-    const themeIcon = document.getElementById('themeIcon');
-    const globalTransToggleBtn = document.getElementById('globalTransToggleBtn');
-    const bookmarkModal = document.getElementById('bookmarkModal');
-    const bookmarkListContainer = document.getElementById('bookmarkListContainer');
-
-    function initTheme() {
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      if (savedTheme === 'light') {
-        document.body.classList.add('theme-light');
-        themeIcon.setAttribute('href', '#icon-sun');
-      } else {
-        document.body.classList.remove('theme-light');
-        themeIcon.setAttribute('href', '#icon-moon');
-      }
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle('theme-light');
-      const isLight = document.body.classList.contains('theme-light');
-      localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      themeIcon.setAttribute('href', isLight ? '#icon-sun' : '#icon-moon');
-    }
-
-    function initTranslationState() { updateGlobalTransBtnUI(); }
-
-    function toggleGlobalTranslation() {
-      showTranslations = !showTranslations;
-      localStorage.setItem('show_translations', showTranslations);
-      updateGlobalTransBtnUI();
-      document.querySelectorAll('.ayah-translation').forEach(el => {
-        if (showTranslations) el.classList.remove('hidden');
-        else el.classList.add('hidden');
-      });
-    }
-
-    function updateGlobalTransBtnUI() {
-      if (showTranslations) {
-        globalTransToggleBtn.classList.add('active');
-        globalTransToggleBtn.title = 'Sembunyikan Semua Terjemahan';
-      } else {
-        globalTransToggleBtn.classList.remove('active');
-        globalTransToggleBtn.title = 'Tampilkan Semua Terjemahan';
-      }
-    }
-
-    function toggleBookmarkModal() {
-      bookmarkModal.classList.toggle('open');
-      if (bookmarkModal.classList.contains('open')) renderBookmarkList();
-    }
-
-    function handleModalOutsideClick(event) {
-      if (event.target === bookmarkModal) toggleBookmarkModal();
-    }
-
-    function renderBookmarkList() {
-      if (savedAyahs.length === 0) {
-        bookmarkListContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 20px; font-weight: 600;">Belum ada bookmark</p>`;
-        return;
-      }
-
-      let html = '';
-      savedAyahs.forEach(itemKey => {
-        const [sNum, aNum] = itemKey.split(' : ').map(Number);
-        const surah = ALL_SURAHS.find(s => s.num === sNum);
-        const surahName = surah ? surah.name : `Surah ${sNum}`;
-        
-        let ayahText = (sNum === 1 && aNum === 0) ? "Ta'awudz" : (aNum === 0 ? 'Bismillah' : `Ayat ${aNum}`);
-
-        html += `
-          <div class="bookmark-item" onclick="jumpToBookmark(${sNum}, ${aNum})">
-            <div class="bookmark-info">
-              <div class="bookmark-title">${surahName} (${sNum} : ${aNum})</div>
-              <div class="bookmark-sub">Surah ${surahName} • ${ayahText}</div>
-            </div>
-            <button class="bookmark-delete" onclick="event.stopPropagation(); removeBookmarkItem('${itemKey}')" title="Hapus">
-              <svg><use href="#icon-close"></use></svg>
-            </button>
-          </div>
-        `;
-      });
-      bookmarkListContainer.innerHTML = html;
-    }
-
-    function removeBookmarkItem(itemKey) {
-      const index = savedAyahs.indexOf(itemKey);
-      if (index > -1) {
-        savedAyahs.splice(index, 1);
-        localStorage.setItem('saved_ayahs', JSON.stringify(savedAyahs));
-        renderBookmarkList();
-        const [sNum, aNum] = itemKey.split(' : ').map(Number);
-        if (currentSurahNum === sNum) updateBookmarkUI(aNum);
-      }
-    }
-
-    async function jumpToBookmark(surahNum, ayahNum) {
-      toggleBookmarkModal();
-      if (currentSurahNum !== surahNum) {
-        currentSurahNum = surahNum;
-        surahSelect.value = surahNum;
-        const surahData = ALL_SURAHS.find(s => s.num === currentSurahNum);
-        if (surahData) currentTotalAyahs = surahData.ayahs;
-        stopAudio();
-        await loadSurah();
-      }
-      setTimeout(() => {
-        const card = document.getElementById(`ayah-card-${ayahNum}`);
-        if (card) {
-          document.querySelectorAll('.ayah-card').forEach(c => c.classList.remove('active'));
-          card.classList.add('active');
-          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 100);
-    }
-
-    function populateDropdowns() {
-      surahSelect.innerHTML = '';
-      ALL_SURAHS.forEach(s => {
-        const option = document.createElement('option');
-        option.value = s.num;
-        option.textContent = `${s.num}. ${s.name}`;
-        if (s.num === currentSurahNum) option.selected = true;
-        surahSelect.appendChild(option);
-      });
-
-      qariSelect.innerHTML = '';
-      QARIS.forEach(q => {
-        const option = document.createElement('option');
-        option.value = q.id;
-        option.textContent = q.name;
-        if (q.id === currentQariId) option.selected = true;
-        qariSelect.appendChild(option);
-      });
-    }
-
-    function setupRangeSelector() {
-      startAyahSelect.innerHTML = '';
-      endAyahSelect.innerHTML = '';
-      for (let i = 1; i <= currentTotalAyahs; i++) {
-        startAyahSelect.innerHTML += `<option value="${i}">${i}</option>`;
-        endAyahSelect.innerHTML += `<option value="${i}">${i}</option>`;
-      }
-      startAyahSelect.value = 1;
-      endAyahSelect.value = currentTotalAyahs;
-
-      startAyahSelect.onchange = () => {
-        if (parseInt(startAyahSelect.value) > parseInt(endAyahSelect.value)) endAyahSelect.value = startAyahSelect.value;
-      };
-      endAyahSelect.onchange = () => {
-        if (parseInt(endAyahSelect.value) < parseInt(startAyahSelect.value)) startAyahSelect.value = endAyahSelect.value;
-      };
-    }
-
-    function handleRepeatModeChange() {
-      rangePicker.style.display = repeatModeSelect.value === 'range' ? 'flex' : 'none';
-    }
-
-    function changeSurah() {
-      currentSurahNum = parseInt(surahSelect.value);
-      const surahData = ALL_SURAHS.find(s => s.num === currentSurahNum);
-      if (surahData) currentTotalAyahs = surahData.ayahs;
-      stopAudio();
-      loadSurah();
-    }
-
-    function changeQari() {
-      currentQariId = qariSelect.value;
-      if (isPlaying && currentAyah !== null) startPlayback(currentAyah);
-    }
-
-    /* Daftar alamat audio (urut: utama dulu, lalu cadangan) */
-    function getAudioSources(surahNumber, ayahNumber, qariId = currentQariId) {
-      const qari = QARIS.find(q => q.id === qariId);
-      if (!qari) return [];
-      const gh = (file) => `${GITHUB_RAW_BASE}/${surahNumber}/${file}`;
-      const S3 = String(surahNumber).padStart(3, '0');
-      const A3 = String(ayahNumber).padStart(3, '0');
-
-      if (qari.type === 'github') {
-        // Suara Anak dulu; bila belum diunggah ke GitHub -> pakai suara Syaikh Alafasy sebagai cadangan
-        const primary = ayahNumber === 0 ? (surahNumber === 1 ? gh('000_001.mp3') : gh('0.mp3')) : gh(`${S3}_${A3}.mp3`);
-        const fb = QARIS.find(q => q.id === 'mishary');
-        const fbm = QARI_MIRRORS.mishary || {};
-        const out = [primary];
-        if (ayahNumber === 0 && surahNumber === 1) out.push(`${fb.baseUrl}audhubillah.mp3`);
-        else {
-          const a = ayahNumber === 0 ? 1 : ayahNumber, s = ayahNumber === 0 ? 1 : surahNumber;
-          const SS = String(s).padStart(3, '0'), AA = String(a).padStart(3, '0');
-          out.push(`${fb.baseUrl}${SS}${AA}.mp3`);
-          out.push(`${QURANCOM_CDN}${fbm.qc}/${SS}${AA}.mp3`);
-          out.push(`${ISLAMIC_CDN}${fbm.isl}/${globalAyahNumber(s, a)}.mp3`);
-        }
-        return out;
-      }
-
-      const mir = QARI_MIRRORS[qari.id] || {};
-      const list = [];
-      if (ayahNumber === 0) {
-        if (surahNumber === 1) {
-          // Ta'awudz
-          list.push(gh('000_002.mp3'));
-          list.push(`${qari.baseUrl}audhubillah.mp3`);
-        } else {
-          // Bismillah = ayat 1 Al-Fatihah
-          list.push(`${qari.baseUrl}001001.mp3`);
-          if (mir.qc) list.push(`${QURANCOM_CDN}${mir.qc}/001001.mp3`);
-          if (mir.isl) list.push(`${ISLAMIC_CDN}${mir.isl}/1.mp3`);
-        }
-        return list;
-      }
-      list.push(`${qari.baseUrl}${S3}${A3}.mp3`);
-      if (mir.qc)  list.push(`${QURANCOM_CDN}${mir.qc}/${S3}${A3}.mp3`);
-      if (mir.isl) list.push(`${ISLAMIC_CDN}${mir.isl}/${globalAyahNumber(surahNumber, ayahNumber)}.mp3`);
-      return list;
-    }
-
-    function getAudioUrl(surahNumber, ayahNumber) {
-      return getAudioSources(surahNumber, ayahNumber)[0] || '';
-    }
-
-    function toggleSaveAyah(ayahNum) {
-      const itemKey = `${currentSurahNum} : ${ayahNum}`;
-      const index = savedAyahs.indexOf(itemKey);
-      if (index > -1) savedAyahs.splice(index, 1);
-      else savedAyahs.push(itemKey);
-      localStorage.setItem('saved_ayahs', JSON.stringify(savedAyahs));
-      updateBookmarkUI(ayahNum);
-    }
-
-    function updateBookmarkUI(ayahNum) {
-      const itemKey = `${currentSurahNum} : ${ayahNum}`;
-      const btn = document.getElementById(`btn-bookmark-${ayahNum}`);
-      if (btn) {
-        if (savedAyahs.includes(itemKey)) btn.classList.add('saved');
-        else btn.classList.remove('saved');
-      }
-    }
-
-    /* ===== Ubah ke TRUE / FALSE untuk menyalakan / mematikan gaya mushaf Indonesia ===== */
-    const USE_MUSHAF_ID_STYLE = true;
-
-    /* Perbaikan harakat lam-alif: pada ligatur lam+alif, font menggambar harakat lam di atas ALIF.
-       Aplikasi mengukur letak huruf LAM pada font yang dipakai, lalu menggambar harakat tepat di atas lam.
-       Bila pengukuran gagal -> otomatis memakai cara biasa (tanpa perbaikan). */
-    const FIX_LAM_ALIF = true;   // ubah ke false untuk mematikan perbaikan ini
-    let LAM_FIX_OK = false;
-    const lamAlifReady = (async () => {
-      try {
-        if (!FIX_LAM_ALIF) throw new Error('dimatikan');
-        try {
-          await Promise.race([
-            document.fonts.load("100px 'Scheherazade New'", "\u0644\u0627"),
-            new Promise(res => setTimeout(res, 3500))
-          ]);
-        } catch (e) {}
-        const S = 100, X0 = 100, BASE = 260, W = 520, H = 400;
-        const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
-        const ctx = cv.getContext('2d', { willReadFrequently: true });
-        ctx.font = S + "px 'Scheherazade New', serif";
-        ctx.direction = 'rtl'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#000';
-        const scan = (text) => {
-          ctx.clearRect(0, 0, W, H); ctx.fillText(text, X0, BASE);
-          const d = ctx.getImageData(0, 0, W, H).data;
-          let minX = W, maxX = -1, minY = H, maxY = -1; const top = new Array(W).fill(H);
-          for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-            if (d[(y * W + x) * 4 + 3] > 110) {
-              if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y;
-              if (y < top[x]) top[x] = y;
-            }
-          }
-          return { minX, maxX, minY, maxY, top };
-        };
-        const lig = scan('\u0644\u0627');
-        if (lig.maxX < 0) throw new Error('ligatur tidak terukur');
-        const limit = lig.minY + 0.45 * (lig.maxY - lig.minY);
-        const groups = []; let cur = null;                      // kelompok kolom yang ujung atasnya tinggi
-        for (let x = lig.minX; x <= lig.maxX; x++) {
-          if (lig.top[x] <= limit) { if (cur && x - cur.end <= 3) cur.end = x; else { cur = { start: x, end: x }; groups.push(cur); } }
-        }
-        if (!groups.length) throw new Error('lam tidak ditemukan');
-        const lam = groups[groups.length - 1];                  // paling kanan = huruf lam
-        const lamX = (lam.start + lam.end) / 2;
-        let lamTop = H; for (let x = lam.start; x <= lam.end; x++) lamTop = Math.min(lamTop, lig.top[x]);
-        const mk = scan('\u00A0\u064E');
-        if (mk.maxX < 0) throw new Error('harakat tidak terukur');
-        const wN = ctx.measureText('\u00A0\u064E').width / S;   // lebar NBSP + harakat (sama seperti di halaman)
-        const cmx = ((mk.minX + mk.maxX) / 2 - X0) / S;
-        const left = (lamX - X0) / S + wN - cmx;
-        const up = (BASE - lamTop) / S - (BASE - mk.maxY) / S + 0.04;
-        if (!(up > -0.3 && up < 1.0) || !(left > -0.5 && left < 2)) throw new Error('hasil ukur tidak wajar');
-        const root = document.documentElement.style;
-        root.setProperty('--la-left', left.toFixed(3));
-        root.setProperty('--la-up', up.toFixed(3));
-        root.setProperty('--la-w', wN.toFixed(3));
-        LAM_FIX_OK = true;
-      } catch (e) { LAM_FIX_OK = false; }
-    })();
-
-    /* =====================================================================
-       GAYA PENULISAN MUSHAF STANDAR INDONESIA
-       Mengubah teks Utsmani (api.quran.com) agar sama dengan contoh mushaf:
-       1. Harakat berdiri (fathah/kasrah/dammah berdiri) -> harakat miring dibuang
-       2. Huruf mad (waw setelah dammah, ya setelah kasrah) -> diberi sukun
-       3. Alif wasal jadi alif biasa, hamzah di atas/bawah alif dihilangkan
-       4. Lafaz Allah ditulis dengan fathah berdiri: اللّٰهِ
-       ===================================================================== */
-    const MushafID = (function () {
-      const C = {
-        FATHA: 0x064E, DAMMA: 0x064F, KASRA: 0x0650, SHADDA: 0x0651, SUKUN: 0x0652,
-        SUB_ALEF: 0x0656, INV_DAMMA: 0x0657, DAGGER: 0x0670,
-        TATWEEL: 0x0640, ALEF: 0x0627, ALEF_WASLA: 0x0671, ALEF_HAMZA_ABOVE: 0x0623, ALEF_HAMZA_BELOW: 0x0625,
-        HAMZA: 0x0621, LAM: 0x0644, HEH: 0x0647, WAW: 0x0648, YEH: 0x064A, SAD: 0x0635, RA: 0x0631, TAH: 0x0637,
-        SMALL_WAW: 0x06E5, SMALL_YEH: 0x06E6, ROUND_ZERO: 0x06DF, SUKUN_ALT: 0x06E1, YEH_HAMZA: 0x0626
-      };
-      const ch = (cp) => String.fromCodePoint(cp);
-
-      // tanda yang menempel pada huruf sebelumnya (harakat, shadda, tanda waqaf kecil, dll.)
-      function isMark(cp) {
-        return (cp >= 0x0610 && cp <= 0x061A) || (cp >= 0x064B && cp <= 0x065F) || cp === 0x0670 ||
-               (cp >= 0x06D6 && cp <= 0x06DC) || (cp >= 0x06DF && cp <= 0x06E4) ||
-               (cp >= 0x06E7 && cp <= 0x06E8) || (cp >= 0x06EA && cp <= 0x06ED) || (cp >= 0x08D3 && cp <= 0x08FF);
-      }
-
-      // pecah teks menjadi "kluster": 1 huruf dasar + tanda-tandanya. Spasi = batas kata.
-      function toClusters(text) {
-        const out = [];
-        for (const c of Array.from(text)) {
-          const cp = c.codePointAt(0);
-          if (isMark(cp) && out.length && out[out.length - 1].b !== ' ') out[out.length - 1].m.push(cp);
-          else out.push({ b: c, m: [] });
-        }
-        return out;
-      }
-      const fromClusters = (cl) => cl.map(k => k.b + k.m.map(ch).join('')).join('');
-      const has = (k, cp) => k && k.m.includes(cp);
-      const drop = (k, cp) => { k.m = k.m.filter(x => x !== cp); };
-      const baseIs = (k, cp) => k && k.b.codePointAt(0) === cp;
-
-      function convert(text, opts) {
-        if (!text) return text;
-        opts = opts || {};
-        // pakai bentuk sukun yang sama dengan teks sumber (agar tampilan seragam)
-        const SUK = text.indexOf(ch(C.SUKUN_ALT)) !== -1 && text.indexOf(ch(C.SUKUN)) === -1 ? C.SUKUN_ALT : C.SUKUN;
-        let cl = toClusters(text);
-
-        // ---- 0. Kata "Shirath": di mushaf Indonesia ditulis dengan alif penuh (الصِّرَاطَ), bukan alif kecil
-        for (let i = 0; i < cl.length - 2; i++) {
-          if (baseIs(cl[i], C.SAD) && has(cl[i], C.KASRA) && baseIs(cl[i + 1], C.RA) && has(cl[i + 1], C.DAGGER) && baseIs(cl[i + 2], C.TAH)) {
-            drop(cl[i + 1], C.DAGGER);
-            cl.splice(i + 2, 0, { b: ch(C.ALEF), m: [] });
-          }
-        }
-
-        // ---- 1. Tatwil + fathah berdiri: gabungkan ke huruf sebelumnya, buang fathah miring
-        for (let i = 1; i < cl.length; i++) {
-          const k = cl[i];
-          if (baseIs(k, C.TATWEEL) && has(k, C.DAGGER) && cl[i - 1].b !== ' ') {
-            const prev = cl[i - 1];
-            drop(prev, C.FATHA);
-            k.m.forEach(x => { if (x !== C.FATHA && x !== C.KASRA && x !== C.DAMMA && !prev.m.includes(x)) prev.m.push(x); });
-            cl.splice(i, 1); i--;
-          }
-        }
-        // alif maqshurah + fathah berdiri (عَلَىٰ -> عَلٰى): fathah berdiri pindah ke huruf sebelumnya, fathah miring dibuang
-        for (let i = 1; i < cl.length; i++) {
-          const k = cl[i], prev = cl[i - 1];
-          if (baseIs(k, 0x0649) && has(k, C.DAGGER) && prev.b !== ' ' && has(prev, C.FATHA)) {
-            drop(k, C.DAGGER); drop(prev, C.FATHA); prev.m.push(C.DAGGER);
-          }
-        }
-        // fathah miring + fathah berdiri pada huruf yang sama -> cukup fathah berdiri
-        cl.forEach(k => { if (has(k, C.DAGGER)) drop(k, C.FATHA); });
-
-        // ---- 2. Waw/ya kecil penanda mad pada "ه" (لَهُۥ / بِهِۦ) -> dammah berdiri / kasrah berdiri (لَهٗ / بِهٖ)
-        for (let i = 1; i < cl.length; i++) {
-          const k = cl[i], prev = cl[i - 1];
-          if (k.m.length === 0 && baseIs(k, C.SMALL_WAW) && has(prev, C.DAMMA)) {
-            drop(prev, C.DAMMA); prev.m.push(C.INV_DAMMA); cl.splice(i, 1); i--;
-          } else if (k.m.length === 0 && baseIs(k, C.SMALL_YEH) && has(prev, C.KASRA)) {
-            drop(prev, C.KASRA); prev.m.push(C.SUB_ALEF); cl.splice(i, 1); i--;
-          }
-        }
-
-        // ---- 3. Lafaz Allah: ٱللَّهِ -> اللّٰهِ  dan  لِلَّهِ -> لِلّٰهِ
-        for (let i = 1; i < cl.length - 1; i++) {
-          const k = cl[i];
-          if (baseIs(k, C.LAM) && has(k, C.SHADDA) && has(k, C.FATHA) && !has(k, C.DAGGER)) {
-            let j = i + 1;
-            if (baseIs(cl[j], C.TATWEEL) && cl[j].m.length === 0) j++;      // ٱللَّـهِ (ada tatwil)
-            const heh = cl[j];
-            const before = cl[i - 1], before2 = cl[i - 2];
-            const afterArticle = baseIs(before, C.LAM) && before2 && (baseIs(before2, C.ALEF_WASLA) || baseIs(before2, C.ALEF));
-            const afterLi = baseIs(before, C.LAM) && has(before, C.KASRA);
-            if (heh && baseIs(heh, C.HEH) && (afterArticle || afterLi)) {
-              drop(k, C.FATHA); k.m.push(C.DAGGER);
-              if (j !== i + 1) cl.splice(i + 1, 1);
-            }
-          }
-        }
-
-        // ---- 4. Alif wasal (ٱ): jadi alif biasa. Di awal AYAT (selain "ال") diberi harakat awal; di tengah ayat polos.
-        for (let i = 0; i < cl.length; i++) {
-          if (!baseIs(cl[i], C.ALEF_WASLA)) continue;
-          cl[i].b = ch(C.ALEF);
-          // Harakat awal (kasrah/dammah) hanya untuk kata PERTAMA ayat (اِهْدِنَا). Di tengah ayat alif wasal polos (... انْفَطَرَتْ)
-          const atStart = (i === 0);
-          const next = cl[i + 1];
-          if (atStart && next && !baseIs(next, C.LAM)) {
-            // cari huruf ke-3 pada kata (ٱ + h1 + h2): bila berharakat dammah -> mulai dengan dammah, selain itu kasrah
-            let w = []; for (let j = i + 1; j < cl.length && cl[j].b !== ' '; j++) w.push(cl[j]);
-            const rootStr = w.slice(0, 3).map(k => k.b).join('');
-            const nounKasra = /^(\u0628\u0646|\u0633\u0645|\u0627?\u0645\u0631|\u062B\u0646)/.test(rootStr); // ابن، اسم، امرؤ، اثنين
-            const hamzaSeat = w[0] && (baseIs(w[0], C.YEH_HAMZA) || baseIs(w[0], C.HAMZA)); // ٱئْتُوا -> kasrah
-            // huruf bertasydid (ٱتَّقُوا) dihitung dua huruf: harakat huruf ke-2 ada pada huruf itu sendiri
-            const third = (w[0] && has(w[0], C.SHADDA)) ? w[0] : w[1];
-            const dammaStart = third && has(third, C.DAMMA) && !nounKasra && !hamzaSeat;
-            cl[i].m.push(dammaStart ? C.DAMMA : C.KASRA);
-          }
-        }
-
-        // ---- 5. Hamzah di atas/bawah alif dihilangkan (أَنْعَمْتَ -> اَنْعَمْتَ, إِيَّاكَ -> اِيَّاكَ)
-        // (hamzah yang bersukun, mis. يَأْكُلُ / فَأْتُوا, tetap dipertahankan)
-        cl.forEach(k => {
-          if ((baseIs(k, C.ALEF_HAMZA_ABOVE) || baseIs(k, C.ALEF_HAMZA_BELOW)) && !has(k, C.SUKUN) && !has(k, C.SUKUN_ALT)) k.b = ch(C.ALEF);
-        });
-        // ءَا (hamzah + fathah + alif) -> اٰ  (ءَامَنُوا -> اٰمَنُوا, ٱلْقُرْءَانَ -> الْقُرْاٰنَ)
-        for (let i = 0; i < cl.length - 1; i++) {
-          if (baseIs(cl[i], C.HAMZA) && cl[i].m.length === 1 && has(cl[i], C.FATHA) && baseIs(cl[i + 1], C.ALEF) && cl[i + 1].m.every(x => x === 0x0653)) {
-            const a = cl[i + 1];
-            if (!a.m.includes(C.DAGGER)) a.m.unshift(C.DAGGER);
-            cl.splice(i, 1);
-          }
-        }
-
-        // Font LPMQ (font resmi mushaf Indonesia) sudah menata lam-alif dengan benar -> pakai maddah standar.
-        // Font lain (mis. Scheherazade) -> pakai maddah terpisah U+06E4 agar tidak menumpuk dengan fathah lam.
-        const MADD = opts.lpmq ? 0x0653 : 0x06E4;
-
-        // ---- 5b. Lam + alif bermaddah (لَآ): maddah ditulis sebagai tanda terpisah (ۤ) agar font tidak menggabungkannya
-        //          dengan fathah lam. Hasilnya fathah tampil di atas LAM dan maddah di atas ALIF, seperti mushaf.
-        for (let i = 1; i < cl.length; i++) {
-          const k = cl[i], prev = cl[i - 1];
-          if (!baseIs(prev, C.LAM)) continue;
-          if (baseIs(k, 0x0622)) { k.b = ch(C.ALEF); k.m.push(MADD); }                          // آ (satu huruf) -> ا + maddah
-          else if (baseIs(k, C.ALEF) && has(k, 0x0653)) { drop(k, 0x0653); k.m.push(MADD); }     // ا + ٓ -> ا + maddah
-        }
-
-        // ---- 5c. Ya akhir kata yang di data ditulis ى (فِى, ٱلَّذِى, ٱلنَّبِىِّ) -> ي bertitik (فِيْ, الَّذِيْ, النَّبِيِّ)
-        for (let i = 1; i < cl.length; i++) {
-          const k = cl[i], prev = cl[i - 1];
-          if (baseIs(k, 0x0649) && !has(k, C.DAGGER) && prev.b !== ' ' && (has(prev, C.KASRA) || has(prev, C.SUB_ALEF))) k.b = ch(C.YEH);
-        }
-
-        // ---- 6. Huruf mad diberi sukun: waw setelah dammah, ya setelah kasrah
-        for (let i = 1; i < cl.length; i++) {
-          const k = cl[i], prev = cl[i - 1];
-          if (k.m.some(x => x !== 0x0653) || prev.b === ' ') continue;
-          const wordEnd = (i === cl.length - 1 || cl[i + 1].b === ' ');
-          if (baseIs(k, C.WAW) && (has(prev, C.DAMMA) || has(prev, C.INV_DAMMA))) {
-            if (wordEnd && prev.b === '\u0630') continue;          // "ذُو" tidak diberi sukun
-            k.m.push(SUK);
-          } else if (baseIs(k, C.YEH) && (has(prev, C.KASRA) || has(prev, C.SUB_ALEF))) {
-            k.m.push(SUK);
-          }
-        }
-
-        // ---- 6b. Nun sukun pada ikhfa haqiqi & idgham: nun yang di teks Madinah polos (tanpa tanda) diberi sukun
-        //          مِن جُوعٍ -> مِنْ جُوْعٍ ,  مِن رَّبِّهِمْ -> مِنْ رَّبِّهِمْ ,  عَن صَلَاتِهِمْ -> عَنْ صَلَاتِهِمْ
-        const NUN_RULE_LETTERS = new Set([
-          // ikhfa haqiqi: ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك
-          0x062A, 0x062B, 0x062C, 0x062F, 0x0630, 0x0632, 0x0633, 0x0634, 0x0635, 0x0636, 0x0637, 0x0638, 0x0641, 0x0642, 0x0643,
-          // idgham: ي ر م ل و ن
-          0x064A, 0x0631, 0x0645, 0x0644, 0x0648, 0x0646
-        ]);
-        for (let i = 0; i < cl.length; i++) {
-          const k = cl[i];
-          if (!baseIs(k, 0x0646) || k.m.length !== 0) continue;          // hanya nun yang polos
-          let j = i + 1;
-          while (j < cl.length) {                                          // lompati spasi & tanda waqaf lepas
-            const cp = cl[j].b.codePointAt(0);
-            if (cl[j].b === ' ' || (cp >= 0x06D6 && cp <= 0x06DC) || cp === 0x06DE || cp === 0x06E9) j++; else break;
-          }
-          if (j < cl.length && NUN_RULE_LETTERS.has(cl[j].b.codePointAt(0))) { k.m.push(SUK); k.idg = true; }
-        }
-
-        // ---- 6c. Idgham bighunnah: ya/waw setelah nun sukun atau tanwin diberi tasydid
-        //          لَهَبٍ وَتَبَّ -> لَهَبٍ وَّتَبَّ ,  فَمَن يَعْمَلْ -> فَمَنْ يَّعْمَلْ ,  خَيْرًا يَرَهُۥ -> خَيْرًا يَّرَهٗ
-        const isWaqf = (k) => { const cp = k.b.codePointAt(0); return (cp >= 0x06D6 && cp <= 0x06DC) || cp === 0x06DE || cp === 0x06E9; };
-        const hasTanwin = (k) => k && k.m.some(x => x === 0x064B || x === 0x064C || x === 0x064D || (x >= 0x08F0 && x <= 0x08F2));
-        for (let i = 2; i < cl.length; i++) {
-          const k = cl[i];
-          if (!(baseIs(k, C.YEH) || baseIs(k, C.WAW)) || cl[i - 1].b !== ' ') continue;      // huruf pertama kata
-          if (!k.m.some(x => x === C.FATHA || x === C.DAMMA || x === C.KASRA) || has(k, C.SHADDA) || has(k, SUK)) continue;
-          let p = cl[i - 2];
-          if (!p || isWaqf(p)) continue;                                                         // ada tanda waqaf di antara -> jangan
-          if ((baseIs(p, C.ALEF) || baseIs(p, 0x0649)) && p.m.length === 0 && cl[i - 3]) p = cl[i - 3];   // tanwin fathah: خَيْرًا / هُدًى
-          if (p.idg || hasTanwin(p)) k.m.unshift(C.SHADDA);
-        }
-
-        // ---- 6d. Idgham lainnya: huruf polos sebelum huruf bertasydid diberi sukun
-        //          عَبَدتُّمْ -> عَبَدْتُّمْ ,  هُم مَّغْفِرَةٌ -> هُمْ مَّغْفِرَةٌ ,  قُل رَّبِّ -> قُلْ رَّبِّ
-        //          (lam "ال" sebelum huruf syamsiyah tidak diberi sukun: الرَّحْمٰنِ)
-        for (let i = 1; i < cl.length; i++) {
-          const k = cl[i], cp = k.b.codePointAt(0);
-          if (k.m.length !== 0 || cp < 0x0628 || cp > 0x064A) continue;
-          if (cp === C.WAW || cp === C.YEH || cp === 0x0649 || cp === C.TATWEEL) continue;
-          if (cl[i - 1].b === ' ') continue;
-          if (cp === C.LAM && baseIs(cl[i - 1], C.ALEF)) continue;                               // lam alif-lam (ta'rif)
-          let j = i + 1;
-          while (j < cl.length && (cl[j].b === ' ' || isWaqf(cl[j]))) j++;
-          if (j < cl.length && has(cl[j], C.SHADDA)) k.m.push(SUK);
-        }
-
-        // ---- 7. Tanda "huruf tidak dibaca" (۟) dibuang -> قَالُوا۟ menjadi قَالُوْا
-        cl.forEach(k => drop(k, C.ROUND_ZERO));
-
-        // ---- 8. Pemeriksaan akhir: harakat miring + berdiri pada 1 huruf -> sisakan yang berdiri saja
-        cl.forEach(k => {
-          if (has(k, C.DAGGER)) { drop(k, C.FATHA); }
-          if (has(k, C.SUB_ALEF)) drop(k, C.KASRA);
-          if (has(k, C.INV_DAMMA)) drop(k, C.DAMMA);
-        });
-
-        // ---- 9. Lam + alif: harakat di ATAS lam digambar font di atas alif (ligatur). Pindahkan ke lapisan
-        //         terpisah (span.la) yang posisinya diukur tepat di atas huruf lam. Tanda di alif (hamzah/maddah) tidak dipindah.
-        if (opts.lamOverlay) {
-          const ABOVE = new Set([0x064B, 0x064C, 0x064E, 0x064F, 0x0651, 0x0652, 0x0653, 0x0654, 0x0657, 0x0670, 0x06E1, 0x06E4, 0x08F0, 0x08F1]);
-          for (let i = 0; i < cl.length - 1; i++) {
-            const k = cl[i], nx = cl[i + 1];
-            if (!baseIs(k, C.LAM) || !baseIs(nx, C.ALEF)) continue;
-            const up = k.m.filter(x => ABOVE.has(x));
-            if (!up.length) continue;
-            up.sort((a, b) => (b === 0x0651) - (a === 0x0651));          // tasydid dulu
-            k.m = k.m.filter(x => !ABOVE.has(x));
-            k.la = up;
-          }
-          let out = '';
-          for (let i = 0; i < cl.length; i++) {
-            const k = cl[i];
-            if (k.la) {
-              const nx = cl[i + 1];
-              out += '<span class="la" data-a="' + k.la.map(ch).join('') + '">' + k.b + k.m.map(ch).join('') + nx.b + nx.m.map(ch).join('') + '</span>';
-              i++;
-            } else out += k.b + k.m.map(ch).join('');
-          }
-          return out;
-        }
-
-        return fromClusters(cl);
-      }
-
-      return { convert };
-    })();
-
-    /* Dipanggil untuk setiap teks Arab (ayat, Bismillah, Ta'awudz) */
-    function applyIndonesianQuranStandards(text) {
-      if (!USE_MUSHAF_ID_STYLE) return text;
-      try { return MushafID.convert(text, { lamOverlay: LAM_FIX_OK }); } catch (e) { console.warn('Gaya mushaf gagal, memakai teks asli:', e); return text; }
-    }
-
-    async function loadSurah() {
-      const surahInfo = ALL_SURAHS.find(s => s.num === currentSurahNum);
-      document.getElementById('surahTitleAr').innerText = surahInfo.ar;
-      document.getElementById('surahSubtitle').innerText = `${surahInfo.name} • Surah ${surahInfo.num} • ${surahInfo.ayahs} Ayat`;
-
-      setupRangeSelector();
-      const container = document.getElementById('ayahs-container');
-      container.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-weight: 600;">Memuat ayat...</p>`;
-
-      try {
-        const [resArab, resIndo] = await Promise.all([
-          fetch(`https://api.quran.com/api/v4/quran/verses/uthmani?chapter_number=${currentSurahNum}`),
-          fetch(`https://api.alquran.cloud/v1/surah/${currentSurahNum}/id.indonesian`)
-        ]);
-
-        await lamAlifReady;   // pengukuran posisi lam selesai sebelum teks Arab dibentuk
-        const dataArab = await resArab.json();
-        const dataIndo = await resIndo.json();
-        const ayahsArab = dataArab.verses;
-        const ayahsIndo = dataIndo.data.ayahs;
-
-        let html = '';
-        const transHiddenClass = showTranslations ? '' : 'hidden';
-
-        if (currentSurahNum === 1) {
-          const itemKeyTaawudz = `${currentSurahNum}:0`;
-          const isTaawudzSaved = savedAyahs.includes(itemKeyTaawudz);
-          let taawudzText = applyIndonesianQuranStandards("أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيْطَٰنِ ٱلرَّجِيمِ");
-
-          html += `
-            <div class="ayah-card bismillah-card" id="ayah-card-0">
-              <div class="ayah-top-bar">
-                <div class="ayah-key">${currentSurahNum} : 0 (Ta'awudz)</div>
-                <div class="ayah-actions">
-                  <button class="glass-btn ${isTaawudzSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
-                  <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
-                </div>
-              </div>
-              <div class="ayah-arabic bismillah-text">${taawudzText}</div>
-              <div class="ayah-translation ${transHiddenClass}" id="translation-0">Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div>
-            </div>`;
-        } 
-        else if (currentSurahNum !== 9) {
-          const itemKey0 = `${currentSurahNum} : 0`;
-          const isBismillahSaved = savedAyahs.includes(itemKey0);
-          let bismillahText = applyIndonesianQuranStandards("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ");
-
-          html += `
-            <div class="ayah-card bismillah-card" id="ayah-card-0">
-              <div class="ayah-top-bar">
-                <div class="ayah-key">${currentSurahNum} : 0 (Bismillah)</div>
-                <div class="ayah-actions">
-                  <button class="glass-btn ${isBismillahSaved ? 'saved' : ''}" id="btn-bookmark-0" onclick="toggleSaveAyah(0)"><svg><use href="#icon-bookmark"></use></svg></button>
-                  <button class="glass-btn round" id="btn-play-0" onclick="playAyah(0)"><svg id="icon-play-0"><use href="#icon-play"></use></svg></button>
-                </div>
-              </div>
-              <div class="ayah-arabic bismillah-text">${bismillahText}</div>
-              <div class="ayah-translation ${transHiddenClass}" id="translation-0">Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.</div>
-            </div>`;
-        }
-
-        ayahsArab.forEach((ayah, idx) => {
-          const ayahNum = idx + 1;
-          let formattedText = ayah.text_uthmani;
-          
-          if (currentSurahNum !== 1 && currentSurahNum !== 9 && idx === 0) {
-            formattedText = formattedText.replace(/^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/, '');
-          }
-          
-          formattedText = applyIndonesianQuranStandards(formattedText);
-          const endOfAyahSymbol = `\u06DD${toArabicDigits(ayahNum)}`;
-          const itemKey = `${currentSurahNum} : ${ayahNum}`;
-          const isSaved = savedAyahs.includes(itemKey);
-
-          html += `
-            <div class="ayah-card" id="ayah-card-${ayahNum}">
-              <div class="ayah-top-bar">
-                <div class="ayah-key">${currentSurahNum} : ${ayahNum}</div>
-                <div class="ayah-actions">
-                  <button class="glass-btn ${isSaved ? 'saved' : ''}" id="btn-bookmark-${ayahNum}" onclick="toggleSaveAyah(${ayahNum})"><svg><use href="#icon-bookmark"></use></svg></button>
-                  <button class="glass-btn round" id="btn-play-${ayahNum}" onclick="playAyah(${ayahNum})"><svg id="icon-play-${ayahNum}"><use href="#icon-play"></use></svg></button>
-                </div>
-              </div>
-              <div class="ayah-arabic">${formattedText} <span class="ayah-number-icon">${endOfAyahSymbol}</span></div>
-              <div class="ayah-translation ${transHiddenClass}" id="translation-${ayahNum}">${ayahNum}. ${ayahsIndo[idx].text}</div>
-            </div>`;
-        });
-
-        container.innerHTML = html;
-      } catch (err) {
-        container.innerHTML = `<p style="text-align:center; color:#ef4444; font-weight: 600;">Gagal memuat ayat. Periksa koneksi internet Anda.</p>`;
-      }
-    }
-
-    function setBtnPlayIcon(ayahNum, isPause) {
-      const iconUse = document.querySelector(`#icon-play-${ayahNum} use`);
-      if (iconUse) iconUse.setAttribute('href', isPause ? '#icon-pause' : '#icon-play');
-    }
-
-    function playAyah(ayahNum) {
-      if (currentAyah === ayahNum && isPlaying) { stopAudio(); return; }
-      if (currentAyah !== null) setBtnPlayIcon(currentAyah, false);
-
-      currentAyah = ayahNum;
-      document.querySelectorAll('.ayah-card').forEach(card => card.classList.remove('active'));
-      const currentCard = document.getElementById(`ayah-card-${ayahNum}`);
-      
-      if (currentCard) {
-        currentCard.classList.add('active');
-        currentCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      setBtnPlayIcon(ayahNum, true);
-
-      const surahInfo = ALL_SURAHS.find(s => s.num === currentSurahNum);
-      let titleLabel = (currentSurahNum === 1 && ayahNum === 0) ? "Ta'awudz" : (ayahNum === 0 ? "Bismillah" : `Ayat ${ayahNum}`);
-      
-      playerTitle.innerText = `${surahInfo.name} : ${titleLabel}`;
-      playerStatus.innerText = "Memutar audio...";
-      
-      masterPlayIcon.setAttribute('href', '#icon-stop');
-      masterPlaySvg.classList.add('icon-fill-stop');
-
-      startPlayback(ayahNum);
-    }
-
-    /* ===== Pemutaran audio dengan server cadangan & penanganan error ===== */
-    let audioSources = [];
-    let audioSrcIdx = 0;
-    let audioToken = 0;
-    let audioStallTimer = null;
-    let audioOwnCount = 0;
-    let audioFailedHosts = new Set();
-    const hostOf = (u) => { try { return new URL(u).hostname; } catch (e) { return ''; } };
-
-    function startPlayback(ayahNum) {
-      audioToken++;
-      clearTimeout(audioStallTimer);
-      const own = getAudioSources(currentSurahNum, ayahNum);
-      audioOwnCount = own.length;
-      audioFailedHosts = new Set();
-      audioSources = own;
-      // Qori syaikh yang gagal -> otomatis pindah ke suara Syaikh Alafasy (punya 3 server)
-      const cur = QARIS.find(q => q.id === currentQariId);
-      if (cur && cur.type === 'api' && cur.id !== 'mishary') {
-        audioSources = own.concat(getAudioSources(currentSurahNum, ayahNum, 'mishary'));
-      }
-      audioSrcIdx = 0;
-      audioElement.pause();
-      playerStatus.innerText = "Memuat audio...";
-      tryAudioSource(ayahNum, audioToken);
-    }
-
-    function tryAudioSource(ayahNum, token) {
-      if (token !== audioToken) return;
-      clearTimeout(audioStallTimer);
-      if (audioSrcIdx >= audioSources.length) {
-        failAudio(ayahNum, navigator.onLine === false
-          ? "Tidak ada koneksi internet"
-          : "Suara gagal dimuat. Coba lagi atau pilih qori lain.");
-        return;
-      }
-      // pada suara pengganti, lewati server yang baru saja gagal agar tidak menunggu lagi
-      while (audioSrcIdx >= audioOwnCount && audioSrcIdx < audioSources.length && audioFailedHosts.has(hostOf(audioSources[audioSrcIdx]))) audioSrcIdx++;
-      if (audioSrcIdx >= audioSources.length) { tryAudioSource(ayahNum, token); return; }
-      const idx = audioSrcIdx;
-      audioElement.src = audioSources[idx];
-      audioElement.load();
-      // bila 12 detik tidak kunjung siap -> coba server berikutnya
-      audioStallTimer = setTimeout(() => {
-        if (token === audioToken && idx === audioSrcIdx && audioElement.readyState < 3) nextAudioSource(ayahNum, token, idx);
-      }, 8000);
-
-      const p = audioElement.play();
-      if (p && p.then) {
-        p.then(() => { if (token === audioToken) isPlaying = true; })
-         .catch((err) => {
-           if (token !== audioToken) return;
-           if (err && err.name === 'AbortError') return;
-           if (err && err.name === 'NotAllowedError') { failAudio(ayahNum, "Browser menahan suara. Ketuk tombol putar sekali lagi."); return; }
-           console.warn('Audio gagal:', audioSources[idx], err);
-           nextAudioSource(ayahNum, token, idx);
-         });
-      }
-    }
-
-    function nextAudioSource(ayahNum, token, idx) {
-      if (token !== audioToken || idx !== audioSrcIdx) return;   // sudah ditangani
-      audioFailedHosts.add(hostOf(audioSources[idx]));
-      audioSrcIdx++;
-      tryAudioSource(ayahNum, token);
-    }
-
-    function failAudio(ayahNum, message) {
-      clearTimeout(audioStallTimer);
-      audioToken++;
-      try { audioElement.pause(); } catch (e) {}
-      isPlaying = false;
-      masterPlayIcon.setAttribute('href', '#icon-play');
-      masterPlaySvg.classList.remove('icon-fill-stop');
-      setBtnPlayIcon(ayahNum, false);
-      playerStatus.innerText = message;
-    }
-
-    audioElement.addEventListener('error', () => {
-      if (currentAyah === null) return;
-      nextAudioSource(currentAyah, audioToken, audioSrcIdx);
-    });
-    audioElement.addEventListener('waiting', () => { if (isPlaying || currentAyah !== null) playerStatus.innerText = "Memuat audio..."; });
-    audioElement.addEventListener('playing', () => {
-      clearTimeout(audioStallTimer);
-      isPlaying = true;
-      playerStatus.innerText = audioSrcIdx === 0 ? "Memutar audio..."
-        : (currentQariId === 'github_anak' && audioSrcIdx === 1 ? "Suara Anak belum tersedia, memutar suara Syaikh Alafasy"
-          : (currentQariId !== 'github_anak' && audioSrcIdx >= audioOwnCount ? "Qori ini sedang tidak bisa dimuat, memutar suara Syaikh Alafasy" : "Memutar audio (server cadangan)"));
-    });
-
-    function stopAudio() {
-      audioToken++;
-      clearTimeout(audioStallTimer);
-      audioElement.pause();
-      audioElement.currentTime = 0;
-      isPlaying = false;
-      masterPlayIcon.setAttribute('href', '#icon-play');
-      masterPlaySvg.classList.remove('icon-fill-stop');
-      if (currentAyah !== null) {
-        setBtnPlayIcon(currentAyah, false);
-        const card = document.getElementById(`ayah-card-${currentAyah}`);
-        if (card) card.classList.remove('active');
-      }
-      currentAyah = null;
-      playerTitle.innerText = "Pilih ayat untuk memutar";
-      playerStatus.innerText = "Dihentikan";
-    }
-
-    function toggleMasterPlay() {
-      if (isPlaying) { stopAudio(); return; }
-      const startIdx = (currentSurahNum === 1) ? 0 : (currentSurahNum === 9 ? 1 : 0);
-      playAyah(repeatModeSelect.value === 'range' ? parseInt(startAyahSelect.value) : startIdx);
-    }
-
-    audioElement.onended = () => {
-      clearTimeout(audioStallTimer);
-      isPlaying = false;
-      masterPlayIcon.setAttribute('href', '#icon-play');
-      masterPlaySvg.classList.remove('icon-fill-stop');
-      if (currentAyah !== null) setBtnPlayIcon(currentAyah, false);
-
-      const mode = repeatModeSelect.value;
-      
-      if (mode === 'single') {
-        playAyah(currentAyah);
-      } 
-      else if (mode === 'surah') {
-        const minAyah = (currentSurahNum === 1) ? 0 : (currentSurahNum === 9 ? 1 : 0);
-        if (currentAyah < currentTotalAyahs) {
-          playAyah(currentAyah + 1);
-        } else {
-          playAyah(minAyah);
-        }
-      } 
-      else if (mode === 'range') {
-        const start = parseInt(startAyahSelect.value);
-        const end = parseInt(endAyahSelect.value);
-        playAyah(currentAyah < end ? currentAyah + 1 : start);
-      }
-    };
-
-    function toArabicDigits(num) { return String(num).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      initTheme();
-      initTranslationState();
-      populateDropdowns();
-      loadSurah();
-    });
-  </script>
-
-  <!-- ===== KARTU AJAKAN INSTALL ===== -->
+  <!-- =================================================================
+       8. KARTU AJAKAN PASANG APLIKASI (muncul otomatis, bisa ditutup)
+       ================================================================= -->
   <div class="install-card" id="installCard" role="dialog" aria-labelledby="icTitle">
     <div class="ic-logo"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#logo-tile"></use></svg></div>
     <div class="ic-body">
       <div class="ic-title" id="icTitle">Pasang TalqinKu di HP-mu!</div>
       <div class="ic-text" id="icText">Buka lebih cepat dari layar utama, tampil layar penuh seperti aplikasi, dan ayat yang pernah dibuka bisa dibaca tanpa internet.</div>
       <div class="ic-actions">
-        <button class="ic-btn primary" id="icInstall" onclick="doInstall()">Pasang</button>
-        <button class="ic-btn" onclick="dismissInstallCard()">Nanti saja</button>
+        <button class="ic-btn primary" id="icInstall">Pasang</button>
+        <button class="ic-btn" id="icDismiss">Nanti saja</button>
       </div>
     </div>
   </div>
 
-  <script>
-    /* =====================================================
-       PWA: splash, install, service worker
-       ===================================================== */
-    (function () {
-      /* ---- Splash: tampil minimal 2 detik, hilang setelah halaman siap ---- */
-      const splash = document.getElementById('splash');
-      const startedAt = Date.now();
-      const MIN_MS = 2000, MAX_MS = 5000;
-      let hidden = false;
-
-      function hideSplash() {
-        if (hidden || !splash) return;
-        hidden = true;
-        splash.classList.add('hide');
-        try { sessionStorage.setItem('tk_splash', '1'); } catch (e) {}
-        setTimeout(() => splash.remove(), 700);
-        setTimeout(() => window.maybeShowInstallCard && window.maybeShowInstallCard(), 2500);
-      }
-      function scheduleHide() {
-        const wait = Math.max(0, MIN_MS - (Date.now() - startedAt));
-        setTimeout(hideSplash, wait);
-      }
-      if (splash && splash.style.display !== 'none') {
-        if (document.readyState === 'complete') scheduleHide();
-        else window.addEventListener('load', scheduleHide);
-        setTimeout(hideSplash, MAX_MS);
-      } else if (splash) {
-        splash.remove();
-        setTimeout(() => window.maybeShowInstallCard && window.maybeShowInstallCard(), 3000);
-      }
-
-      /* ---- Warna status bar mengikuti tema ---- */
-      const themeMeta = document.querySelector('meta[name="theme-color"]');
-      function syncThemeColor() {
-        if (!themeMeta) return;
-        themeMeta.setAttribute('content', document.body.classList.contains('theme-light') ? '#f59e0b' : '#10b981');
-      }
-      new MutationObserver(syncThemeColor).observe(document.body, { attributes: true, attributeFilter: ['class'] });
-      document.addEventListener('DOMContentLoaded', syncThemeColor);
-      syncThemeColor();
-
-      /* ---- Install ---- */
-      const INSTALL_DISMISS_KEY = 'tk_install_dismissed';
-      const DISMISS_DAYS = 7;
-      let deferredPrompt = null;
-
-      const installBtn = document.getElementById('installBtn');
-      const installCard = document.getElementById('installCard');
-      const icText = document.getElementById('icText');
-      const icTitle = document.getElementById('icTitle');
-      const icInstall = document.getElementById('icInstall');
-
-      const isStandalone = () =>
-        window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-      const isIOS = () =>
-        /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-      function recentlyDismissed() {
-        try {
-          const t = parseInt(localStorage.getItem(INSTALL_DISMISS_KEY) || '0', 10);
-          return t && (Date.now() - t) < DISMISS_DAYS * 86400000;
-        } catch (e) { return false; }
-      }
-
-      function setIOSMode() {
-        icTitle.textContent = 'Pasang TalqinKu di iPhone / iPad';
-        icText.innerHTML = 'Ketuk tombol <b>Bagikan</b> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> di Safari, lalu pilih <b>Tambah ke Layar Utama</b>.';
-        icInstall.textContent = 'Mengerti';
-      }
-
-      function showInstallCard() { installCard.classList.add('show'); }
-      function hideInstallCard() { installCard.classList.remove('show'); }
-
-      window.dismissInstallCard = function () {
-        hideInstallCard();
-        try { localStorage.setItem(INSTALL_DISMISS_KEY, String(Date.now())); } catch (e) {}
-      };
-
-      window.doInstall = async function () {
-        if (deferredPrompt) {
-          hideInstallCard();
-          deferredPrompt.prompt();
-          try { await deferredPrompt.userChoice; } catch (e) {}
-          deferredPrompt = null;
-          installBtn.hidden = true;
-        } else {
-          dismissInstallCard();
-        }
-      };
-
-      window.handleInstallClick = function () {
-        if (isIOS() && !deferredPrompt) setIOSMode();
-        showInstallCard();
-      };
-
-      window.maybeShowInstallCard = function () {
-        if (isStandalone() || recentlyDismissed()) return;
-        if (isIOS() && !deferredPrompt && !installBtn.hidden) { setIOSMode(); showInstallCard(); }
-        else if (deferredPrompt) showInstallCard();
-      };
-
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        if (!isStandalone()) installBtn.hidden = false;
-        if (hidden || !splash || splash.style.display === 'none') setTimeout(() => window.maybeShowInstallCard && window.maybeShowInstallCard(), 1500);
-      });
-
-      window.addEventListener('appinstalled', () => {
-        deferredPrompt = null;
-        installBtn.hidden = true;
-        hideInstallCard();
-      });
-
-      // iOS Safari tidak punya prompt otomatis -> tampilkan tombol panduan
-      if (isIOS() && !isStandalone()) installBtn.hidden = false;
-
-      /* ---- Service Worker (offline) ---- */
-      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js').catch((err) => console.warn('SW gagal didaftarkan:', err));
-        });
-      }
-    })();
-  </script>
-
-  <script>
-    /* Ukur tinggi navbar agar bar pilih surah menempel tepat di bawahnya */
-    (function () {
-      const nav = document.querySelector('.navbar');
-      function setNavH() { if (nav) document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px'); }
-      window.addEventListener('resize', setNavH);
-      window.addEventListener('load', setNavH);
-      document.addEventListener('DOMContentLoaded', setNavH);
-      if (window.ResizeObserver && nav) new ResizeObserver(setNavH).observe(nav);
-      setNavH();
-    })();
-  </script>
+  <!-- =================================================================
+       9. JAVASCRIPT (urutan di bawah ini PENTING, jangan ditukar)
+          1) config        pengaturan & daftar qori/tema
+          2) data-surah    daftar 114 surah (yang dipakai)
+          3) mushaf-style  pengubah teks Arab ke gaya mushaf Indonesia
+          4) utils         fungsi bantu, penyimpanan, state, referensi elemen
+          5) theme         ganti tema
+          6) bookmarks     penanda ayat
+          7) audio         pemutar suara
+          8) reader        memuat & menampilkan ayat
+          9) pwa           splash, pasang aplikasi, service worker
+         10) app           menyalakan semuanya
+       ================================================================= -->
+  <script defer src="js/config.js"></script>
+  <script defer src="js/data-surah.js"></script>
+  <script defer src="js/mushaf-style.js"></script>
+  <script defer src="js/utils.js"></script>
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/bookmarks.js"></script>
+  <script defer src="js/audio.js"></script>
+  <script defer src="js/reader.js"></script>
+  <script defer src="js/pwa.js"></script>
+  <script defer src="js/app.js"></script>
 </body>
 </html>

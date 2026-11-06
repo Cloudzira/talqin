@@ -1,0 +1,351 @@
+/* =====================================================================
+   TalqinKu - splash-install.css
+   1. Splash screen (layar pembuka)   2. Kartu ajakan pasang aplikasi
+   Warna mengikuti tema (lihat variabel --splash-* di themes.css).
+   ===================================================================== */
+
+/* ===== 1. SPLASH SCREEN ===== */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden;
+  background: var(--splash-bg);
+  font-family: var(--font-ui);
+  transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s;
+}
+
+#splash.hide {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+/* Sudah pernah tampil pada sesi ini -> langsung disembunyikan (diatur oleh skrip di <head>) */
+.splash-seen #splash {
+  display: none;
+}
+
+/* Kisi futuristik di splash (tema futuristik saja) */
+#splash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  display: var(--splash-grid);
+  background-image: var(--pattern);
+  background-size: var(--pattern-size);
+  pointer-events: none;
+}
+
+#splash .sp-hills {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: var(--splash-deco);
+  width: 100%;
+  height: 22vh;
+  min-height: 120px;
+}
+
+#splash .sp-cloud {
+  position: absolute;
+  display: var(--splash-deco);
+  width: 120px;
+  opacity: 0.85;
+  animation: spDrift 26s linear infinite;
+}
+
+#splash .sp-cloud.c1 {
+  top: 12%;
+  left: -140px;
+}
+
+#splash .sp-cloud.c2 {
+  top: 26%;
+  left: -140px;
+  width: 84px;
+  opacity: 0.65;
+  animation-duration: 38s;
+  animation-delay: -14s;
+}
+
+#splash .sp-mark {
+  width: min(50vw, 220px);
+  aspect-ratio: 1;
+  animation: spPop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+#splash .sp-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: var(--logo-shadow);
+}
+
+#splash .mk-star {
+  animation: spBob 2.4s ease-in-out 0.9s infinite;
+}
+
+#splash .mk-sparkles {
+  animation: spTwinkle 1.8s ease-in-out infinite;
+}
+
+#splash .sp-title {
+  display: flex;
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: clamp(34px, 11vw, 52px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: var(--brand-spacing);
+}
+
+#splash .sp-title span {
+  display: inline-block;
+  opacity: 0;
+  background: linear-gradient(135deg, var(--splash-title-1), var(--splash-title-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: spLetter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc(0.55s + var(--i) * 0.07s);
+}
+
+#splash .sp-tag {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--splash-tag);
+  opacity: 0;
+  animation: spFade 0.7s ease 1.25s forwards;
+}
+
+#splash .sp-dots {
+  display: flex;
+  gap: 9px;
+  margin-top: 22px;
+  opacity: 0;
+  animation: spFade 0.5s ease 1.4s forwards;
+}
+
+#splash .sp-dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  animation: spDot 1s ease-in-out infinite;
+}
+
+#splash .sp-dots i:nth-child(1) {
+  background: var(--accent);
+}
+
+#splash .sp-dots i:nth-child(2) {
+  background: var(--primary);
+  animation-delay: 0.15s;
+}
+
+#splash .sp-dots i:nth-child(3) {
+  background: var(--secondary);
+  animation-delay: 0.3s;
+}
+
+#splash .sp-credit {
+  position: absolute;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--splash-credit);
+  text-align: center;
+  opacity: 0;
+  animation: spFade 0.6s ease 1.5s forwards;
+}
+
+#splash .sp-credit strong {
+  color: var(--credit-accent);
+}
+
+@keyframes spPop {
+  0% {
+    transform: scale(0.4) translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes spBob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes spTwinkle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes spLetter {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes spFade {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spDot {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+@keyframes spDrift {
+  to {
+    transform: translateX(calc(100vw + 280px));
+  }
+}
+
+/* ===== 2. KARTU AJAKAN PASANG APLIKASI ===== */
+.install-card {
+  position: fixed;
+  top: calc(var(--nav-h, 64px) + 14px);
+  left: 50%;
+  z-index: 40;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: calc(100% - 32px);
+  max-width: 460px;
+  padding: 16px;
+  background: var(--surface);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.14), var(--glow);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, -24px);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, visibility 0.3s;
+}
+
+.install-card.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.install-card .ic-logo {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+}
+
+.install-card .ic-logo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.install-card .ic-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.install-card .ic-title {
+  margin-bottom: 2px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.install-card .ic-text {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.install-card .ic-text svg {
+  width: 16px;
+  height: 16px;
+  vertical-align: -3px;
+  fill: none;
+  stroke: var(--secondary);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.install-card .ic-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.ic-btn {
+  padding: 9px 18px;
+  background: var(--btn-bg);
+  border: 2px solid var(--btn-border);
+  border-radius: var(--radius-btn);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ic-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.ic-btn.primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-color: transparent;
+  color: var(--on-primary);
+  box-shadow: var(--glow);
+}
+
+/* Pengguna yang memilih "kurangi animasi" -> animasi splash dimatikan */
+@media (prefers-reduced-motion: reduce) {
+  #splash, #splash * {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+  #splash .sp-title span, #splash .sp-tag, #splash .sp-dots, #splash .sp-credit {
+    opacity: 1;
+  }
+  .install-card {
+    transition: none;
+  }
+}

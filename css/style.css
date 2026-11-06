@@ -1,0 +1,850 @@
+/* =====================================================================
+   TalqinKu - style.css
+   Gaya tampilan komponen. Warna TIDAK ditulis di sini, semuanya memakai
+   variabel (var(--...)) dari themes.css supaya ganti tema otomatis.
+   Daftar isi:
+     1. Dasar & latar      5. Kartu ayat
+     2. Navbar             6. Tombol
+     3. Pilih surah/qori   7. Jendela (modal) & pilihan tema
+     4. Judul surah        8. Pemutar audio  9. Responsif
+   ===================================================================== */
+
+/* ===== 1. DASAR & LATAR ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  color-scheme: var(--color-scheme);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: clip;
+  padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px));
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 15% 15%, var(--glow-1) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, var(--glow-2) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, var(--glow-center) 0%, var(--bg) 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-ui);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Pola kisi (grid) futuristik di belakang konten */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--pattern);
+  background-size: var(--pattern-size);
+}
+
+button, select {
+  font-family: inherit;
+}
+
+select {
+  max-width: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 8px;
+}
+
+/* ===== 2. NAVBAR ===== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: var(--navbar-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 2px var(--divider-style) var(--card-border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.brand-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: var(--brand-spacing);
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-logo {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  filter: var(--logo-shadow-sm);
+  -webkit-text-fill-color: initial;
+}
+
+.brand-logo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.header-subtext {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.heart {
+  color: #ef4444;
+}
+
+.credit-link {
+  color: var(--credit-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.credit-link:hover {
+  text-decoration: underline;
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ===== 3. PILIH SURAH & QORI (menempel di bawah navbar) ===== */
+.surah-selector-wrapper {
+  position: sticky;
+  top: var(--nav-h, 64px);
+  z-index: 20;
+  display: flex;
+  width: 100%;
+  max-width: 800px;
+  margin: 12px auto 0;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.surah-selector-container {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: end;
+  gap: 8px 12px;
+  width: 100%;
+  padding: 10px 12px;
+  pointer-events: auto;
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 2px solid var(--card-border);
+  border-radius: calc(var(--radius-card) - 4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.selector-group {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 0;
+}
+
+.selector-group label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+}
+
+.selector-group select {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  overflow: hidden;
+  background: var(--btn-bg);
+  color: var(--text);
+  border: 2px solid var(--btn-border);
+  border-radius: var(--radius-btn);
+  outline: none;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* ===== 4. JUDUL SURAH ===== */
+.container {
+  flex: 1;
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.surah-header-standalone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 24px;
+  padding: 12px 0;
+  text-align: center;
+}
+
+.surah-title-ar {
+  max-width: 100%;
+  font-family: var(--font-arabic);
+  font-size: clamp(28px, 8vw, 36px);
+  line-height: 1.4;
+  color: var(--secondary);
+  direction: rtl;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.surah-subtitle {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.status-message {
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.status-message.error {
+  color: var(--danger);
+}
+
+/* ===== 5. KARTU AYAT ===== */
+.ayah-card {
+  position: relative;
+  margin-bottom: 18px;
+  padding: 22px;
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Garis cahaya tipis di tepi atas kartu (hanya terlihat di tema futuristik) */
+.ayah-card::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+  opacity: var(--card-line-opacity);
+  pointer-events: none;
+}
+
+.ayah-card.bismillah-card {
+  background: var(--bismillah-bg);
+  border-color: var(--bismillah-border);
+}
+
+.ayah-card.active {
+  border-color: var(--secondary);
+  box-shadow: var(--glow);
+  transform: scale(1.01);
+}
+
+.ayah-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 2px var(--divider-style) var(--card-border);
+}
+
+.ayah-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ayah-key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 0;
+  padding: 0 12px;
+  background: var(--btn-bg);
+  border: 2px solid var(--btn-border);
+  border-radius: calc(var(--radius-btn) - 2px);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+.ayah-arabic {
+  margin-bottom: 16px;
+  font-family: var(--font-arabic);
+  font-size: clamp(24px, 6.6vw, 30px);
+  line-height: 2.5;
+  color: var(--text-arabic);
+  direction: rtl;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.bismillah-text {
+  font-size: clamp(24px, 7vw, 32px);
+  color: var(--accent);
+  text-align: center;
+}
+
+.ayah-number-icon {
+  display: inline-block;
+  margin-right: 6px;
+  font-family: var(--font-arabic);
+  font-size: 26px;
+  color: var(--secondary);
+}
+
+.ayah-translation {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.ayah-translation.hidden {
+  display: none;
+}
+
+/* Harakat di atas huruf lam pada ligatur lam-alif (posisi diukur otomatis oleh js/mushaf-style.js) */
+.la::after {
+  content: "\00A0" attr(data-a);
+  position: relative;
+  left: calc(var(--la-left, 0) * 1em);
+  top: calc(var(--la-up, 0) * -1em);
+  margin-inline-end: calc(var(--la-w, 0.25) * -1em);
+  pointer-events: none;
+}
+
+/* ===== 6. TOMBOL ===== */
+.glass-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--btn-bg);
+  backdrop-filter: blur(12px);
+  border: 2px solid var(--btn-border);
+  border-radius: var(--radius-btn);
+  box-shadow: var(--btn-shadow);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.glass-btn[hidden] {
+  display: none;
+}
+
+.glass-btn.round {
+  border-radius: 50%;
+}
+
+.glass-btn:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.glass-btn:focus-visible, .theme-option:focus-visible, .bookmark-item:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+.glass-btn.active, .glass-btn.saved {
+  background: var(--btn-active-bg);
+  border-color: var(--secondary);
+}
+
+.glass-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.glass-btn.saved svg {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+.glass-btn svg.icon-fill-stop {
+  fill: var(--primary);
+}
+
+/* ===== 7. JENDELA (MODAL), BOOKMARK & PILIHAN TEMA ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: var(--overlay);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  background: var(--surface);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), var(--glow);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 2px var(--divider-style) var(--card-border);
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.modal-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 20px;
+  overflow-y: auto;
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+}
+
+.modal-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.modal-empty {
+  padding: 20px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.bookmark-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bookmark-item:hover {
+  border-color: var(--secondary);
+  transform: translateX(4px);
+}
+
+.bookmark-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding-right: 10px;
+}
+
+.bookmark-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.bookmark-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.bookmark-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  background: var(--btn-bg);
+  border: 2px solid var(--btn-border);
+  border-radius: 10px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bookmark-delete:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: var(--danger);
+  color: var(--danger);
+  transform: scale(1.1);
+}
+
+.bookmark-delete svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-group-title {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-btn);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-option:hover {
+  border-color: var(--secondary);
+  transform: translateX(4px);
+}
+
+.theme-option.selected {
+  border-color: var(--primary);
+  box-shadow: var(--glow);
+}
+
+.theme-swatch {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: radial-gradient(circle at 30% 30%, var(--sw-1) 0 22%, transparent 23%), radial-gradient(circle at 70% 70%, var(--sw-2) 0 22%, transparent 23%), var(--sw-bg);
+  border: 2px solid rgba(127, 127, 127, 0.35);
+  border-radius: 14px;
+}
+
+.theme-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.theme-name {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.theme-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.theme-check {
+  font-weight: 700;
+  color: var(--primary);
+  opacity: 0;
+}
+
+.theme-option.selected .theme-check {
+  opacity: 1;
+}
+
+/* ===== 8. PEMUTAR AUDIO (menempel di bawah layar) ===== */
+.bottom-player {
+  position: fixed;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: calc(100% - 24px);
+  max-width: 800px;
+  padding: 12px 16px;
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1), var(--glow);
+  transform: translateX(-50%);
+}
+
+.player-left-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.player-title {
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.player-subtitle {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.repeat-mode-select {
+  max-width: 100%;
+  padding: 8px 12px;
+  background: var(--btn-bg);
+  backdrop-filter: blur(12px);
+  color: var(--text);
+  border: 2px solid var(--btn-border);
+  border-radius: calc(var(--radius-btn) - 2px);
+  outline: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.range-picker {
+  display: none;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 100%;
+  padding: 4px 10px;
+  background: var(--btn-bg);
+  border: 2px solid var(--btn-border);
+  border-radius: calc(var(--radius-btn) - 2px);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.range-picker.is-visible {
+  display: flex;
+}
+
+.range-picker select {
+  max-width: 64px;
+  background: transparent;
+  color: var(--secondary);
+  border: none;
+  outline: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.main-play-btn {
+  align-self: center;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+}
+
+.main-play-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+#audio-element {
+  display: none;
+}
+
+/* ===== 9. RESPONSIF (layar kecil) ===== */
+@media (max-width: 430px) {
+  .navbar {
+    padding: 12px 14px;
+  }
+  .nav-controls {
+    gap: 7px;
+  }
+  .nav-controls .glass-btn {
+    width: 37px;
+    height: 37px;
+  }
+  .nav-controls .glass-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  .header-subtext {
+    font-size: 11px;
+  }
+  .brand {
+    font-size: 20px;
+  }
+  .ayah-card {
+    padding: 16px;
+    border-radius: calc(var(--radius-card) - 4px);
+  }
+  .ayah-key {
+    padding: 0 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand {
+    gap: 4px;
+    font-size: 17px;
+  }
+  .brand-logo {
+    width: 28px;
+    height: 28px;
+  }
+  .nav-controls {
+    gap: 5px;
+  }
+  .nav-controls .glass-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+  }
+  .nav-controls .glass-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+  .header-subtext {
+    font-size: 10px;
+  }
+  .surah-selector-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

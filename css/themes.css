@@ -1,0 +1,184 @@
+/* =====================================================================
+   TalqinKu - themes.css
+   Semua WARNA & GAYA TEMA ada di file ini.
+   Cara kerja: <html data-theme="nama-tema"> memilih blok warna di bawah.
+   Mau menambah tema baru? Salin satu blok, ganti nama dan warnanya,
+   lalu daftarkan di js/config.js (daftar THEMES).
+   ===================================================================== */
+
+/* ===== 1. TEMA "CERIA HIJAU" (bawaan, ramah anak) ===== */
+:root, [data-theme="ceria-hijau"] {
+  /* huruf & bentuk */
+  --font-ui: 'Fredoka', system-ui, sans-serif;
+  --font-display: 'Fredoka', system-ui, sans-serif;
+  --font-arabic: 'Scheherazade New', serif;
+  --brand-spacing: 0.5px;
+  --divider-style: dashed;
+  --radius-card: 24px;
+  --radius-btn: 14px;
+  --card-line-opacity: 0;
+  --color-scheme: light;
+  /* warna latar */
+  --bg: #f0fdf4;
+  --glow-1: rgba(74, 222, 128, 0.15);
+  --glow-2: rgba(56, 189, 248, 0.15);
+  --glow-center: rgba(255, 255, 255, 0.4);
+  --pattern: none;
+  --pattern-size: 44px 44px;
+  /* kartu & permukaan */
+  --card: rgba(255, 255, 255, 0.85);
+  --card-border: rgba(187, 247, 208, 0.9);
+  --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+  --surface: #ffffff;
+  --navbar-bg: rgba(255, 255, 255, 0.8);
+  --overlay: rgba(30, 41, 59, 0.5);
+  --bismillah-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(254, 243, 199, 0.4));
+  --bismillah-border: rgba(245, 158, 11, 0.4);
+  /* warna aksen & teks */
+  --primary: #10b981;
+  --secondary: #0ea5e9;
+  --accent: #f59e0b;
+  --on-primary: #ffffff;
+  --danger: #ef4444;
+  --text: #1e293b;
+  --text-arabic: #0f172a;
+  --text-muted: #64748b;
+  --credit-accent: #10b981;
+  --scrollbar-thumb: rgba(187, 247, 208, 0.9);
+  /* tombol */
+  --btn-bg: rgba(240, 253, 244, 0.9);
+  --btn-border: rgba(187, 247, 208, 1);
+  --btn-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+  --btn-active-bg: rgba(254, 243, 199, 0.9);
+  --glow: 0 8px 25px rgba(16, 185, 129, 0.2);
+  --glass-blur: blur(12px);
+  /* splash screen */
+  --splash-bg: linear-gradient(165deg, #d1fae5 0%, #a7f3d0 42%, #bae6fd 100%);
+  --splash-title-1: #059669;
+  --splash-title-2: #0284c7;
+  --splash-tag: #047857;
+  --splash-credit: #065f46;
+  --splash-deco: block;
+  --splash-grid: none;
+  --logo-shadow: drop-shadow(0 18px 24px rgba(4, 120, 87, 0.22));
+  --logo-shadow-sm: drop-shadow(0 3px 6px rgba(16, 185, 129, 0.35));
+}
+
+/* ===== 2. TEMA "CERIA KUNING" (ramah anak, hangat) ===== */
+[data-theme="ceria-kuning"] {
+  --bg: #fffbeb;
+  --glow-1: rgba(251, 191, 36, 0.12);
+  --glow-2: rgba(244, 63, 94, 0.08);
+  --card: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(253, 230, 138, 0.9);
+  --navbar-bg: rgba(255, 251, 235, 0.85);
+  --primary: #f59e0b;
+  --secondary: #f43f5e;
+  --accent: #fbbf24;
+  --text: #451a03;
+  --text-arabic: #292524;
+  --text-muted: #78716c;
+  --scrollbar-thumb: rgba(253, 230, 138, 0.9);
+  --btn-bg: rgba(254, 243, 199, 0.8);
+  --btn-border: rgba(253, 230, 138, 1);
+  --btn-shadow: 0 6px 20px rgba(245, 158, 11, 0.15);
+  --btn-active-bg: rgba(254, 226, 226, 0.9);
+  --glow: 0 8px 25px rgba(245, 158, 11, 0.2);
+}
+
+/* ===== 3. TEMA "FUTURISTIK GELAP" (dewasa: neon cyan & violet) ===== */
+[data-theme="futuristik-gelap"] {
+  --font-ui: 'Exo 2', system-ui, sans-serif;
+  --font-display: 'Orbitron', 'Exo 2', sans-serif;
+  --brand-spacing: 2px;
+  --divider-style: solid;
+  --radius-card: 18px;
+  --radius-btn: 12px;
+  --card-line-opacity: 0.9;
+  --color-scheme: dark;
+  --bg: #060a16;
+  --glow-1: rgba(34, 211, 238, 0.14);
+  --glow-2: rgba(139, 92, 246, 0.16);
+  --glow-center: transparent;
+  --pattern: linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+  --card: rgba(13, 20, 40, 0.72);
+  --card-border: rgba(34, 211, 238, 0.22);
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --surface: #0c1428;
+  --navbar-bg: rgba(6, 10, 22, 0.78);
+  --overlay: rgba(2, 4, 12, 0.72);
+  --bismillah-bg: linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(167, 139, 250, 0.1));
+  --bismillah-border: rgba(251, 191, 36, 0.45);
+  --primary: #22d3ee;
+  --secondary: #a78bfa;
+  --accent: #fbbf24;
+  --on-primary: #04121c;
+  --danger: #fb7185;
+  --text: #e2ecff;
+  --text-arabic: #f4f8ff;
+  --text-muted: #8da2c4;
+  --credit-accent: #22d3ee;
+  --scrollbar-thumb: rgba(34, 211, 238, 0.35);
+  --btn-bg: rgba(34, 211, 238, 0.08);
+  --btn-border: rgba(34, 211, 238, 0.35);
+  --btn-shadow: 0 0 14px rgba(34, 211, 238, 0.12);
+  --btn-active-bg: rgba(167, 139, 250, 0.18);
+  --glow: 0 0 28px rgba(34, 211, 238, 0.22);
+  --splash-bg: radial-gradient(circle at 50% 38%, #12214a 0%, #060a16 70%);
+  --splash-title-1: #22d3ee;
+  --splash-title-2: #a78bfa;
+  --splash-tag: #8da2c4;
+  --splash-credit: #8da2c4;
+  --splash-deco: none;
+  --splash-grid: block;
+  --logo-shadow: drop-shadow(0 0 36px rgba(34, 211, 238, 0.45));
+  --logo-shadow-sm: drop-shadow(0 0 8px rgba(34, 211, 238, 0.55));
+}
+
+/* ===== 4. TEMA "FUTURISTIK TERANG" (dewasa: biru elektrik & violet) ===== */
+[data-theme="futuristik-terang"] {
+  --font-ui: 'Exo 2', system-ui, sans-serif;
+  --font-display: 'Orbitron', 'Exo 2', sans-serif;
+  --brand-spacing: 2px;
+  --divider-style: solid;
+  --radius-card: 18px;
+  --radius-btn: 12px;
+  --card-line-opacity: 0.9;
+  --color-scheme: light;
+  --bg: #eef3fb;
+  --glow-1: rgba(37, 99, 235, 0.1);
+  --glow-2: rgba(124, 58, 237, 0.1);
+  --glow-center: rgba(255, 255, 255, 0.6);
+  --pattern: linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+  --card: rgba(255, 255, 255, 0.78);
+  --card-border: rgba(37, 99, 235, 0.22);
+  --card-shadow: 0 8px 24px rgba(30, 58, 138, 0.08);
+  --surface: #ffffff;
+  --navbar-bg: rgba(238, 243, 251, 0.82);
+  --overlay: rgba(11, 21, 48, 0.5);
+  --bismillah-bg: linear-gradient(135deg, rgba(37, 99, 235, 0.06), rgba(124, 58, 237, 0.08));
+  --bismillah-border: rgba(217, 119, 6, 0.4);
+  --primary: #2563eb;
+  --secondary: #7c3aed;
+  --accent: #d97706;
+  --danger: #e11d48;
+  --text: #0b1530;
+  --text-arabic: #0a1226;
+  --text-muted: #53637f;
+  --credit-accent: #2563eb;
+  --scrollbar-thumb: rgba(37, 99, 235, 0.3);
+  --btn-bg: rgba(37, 99, 235, 0.07);
+  --btn-border: rgba(37, 99, 235, 0.3);
+  --btn-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+  --btn-active-bg: rgba(124, 58, 237, 0.12);
+  --glow: 0 8px 28px rgba(37, 99, 235, 0.18);
+  --splash-bg: linear-gradient(160deg, #f4f8ff 0%, #dbe7ff 55%, #e9ddff 100%);
+  --splash-title-1: #2563eb;
+  --splash-title-2: #7c3aed;
+  --splash-tag: #3b4a68;
+  --splash-credit: #3b4a68;
+  --splash-deco: none;
+  --splash-grid: block;
+  --logo-shadow: drop-shadow(0 12px 28px rgba(37, 99, 235, 0.35));
+  --logo-shadow-sm: drop-shadow(0 3px 8px rgba(37, 99, 235, 0.4));
+}

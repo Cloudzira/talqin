@@ -11,7 +11,7 @@
 'use strict';
 
 /* ===== 1. PENGATURAN ===== */
-const VERSION = 'v1.1.0';
+const VERSION = 'v1.2.0';
 const CACHE_PREFIX = 'talqinku-';
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${VERSION}`;
 const RUNTIME_CACHE = `${CACHE_PREFIX}runtime-${VERSION}`;

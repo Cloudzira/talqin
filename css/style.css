@@ -788,6 +788,71 @@ select option {
   display: none;
 }
 
+/* ===== 8b. FOOTER (ikon medsos + credit) - warna & bentuk ikut tema ===== */
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 22px 16px 8px;
+  border-top: 1px var(--divider-style) var(--card-border);
+  text-align: center;
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--primary);
+  background: var(--btn-bg);
+  border: 2px solid var(--btn-border);
+  border-radius: var(--radius-btn);
+  box-shadow: var(--btn-shadow);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.social-link svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.social-link:hover,
+.social-link:focus-visible {
+  color: var(--on-primary);
+  background: var(--primary);
+  box-shadow: var(--glow);
+  transform: translateY(-3px);
+  outline: none;
+}
+
+.social-link:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.footer-credit {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
 /* ===== 9. RESPONSIF (layar kecil) ===== */
 @media (max-width: 430px) {
   .navbar {

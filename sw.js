@@ -11,7 +11,7 @@
 'use strict';
 
 /* ===== 1. PENGATURAN ===== */
-const VERSION = 'v1.2.0';
+const VERSION = 'v1.3.0';
 const CACHE_PREFIX = 'talqinku-';
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${VERSION}`;
 const RUNTIME_CACHE = `${CACHE_PREFIX}runtime-${VERSION}`;
@@ -148,7 +148,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  /* File statis milik sendiri (CSS, JS, ikon, manifest, dll) */
+  /* CSS & JS milik sendiri: jaringan dulu supaya hasil deploy baru langsung terpakai
+     (tidak tersangkut CSS/JS lama di cache); offline tetap memakai simpanan */
+  if (url.origin === self.location.origin && (request.destination === 'style' || request.destination === 'script')) {
+    event.respondWith(networkFirst(request, SHELL_CACHE));
+    return;
+  }
+
+  /* File statis lain milik sendiri (ikon, manifest, dll) */
   if (url.origin === self.location.origin) {
     event.respondWith(staleWhileRevalidate(request, SHELL_CACHE));
     return;
